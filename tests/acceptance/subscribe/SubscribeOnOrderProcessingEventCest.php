@@ -61,6 +61,14 @@ class SubscribeOnOrderProcessingEventCest
 		// in the integration's settings.
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['TEST_SITE_WP_URL']
+		);
+
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
 
@@ -126,6 +134,14 @@ class SubscribeOnOrderProcessingEventCest
 		// in the integration's settings.
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['TEST_SITE_WP_URL']
+		);
+
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
 
@@ -165,6 +181,14 @@ class SubscribeOnOrderProcessingEventCest
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
 
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['TEST_SITE_WP_URL']
+		);
+
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
 	}
@@ -203,6 +227,14 @@ class SubscribeOnOrderProcessingEventCest
 		// Confirm the subscriber's custom field data exists and is correct, and the name
 		// is not included in the address.
 		$I->apiCustomFieldDataIsValid($I, $subscriber, true);
+
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['TEST_SITE_WP_URL']
+		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
