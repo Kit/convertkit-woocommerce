@@ -289,15 +289,18 @@ class WooCommerce extends \Codeception\Module
 			$I->waitForText('Coupon code applied successfully.', 5, '.is-success');
 		}
 
+		// Determine field ID for opt-in checkbox.
+		$optInCheckboxFieldID = ( $options['use_legacy_checkout'] ? '#ckwc_opt_in' : '#billing-ckwc-opt-in' );
+
 		// Handle Opt-In Checkbox.
 		if ($options['display_opt_in']) {
 			if ($options['check_opt_in']) {
-				$I->checkOption('#ckwc_opt_in');
+				$I->checkOption($optInCheckboxFieldID);
 			} else {
-				$I->uncheckOption('#ckwc_opt_in');
+				$I->uncheckOption($optInCheckboxFieldID);
 			}
 		} else {
-			$I->dontSeeElement('#ckwc_opt_in');
+			$I->dontSeeElement($optInCheckboxFieldID);
 		}
 
 		// Click Place order button.
