@@ -74,11 +74,9 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 			),
 
 			// Where to display the block within the WooCommerce Checkout Block.
-			/*
 			'parent'        => array(
 				'woocommerce/checkout-contact-information-block',
 			),
-			*/
 
 			// Attributes.
 			'attributes'    => array(

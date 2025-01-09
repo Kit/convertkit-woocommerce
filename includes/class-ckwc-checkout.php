@@ -66,7 +66,7 @@ class CKWC_Checkout {
 		// 8.9.0 and higher introduces a single `woocommerce_register_additional_checkout_field()` method to register
 		// the opt in field when using the WooCommerce Checkout Block.
 		if ( function_exists( 'woocommerce_register_additional_checkout_field' ) ) {
-			// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout additional field. 
+			// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout additional field.
 			add_action( 'woocommerce_set_additional_field_value', array( $this, 'save_opt_in_checkbox_additional_field' ), 10, 4 );
 		} else {
 			// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout block.
@@ -170,10 +170,10 @@ class CKWC_Checkout {
 
 		woocommerce_register_additional_checkout_field(
 			array(
-				'id'            => 'ckwc/opt-in',
-				'label'         => $this->integration->get_option( 'opt_in_label' ),
-				'type'			=> 'checkbox',
-				'attributes' 	=> array(
+				'id'                         => 'ckwc/opt-in',
+				'label'                      => $this->integration->get_option( 'opt_in_label' ),
+				'type'                       => 'checkbox',
+				'attributes'                 => array(
 					// This is deliberate; WooCommerce won't support a `checked` attribute for checkboxes.
 					// Frontend JS will check for data-checked and convert it to the `checked` attribute.
 					'data-checked' => $this->integration->get_option( 'opt_in_status' ),
@@ -182,7 +182,7 @@ class CKWC_Checkout {
 
 				// location supports contact, address or order. We store 'billing' to mean address in the Plugin settings.
 				// @see https://github.com/woocommerce/woocommerce/blob/trunk/docs/cart-and-checkout-blocks/additional-checkout-fields.md.
-				'location'      => ( $this->integration->get_option( 'opt_in_location' ) === 'billing' ? 'address' : $this->integration->get_option( 'opt_in_location' ) ),
+				'location'                   => ( $this->integration->get_option( 'opt_in_location' ) === 'billing' ? 'address' : $this->integration->get_option( 'opt_in_location' ) ),
 			)
 		);
 
@@ -231,6 +231,11 @@ class CKWC_Checkout {
 	 * when the opt-in checkbox is registered using add_opt_in_checkbox_as_additional_checkout_field().
 	 *
 	 * @since   1.9.1
+	 *
+	 * @param   string $key        Field Key.
+	 * @param   string $value      Field Value.
+	 * @param   string $group      Checkout Group (contact, address, order).
+	 * @param   mixed  $wc_object  WooCommerce object.
 	 */
 	public function save_opt_in_checkbox_additional_field( $key, $value, $group, $wc_object ) {
 

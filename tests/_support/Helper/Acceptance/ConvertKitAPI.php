@@ -222,7 +222,7 @@ class ConvertKitAPI extends \Codeception\Module
 	public function apiCustomFieldDataIsValid($I, $subscriber, $excludeNameFromAddress = false)
 	{
 		$I->assertEquals($subscriber['fields']['last_name'], 'Last');
-		$I->assertEquals($subscriber['fields']['phone_number'], '123-123-1234');
+		$I->assertEquals($subscriber['fields']['phone_number'], '1231231234');
 		$I->assertEquals($subscriber['fields']['billing_address'], ( $excludeNameFromAddress ? 'Address Line 1, City, CA 12345' : 'First Last, Address Line 1, City, CA 12345' ));
 		$I->assertEquals($subscriber['fields']['payment_method'], 'cod');
 		$I->assertEquals($subscriber['fields']['notes'], 'Notes');
