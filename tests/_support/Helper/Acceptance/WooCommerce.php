@@ -656,7 +656,7 @@ class WooCommerce extends \Codeception\Module
 				$I->fillField('#billing_address_1', 'Address Line 1');
 				$I->fillField('#billing_city', 'City');
 				$I->fillField('#billing_postcode', '12345');
-				$I->fillField('#billing_phone', '123-123-1234');
+				$I->fillField('#billing_phone', '1231231234');
 				$I->fillField('#billing_email', $emailAddress);
 				$I->fillField('#order_comments', 'Notes');
 				break;
@@ -668,7 +668,7 @@ class WooCommerce extends \Codeception\Module
 				$I->fillField('#billing-address_1', 'Address Line 1');
 				$I->fillField('#billing-city', 'City');
 				$I->fillField('#billing-postcode', '12345');
-				$I->fillField('#billing-phone', '123-123-1234');
+				$I->fillField('#billing-phone', '1231231234');
 				$I->fillField('#email', $emailAddress);
 				$I->checkOption('.wc-block-checkout__add-note input.wc-block-components-checkbox__input');
 				$I->fillField('.wc-block-components-textarea', 'Notes');
