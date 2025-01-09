@@ -62,11 +62,16 @@ class CKWC_Checkout {
 		// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout shortcode.
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
 
-		// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout block.
-		add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'save_opt_in_checkbox_block' ), 10, 2 );
-
-		// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout additional field. 
-		add_action( 'woocommerce_set_additional_field_value', array( $this, 'save_opt_in_checkbox_additional_field' ), 10, 4 );
+		// Checkout block.
+		// 8.9.0 and higher introduces a single `woocommerce_register_additional_checkout_field()` method to register
+		// the opt in field when using the WooCommerce Checkout Block.
+		if ( function_exists( 'woocommerce_register_additional_checkout_field' ) ) {
+			// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout additional field. 
+			add_action( 'woocommerce_set_additional_field_value', array( $this, 'save_opt_in_checkbox_additional_field' ), 10, 4 );
+		} else {
+			// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout block.
+			add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'save_opt_in_checkbox_block' ), 10, 2 );
+		}
 
 	}
 
@@ -229,8 +234,26 @@ class CKWC_Checkout {
 	 */
 	public function save_opt_in_checkbox_additional_field( $key, $value, $group, $wc_object ) {
 
-		// @TODO.
+		// Ignore if the key doesn't match the opt-in field.
+		if ( $key !== 'ckwc/opt-in' ) {
+			return $value;
+		}
 
+		// Bail if the given Order ID isn't for a WooCommerce Order.
+		// Multiple calls may be made to this action for e.g. customer edits.
+		if ( ! $wc_object instanceof WC_Order ) {
+			return $value;
+		}
+
+		// Store the value of the opt in checkbox in the `ckwc_opt_in` meta key,
+		// as we do for the block and shortcode methods.
+		$this->save_opt_in_for_order(
+			$wc_object,
+			(bool) $value
+		);
+
+		// Return original value.
+		return $value;
 
 	}
 
