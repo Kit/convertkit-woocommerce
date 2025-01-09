@@ -107,6 +107,14 @@ class WP_CKWC {
 	 */
 	public function woocommerce_blocks_register() {
 
+		// 8.9.0 and higher replaces checkout block registrations with the `woocommerce_register_additional_checkout_field()` method,
+		// to register the opt in field when using the WooCommerce Checkout Block.
+		// See CKWC_Checkout, which uses this method.
+		if ( function_exists( 'woocommerce_register_additional_checkout_field' ) ) {
+			// The block won't display or be used in 8.9.0+ checkout, so there's no point registering it.
+			return;
+		}
+
 		// Load opt in checkbox block.
 		require_once CKWC_PLUGIN_PATH . '/includes/blocks/opt-in/class-ckwc-opt-in-block-integration.php';
 
@@ -226,8 +234,6 @@ class WP_CKWC {
 			return;
 		}
 
-		$this->classes['checkout'] = new CKWC_Checkout();
-
 		/**
 		 * Initialize integration classes for the frontend web site.
 		 *
@@ -245,6 +251,7 @@ class WP_CKWC {
 	 */
 	private function initialize_global() {
 
+		$this->classes['checkout'] = new CKWC_Checkout();
 		$this->classes['order']            = new CKWC_Order();
 		$this->classes['review_request']   = new ConvertKit_Review_Request( 'Kit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
 		$this->classes['setup']            = new CKWC_Setup();
