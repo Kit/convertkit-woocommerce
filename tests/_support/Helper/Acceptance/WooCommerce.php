@@ -59,11 +59,30 @@ class WooCommerce extends \Codeception\Module
 				'payment_request_button_size'           => 'default',
 				'saved_cards'                           => 'no',
 				'logging'                               => 'no',
-				'upe_checkout_experience_enabled'       => 'disabled',
+				'upe_checkout_experience_enabled'       => 'yes',
 				'title_upe'                             => '',
 				'is_short_statement_descriptor_enabled' => 'no',
-				'upe_checkout_experience_accepted_payments' => [],
+				'upe_checkout_experience_accepted_payments' => [
+					'card',
+					'link',
+				],
 				'short_statement_descriptor'            => 'CK',
+				'stripe_upe_payment_method_order'       => [
+					'card',
+					'alipay',
+					'klarna',
+					'afterpay_clearpay',
+					'eps',
+					'bancontact',
+					'boleto',
+					'ideal',
+					'oxxo',
+					'sepa_debit',
+					'p24',
+					'multibanco',
+					'link',
+					'wechat_pay',
+				],
 			]
 		);
 	}
@@ -685,10 +704,9 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
-				$I->wait(5);
 				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
-				$I->fillField('cardnumber', '4242424242424242');
-				$I->fillfield('exp-date', '01/26');
+				$I->fillField('number', '4242424242424242');
+				$I->fillfield('expiry', '01/26');
 				$I->fillField('cvc', '123');
 				$I->switchToIFrame(); // Switch back to main window.
 				break;
