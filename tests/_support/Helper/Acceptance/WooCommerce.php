@@ -59,11 +59,30 @@ class WooCommerce extends \Codeception\Module
 				'payment_request_button_size'           => 'default',
 				'saved_cards'                           => 'no',
 				'logging'                               => 'no',
-				'upe_checkout_experience_enabled'       => 'disabled',
+				'upe_checkout_experience_enabled'       => 'yes',
 				'title_upe'                             => '',
 				'is_short_statement_descriptor_enabled' => 'no',
-				'upe_checkout_experience_accepted_payments' => [],
+				'upe_checkout_experience_accepted_payments' => [
+					'card',
+					'link',
+				],
 				'short_statement_descriptor'            => 'CK',
+				'stripe_upe_payment_method_order'       => [
+					'card',
+					'alipay',
+					'klarna',
+					'afterpay_clearpay',
+					'eps',
+					'bancontact',
+					'boleto',
+					'ideal',
+					'oxxo',
+					'sepa_debit',
+					'p24',
+					'multibanco',
+					'link',
+					'wechat_pay',
+				],
 			]
 		);
 	}
@@ -286,22 +305,25 @@ class WooCommerce extends \Codeception\Module
 			$I->waitForText('Coupon code applied successfully.', 5, '.is-success');
 		}
 
+		// Determine field ID for opt-in checkbox.
+		$optInCheckboxFieldID = ( $options['use_legacy_checkout'] ? '#ckwc_opt_in' : '#billing-ckwc-opt-in' );
+
 		// Handle Opt-In Checkbox.
 		if ($options['display_opt_in']) {
 			if ($options['check_opt_in']) {
-				$I->checkOption('#ckwc_opt_in');
+				$I->checkOption($optInCheckboxFieldID);
 			} else {
-				$I->uncheckOption('#ckwc_opt_in');
+				$I->uncheckOption($optInCheckboxFieldID);
 			}
 		} else {
-			$I->dontSeeElement('#ckwc_opt_in');
+			$I->dontSeeElement($optInCheckboxFieldID);
 		}
 
 		// Click Place order button.
 		switch ($options['use_legacy_checkout']) {
 			case true:
 				$I->waitForElementNotVisible('.blockOverlay');
-				$I->scrollTo('#order_review_heading');
+				$I->scrollTo('#place_order');
 				$I->click('#place_order');
 				break;
 
@@ -324,7 +346,7 @@ class WooCommerce extends \Codeception\Module
 		// Confirm order received is displayed.
 		// WooCommerce changed the default wording between 5.x and 6.x, so perform
 		// a few checks to be certain.
-		$I->waitForElement('body.woocommerce-order-received');
+		$I->waitForElement('body.woocommerce-order-received', 30);
 		$I->seeInSource('Order');
 		$I->seeInSource('received');
 		$I->seeInSource('Order details</h3>');
@@ -656,7 +678,7 @@ class WooCommerce extends \Codeception\Module
 				$I->fillField('#billing_address_1', 'Address Line 1');
 				$I->fillField('#billing_city', 'City');
 				$I->fillField('#billing_postcode', '12345');
-				$I->fillField('#billing_phone', '1231231234');
+				$I->fillField('#billing_phone', '6159684594');
 				$I->fillField('#billing_email', $emailAddress);
 				$I->fillField('#order_comments', 'Notes');
 				break;
@@ -668,7 +690,7 @@ class WooCommerce extends \Codeception\Module
 				$I->fillField('#billing-address_1', 'Address Line 1');
 				$I->fillField('#billing-city', 'City');
 				$I->fillField('#billing-postcode', '12345');
-				$I->fillField('#billing-phone', '1231231234');
+				$I->fillField('#billing-phone', '6159684594');
 				$I->fillField('#email', $emailAddress);
 				$I->checkOption('.wc-block-checkout__add-note input.wc-block-components-checkbox__input');
 				$I->fillField('.wc-block-components-textarea', 'Notes');
@@ -682,13 +704,9 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
-				// Only need to click the label in the legacy checkout.
-				if ($useLegacyCheckout) {
-					$I->click('label[for="payment_method_stripe"]');
-				}
 				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
-				$I->fillField('cardnumber', '4242424242424242');
-				$I->fillfield('exp-date', '01/26');
+				$I->fillField('number', '4242424242424242');
+				$I->fillfield('expiry', '01/26');
 				$I->fillField('cvc', '123');
 				$I->switchToIFrame(); // Switch back to main window.
 				break;
