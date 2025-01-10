@@ -685,7 +685,7 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
-				$I->wait(2);
+				$I->wait(5);
 				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
 				$I->fillField('cardnumber', '4242424242424242');
 				$I->fillfield('exp-date', '01/26');
