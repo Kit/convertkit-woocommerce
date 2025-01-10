@@ -304,7 +304,7 @@ class WooCommerce extends \Codeception\Module
 		switch ($options['use_legacy_checkout']) {
 			case true:
 				$I->waitForElementNotVisible('.blockOverlay');
-				$I->scrollTo('#order_review_heading');
+				$I->scrollTo('#place_order');
 				$I->click('#place_order');
 				break;
 
@@ -685,6 +685,7 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
+				$I->wait(2);
 				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
 				$I->fillField('cardnumber', '4242424242424242');
 				$I->fillfield('exp-date', '01/26');
