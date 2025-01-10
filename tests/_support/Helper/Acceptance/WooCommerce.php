@@ -685,10 +685,6 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
-				// Only need to click the label in the legacy checkout.
-				if ($useLegacyCheckout) {
-					$I->click('label[for="payment_method_stripe"]');
-				}
 				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
 				$I->fillField('cardnumber', '4242424242424242');
 				$I->fillfield('exp-date', '01/26');
