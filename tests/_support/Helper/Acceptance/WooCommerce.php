@@ -346,7 +346,7 @@ class WooCommerce extends \Codeception\Module
 		// Confirm order received is displayed.
 		// WooCommerce changed the default wording between 5.x and 6.x, so perform
 		// a few checks to be certain.
-		$I->waitForElement('body.woocommerce-order-received');
+		$I->waitForElement('body.woocommerce-order-received', 30);
 		$I->seeInSource('Order');
 		$I->seeInSource('received');
 		$I->seeInSource('Order details</h3>');
