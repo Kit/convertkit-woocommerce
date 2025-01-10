@@ -42,34 +42,39 @@ class CKWC_Checkout {
 			return;
 		}
 
-		// If Display Opt In is enabled, show the Opt In checkbox at Checkout.
+		// If Display Opt In is enabled, show the opt in checkbox at checkout and register
+		// hooks to save its value against the WooCommerce Order.
 		if ( $this->integration->get_option_bool( 'display_opt_in' ) ) {
 			// Checkout shortcode.
 			add_filter( 'woocommerce_checkout_fields', array( $this, 'add_opt_in_checkbox' ) );
+
+			// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout shortcode.
+			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
 
 			// Checkout block.
 			// 8.9.0 and higher introduces a single `woocommerce_register_additional_checkout_field()` method to register
 			// the opt in field when using the WooCommerce Checkout Block.
 			if ( function_exists( 'woocommerce_register_additional_checkout_field' ) ) {
+				// Display opt in field.
 				$this->add_opt_in_checkbox_additional_checkout_field();
+
+				// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout additional field.
+				add_action( 'woocommerce_set_additional_field_value', array( $this, 'save_opt_in_checkbox_additional_field' ), 10, 4 );
 			} else {
 				// Checkout block with the CKWC_Opt_In_Block_Integration block embedded.
 				// Register the API endpoint to pass the state of the opt in checkbox.
 				$this->register_opt_in_checkbox_store_api_endpoint();
+
+				// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout block.
+				add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'save_opt_in_checkbox_block' ), 10, 2 );
 			}
-		}
-
-		// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout shortcode.
-		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
-
-		// Checkout block.
-		// 8.9.0 and higher introduces a single `woocommerce_register_additional_checkout_field()` method to register
-		// the opt in field when using the WooCommerce Checkout Block.
-		if ( function_exists( 'woocommerce_register_additional_checkout_field' ) ) {
-			// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout additional field.
-			add_action( 'woocommerce_set_additional_field_value', array( $this, 'save_opt_in_checkbox_additional_field' ), 10, 4 );
 		} else {
-			// Store whether the customer should be opted in, in the Order's metadata, when using the Checkout block.
+			// No opt in checkbox is displayed; always opt in the customer at checkout.
+
+			// Opt the customer in when using the checkout shortcode.
+			add_action( 'woocommerce_checkout_order_created', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
+
+			// Opt the customer in when using the checkout block.
 			add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'save_opt_in_checkbox_block' ), 10, 2 );
 		}
 
