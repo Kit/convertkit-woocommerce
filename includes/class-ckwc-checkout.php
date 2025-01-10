@@ -72,7 +72,7 @@ class CKWC_Checkout {
 			// No opt in checkbox is displayed; always opt in the customer at checkout.
 
 			// Opt the customer in when using the checkout shortcode.
-			add_action( 'woocommerce_checkout_order_created', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
+			add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'save_opt_in_checkbox' ), 10, 1 );
 
 			// Opt the customer in when using the checkout block.
 			add_action( 'woocommerce_store_api_checkout_update_order_from_request', array( $this, 'save_opt_in_checkbox_block' ), 10, 2 );
