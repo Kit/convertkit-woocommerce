@@ -18,6 +18,9 @@ class WooCommerce extends \Codeception\Module
 	 */
 	public function setupWooCommercePlugin($I)
 	{
+		// Set Store in Live mode i.e. not in "Coming Soon" mode.
+		$I->haveOptionInDatabase( 'woocommerce_coming_soon', 'no' );
+
 		// Setup Cash on Delivery as Payment Method.
 		$I->haveOptionInDatabase(
 			'woocommerce_cod_settings',
