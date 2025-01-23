@@ -62,6 +62,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		// in the integration's settings.
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
 
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['TEST_SITE_WP_URL']
+		);
+
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
 
@@ -125,6 +133,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		// Confirm that the email address was added to ConvertKit.
 		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['TEST_SITE_WP_URL']
+		);
+
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
 		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
@@ -166,6 +182,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		// Confirm that the email address was now added to ConvertKit.
 		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
 
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['TEST_SITE_WP_URL']
+		);
+
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
 
@@ -204,6 +228,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 
 		// Confirm that the email address was now added to ConvertKit.
 		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['TEST_SITE_WP_URL']
+		);
 
 		// Confirm the subscriber's custom field data exists and is correct, and the name
 		// is not included in the address.
