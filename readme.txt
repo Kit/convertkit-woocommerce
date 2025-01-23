@@ -3,9 +3,9 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://kit.com
 Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
-Tested up to: 6.7
+Tested up to: 6.7.1
 Requires PHP: 5.6.20
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,11 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.9.1 2025-01-23
+* Added: Populate the referrer property when the Plugin is configured to subscribe an email address to a Kit Form
+* Added: Register opt-in checkbox using new `woocommerce_register_additional_checkout_field method`
+* Updated: ConvertKit WordPress Libraries to 2.0.6
 
 ### 1.9.0 2024-11-18
 * Fix: Purchase Data: Sync Past Orders when High-Performance Order Storage is disabled

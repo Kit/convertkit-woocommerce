@@ -58,7 +58,7 @@
 					</tbody>
 				</table><h3 id="convertkit_for_woocommerce_checkout_add_opt_in_checkbox">
 						convertkit_for_woocommerce_checkout_add_opt_in_checkbox
-						<code>includes/class-ckwc-checkout.php::137</code>
+						<code>includes/class-ckwc-checkout.php::160</code>
 					</h3><h4>Overview</h4>
 						<p>Adds the opt-in checkbox to the checkout's billing or order section, based on the Plugin's settings.</p><h4>Parameters</h4>
 					<table>
@@ -447,7 +447,7 @@ add_filter( 'convertkit_for_woocommerce_custom_field_data', function( $fields, $
 					</tbody>
 				</table><h3 id="convertkit_for_woocommerce_initialize_admin">
 						convertkit_for_woocommerce_initialize_admin
-						<code>includes/class-wp-ckwc.php::165</code>
+						<code>includes/class-wp-ckwc.php::173</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -467,7 +467,7 @@ do_action( 'convertkit_for_woocommerce_initialize_admin', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_cli">
 						convertkit_for_woocommerce_initialize_cli
-						<code>includes/class-wp-ckwc.php::212</code>
+						<code>includes/class-wp-ckwc.php::220</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -487,7 +487,7 @@ do_action( 'convertkit_for_woocommerce_initialize_cli', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_frontend">
 						convertkit_for_woocommerce_initialize_frontend
-						<code>includes/class-wp-ckwc.php::235</code>
+						<code>includes/class-wp-ckwc.php::241</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -507,7 +507,7 @@ do_action( 'convertkit_for_woocommerce_initialize_frontend', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_global">
 						convertkit_for_woocommerce_initialize_global
-						<code>includes/class-wp-ckwc.php::257</code>
+						<code>includes/class-wp-ckwc.php::264</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
