@@ -268,7 +268,7 @@ class CKWC_Order {
 				}
 
 				// Add subscriber to form.
-				$result = $this->api->add_subscriber_to_form( $resource_id, $subscriber['subscriber']['id'] );
+				$result = $this->api->add_subscriber_to_form( $resource_id, $subscriber['subscriber']['id'], home_url() );
 				break;
 
 			case 'tag':
