@@ -712,6 +712,8 @@ class CKWC_Order {
 				// Query HPOS.
 				$query = new WC_Order_Query(
 					array(
+						// Return posts of type `shop_order`.
+						'type'       => 'shop_order',
 						'limit'      => -1,
 
 						// Only include Orders that do not match the Purchase Data Event integration setting.
