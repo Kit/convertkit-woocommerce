@@ -413,7 +413,19 @@ class CKWC_Order {
 				'convertkit_for_woocommerce_error_order_missing',
 				sprintf(
 					/* translators: WooCommerce Order ID */
-					__( 'Order ID %s could not be found in WooCommerce.', 'woocommerce-convertkit' ),
+					__( 'Order ID #%s could not be found in WooCommerce.', 'woocommerce-convertkit' ),
+					$order_id
+				)
+			);
+		}
+
+		// If the Order is a refund, skip it.
+		if ( $order instanceof \Automattic\WooCommerce\Admin\Overrides\OrderRefund ) {
+			return new WP_Error(
+				'convertkit_for_woocommerce_error_order_refund',
+				sprintf(
+					/* translators: WooCommerce Order ID */
+					__( 'Order ID #%s is a refund. Skipping...', 'woocommerce-convertkit' ),
 					$order_id
 				)
 			);
@@ -427,7 +439,7 @@ class CKWC_Order {
 				'convertkit_for_woocommerce_error_order_exists',
 				sprintf(
 					/* translators: WooCommerce Order ID */
-					__( 'Order ID %s has already been sent to Kit.', 'woocommerce-convertkit' ),
+					__( 'Order ID #%s has already been sent to Kit.', 'woocommerce-convertkit' ),
 					$order_id
 				)
 			);
