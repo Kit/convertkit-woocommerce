@@ -394,6 +394,41 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
+	 * Refunds the given Order ID.
+	 *
+	 * @since   1.9.2
+	 *
+	 * @param   AcceptanceTester $I              Acceptance Tester.
+	 * @param   int              $orderID        WooCommerce Order ID.
+	 * @param   int              $amount         Amount to refund.
+	 */
+	public function wooCommerceRefundOrder($I, $orderID, $amount)
+	{
+		// We perform the order status change by editing the Order as a WordPress Administrator would,
+		// so that WooCommerce triggers its actions and filters that our integration hooks into.
+		$I->loginAsAdmin();
+
+		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
+		if (strpos($orderID, '-') !== false) {
+			$orderIDParts = explode('-', $orderID);
+			$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
+		}
+
+		// Load order edit screen.
+		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+
+		// Refund the entire order.
+		$I->click('button.refund-items');
+		$I->waitForElementVisible('input#refund_amount');
+		$I->fillField('input#refund_amount', $amount);
+		$I->click('button.do-manual-refund');
+		$I->acceptPopup();
+
+		// Wait for confirmation.
+		$I->waitForElementVisible('abbr.refund_by');
+	}
+
+	/**
 	 * Creates a 'Simple product' in WooCommerce that can be used for tests.
 	 *
 	 * @since   1.0.0
