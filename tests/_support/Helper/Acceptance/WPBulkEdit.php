@@ -41,8 +41,16 @@ class WPBulkEdit extends \Codeception\Module
 			}
 		}
 
-		// Scroll to Stock Quantity.
-		$I->scrollTo('select.change_stock');
+		switch ( $noticePostType ) {
+			case 'coupon':
+				// Scroll to Bulk Edit label.
+				$I->scrollTo('#bulk-edit-legend');
+				break;
+			default:
+				// Scroll to Stock Quantity.
+				$I->scrollTo('select.change_stock');
+				break;
+		}
 
 		// Click Update.
 		$I->click('Update');
