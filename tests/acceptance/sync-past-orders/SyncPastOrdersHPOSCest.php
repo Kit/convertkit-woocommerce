@@ -140,6 +140,37 @@ class SyncPastOrdersHPOSCest
 	}
 
 	/**
+	 * Test that no button is displayed on the Integration Settings screen
+	 * when:
+	 * - the Integration is enabled,
+	 * - valid API credentials are specified,
+	 * - a WooCommerce Order exists, that has been refunded.
+	 *
+	 * @since   1.9.2
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testSyncPastOrderExcludesRefunds(AcceptanceTester $I)
+	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->wooCommerceDeleteAllOrders($I);
+
+		// Create Product and Checkout for this test, sending the Order
+		// to Kit.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
+
+		// Refund the Order.
+		$I->wooCommerceRefundOrder($I, $result['order_id'], 10);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Confirm that no Sync Past Order button is displayed, as the Order
+		// is fully refunded.
+		$I->dontSeeElementInDOM('a#ckwc_sync_past_orders');
+	}
+
+	/**
 	 * Test that a button is displayed on the Integration Settings screen
 	 * when:
 	 * - the Integration is enabled,

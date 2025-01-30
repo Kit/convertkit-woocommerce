@@ -13,7 +13,7 @@
 	<h2><?php echo esc_html( $this->get_method_title() ); ?></h2>
 
 	<p>
-		<?php esc_html_e( 'Do not navigate away from this page until the process is completed, otherwise complete purchase data will not be sent to ConvertKit. You will be notified via this page when the process is completed.', 'woocommerce-convertkit' ); ?>
+		<?php esc_html_e( 'Do not navigate away from this page until the process is completed, otherwise complete purchase data will not be sent to Kit. You will be notified via this page when the process is completed.', 'woocommerce-convertkit' ); ?>
 	</p>
 
 	<!-- Progress Bar -->
