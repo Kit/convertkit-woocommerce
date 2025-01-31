@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Kit (formerly ConvertKit) for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 1.9.1\n"
+"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 1.9.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-23T02:56:00+00:00\n"
+"POT-Creation-Date: 2025-01-31T03:00:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: woocommerce-convertkit\n"
@@ -519,45 +519,50 @@ msgstr ""
 
 #. translators: WooCommerce Order ID
 #: includes/class-ckwc-order.php:416
-msgid "Order ID %s could not be found in WooCommerce."
+msgid "Order ID #%s could not be found in WooCommerce."
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:430
-msgid "Order ID %s has already been sent to Kit."
+#: includes/class-ckwc-order.php:428
+msgid "Order ID #%s is a refund. Skipping..."
 msgstr ""
 
-#: includes/class-ckwc-order.php:461
+#. translators: WooCommerce Order ID
+#: includes/class-ckwc-order.php:442
+msgid "Order ID #%s has already been sent to Kit."
+msgstr ""
+
+#: includes/class-ckwc-order.php:473
 msgid "[Kit] Purchase Data skipped, as this Order has no Products"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:532
+#: includes/class-ckwc-order.php:544
 msgid "[Kit] Send Purchase Data Error: %1$s %2$s"
 msgstr ""
 
 #. translators: ConvertKit Purchase ID
-#: includes/class-ckwc-order.php:548
+#: includes/class-ckwc-order.php:560
 msgid "[Kit] Purchase Data sent successfully: ID [%s]"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:573
+#: includes/class-ckwc-order.php:585
 msgid "[Kit] Purchase Data: Custom Fields: Get Subscriber Error: %1$s %2$s"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:587
+#: includes/class-ckwc-order.php:599
 msgid "[Kit] Purchase Data: Custom Fields: No subscriber found for email address %s"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:608
+#: includes/class-ckwc-order.php:620
 msgid "[Kit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s"
 msgstr ""
 
 #. translators: ConvertKit Subscriber ID
-#: includes/class-ckwc-order.php:619
+#: includes/class-ckwc-order.php:631
 msgid "[Kit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]"
 msgstr ""
 
@@ -653,7 +658,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: views/backend/settings/sync-past-orders.php:16
-msgid "Do not navigate away from this page until the process is completed, otherwise complete purchase data will not be sent to ConvertKit. You will be notified via this page when the process is completed."
+msgid "Do not navigate away from this page until the process is completed, otherwise complete purchase data will not be sent to Kit. You will be notified via this page when the process is completed."
 msgstr ""
 
 #: views/backend/settings/sync-past-orders.php:34

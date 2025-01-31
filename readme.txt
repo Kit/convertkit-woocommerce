@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 6.7.1
 Requires PHP: 5.6.20
-Stable tag: 1.9.1
+Stable tag: 1.9.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,9 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.9.2 2025-01-31
+* Fix: Sync Past Orders: Exclude refund orders, to prevent 500 Internal Server errors
 
 ### 1.9.1 2025-01-23
 * Added: Populate the referrer property when the Plugin is configured to subscribe an email address to a Kit Form
