@@ -91,15 +91,27 @@ class WooCommerce extends \Codeception\Module
 	}
 
 	/**
-	 * Helper method to setup HPOS in WooCommerce.
+	 * Helper method to enable HPOS in WooCommerce.
 	 *
-	 * @since   1.6.6
+	 * @since   1.9.3
 	 *
 	 * @param   AcceptanceTester $I     AcceptanceTester.
 	 */
-	public function setupWooCommerceHPOS($I)
+	public function enableWooCommerceHPOS($I)
 	{
 		$I->haveOptionInDatabase('woocommerce_custom_orders_table_enabled', 'yes');
+	}
+
+	/**
+	 * Helper method to disable HPOS in WooCommerce.
+	 *
+	 * @since   1.9.3
+	 *
+	 * @param   AcceptanceTester $I     AcceptanceTester.
+	 */
+	public function disableWooCommerceHPOS($I)
+	{
+		$I->haveOptionInDatabase('woocommerce_custom_orders_table_enabled', 'no');
 	}
 
 	/**
@@ -426,6 +438,43 @@ class WooCommerce extends \Codeception\Module
 
 		// Wait for confirmation.
 		$I->waitForElementVisible('abbr.refund_by');
+	}
+
+	/**
+	 * Refunds the given Order ID.
+	 *
+	 * @since   1.9.3
+	 *
+	 * @param   AcceptanceTester $I                 Acceptance Tester.
+	 * @param   int|string       $orderID           WooCommerce Order ID.
+	 * @param   string           $newEmailAddress   New Email Address.
+	 */
+	public function wooCommerceChangeOrderEmailAddress($I, $orderID, $newEmailAddress = '')
+	{
+		// We perform the order status change by editing the Order as a WordPress Administrator would,
+		// so that WooCommerce triggers its actions and filters that our integration hooks into.
+		$I->loginAsAdmin();
+
+		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
+		if (strpos($orderID, '-') !== false) {
+			$orderIDParts = explode('-', $orderID);
+			$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
+		}
+
+		// Load order edit screen.
+		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+
+		// Change the email address.
+		$I->click('a.edit_address:first-child');
+		$I->waitForElementVisible('#_billing_email');
+
+		// Update email address.
+		$I->submitForm(
+			'div.wrap > form',
+			[
+				'_billing_email' => $newEmailAddress,
+			]
+		);
 	}
 
 	/**

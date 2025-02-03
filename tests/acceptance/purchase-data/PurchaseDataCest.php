@@ -19,9 +19,6 @@ class PurchaseDataCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Enable HPOS.
-		$I->setupWooCommerceHPOS($I);
-
 		// Activate Custom Order Numbers, so that we can prefix Order IDs with
 		// an environment-specific string.
 		$I->activateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
