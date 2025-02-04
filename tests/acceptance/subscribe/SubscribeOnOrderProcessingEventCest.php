@@ -20,9 +20,6 @@ class SubscribeOnOrderProcessingEventCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Enable HPOS.
-		$I->setupWooCommerceHPOS($I);
-
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 

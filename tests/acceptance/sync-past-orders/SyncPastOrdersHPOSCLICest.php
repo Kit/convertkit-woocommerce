@@ -20,7 +20,7 @@ class SyncPastOrdersHPOSCLICest
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
 		// Enable HPOS.
-		$I->setupWooCommerceHPOS($I);
+		$I->enableWooCommerceHPOS($I);
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);

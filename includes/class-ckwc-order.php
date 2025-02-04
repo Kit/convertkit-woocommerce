@@ -675,7 +675,7 @@ class CKWC_Order {
 		switch ( get_option( 'woocommerce_custom_orders_table_enabled' ) ) {
 			case 'no':
 				// Query CPT.
-				// We can't use WC_Order_Quey with a meta_query when HPOS is disabled:
+				// We can't use WC_Order_Query with a meta_query when HPOS is disabled:
 				// https://github.com/woocommerce/woocommerce/pull/47457.
 				$query = new WP_Query(
 					array(
@@ -686,11 +686,17 @@ class CKWC_Order {
 						// Only include Orders that do not match the Purchase Data Event integration setting.
 						'post_status'    => $post_statuses,
 
-						// Only include Orders that do not have a ConvertKit Purchase Data ID.
+						// Only include Orders that do not have a ConvertKit Purchase Data ID
+						// and have an email address.
 						'meta_query'     => array(
 							array(
 								'key'     => 'ckwc_purchase_data_id',
 								'compare' => 'NOT EXISTS',
+							),
+							array(
+								'key'     => '_billing_email',
+								'value'   => '',
+								'compare' => '!=',
 							),
 						),
 
@@ -713,22 +719,31 @@ class CKWC_Order {
 				$query = new WC_Order_Query(
 					array(
 						// Return posts of type `shop_order`.
-						'type'       => 'shop_order',
-						'limit'      => -1,
+						'type'        => 'shop_order',
+						'limit'       => -1,
 
 						// Only include Orders that do not match the Purchase Data Event integration setting.
-						'status'     => $post_statuses,
+						'status'      => $post_statuses,
 
 						// Only include Orders that do not have a ConvertKit Purchase Data ID.
-						'meta_query' => array(
+						'meta_query'  => array(
 							array(
 								'key'     => 'ckwc_purchase_data_id',
 								'compare' => 'NOT EXISTS',
 							),
 						),
 
+						// Only include Orders that have an email address.
+						'field_query' => array(
+							array(
+								'field'   => 'billing_email',
+								'value'   => '',
+								'compare' => '!=',
+							),
+						),
+
 						// Only return Order IDs.
-						'return'     => 'ids',
+						'return'      => 'ids',
 					)
 				);
 
