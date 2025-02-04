@@ -18,6 +18,9 @@ class SyncPastOrdersCLICest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
+		// Disable HPOS.
+		$I->disableWooCommerceHPOS($I);
+
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
