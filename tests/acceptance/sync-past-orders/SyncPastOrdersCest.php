@@ -18,6 +18,9 @@ class SyncPastOrdersCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
+		// Disable HPOS.
+		$I->disableWooCommerceHPOS($I);
+
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
 
@@ -167,6 +170,50 @@ class SyncPastOrdersCest
 	}
 
 	/**
+	 * Test that no button is displayed on the Integration Settings screen
+	 * when:
+	 * - the Integration is enabled,
+	 * - valid API credentials are specified,
+	 * - a WooCommerce Order exists, that has no email address.
+	 *
+	 * @since   1.9.3
+	 *
+	 * @param   AcceptanceTester $I  Tester.
+	 */
+	public function testSyncPastOrderExcludesOrdersWithNoEmailAddress(AcceptanceTester $I)
+	{
+		// Delete all existing WooCommerce Orders from the database.
+		$I->wooCommerceDeleteAllOrders($I);
+
+		// Create Product and Checkout for this test, not sending the Order
+		// to ConvertKit.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'send_purchase_data' => false,
+			]
+		);
+
+		// Login as the Administrator.
+		$I->loginAsAdmin();
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Confirm that the Sync Past Order button is displayed.
+		$I->seeElementInDOM('a#ckwc_sync_past_orders');
+
+		// Remove the email address from the Order.
+		$I->wooCommerceChangeOrderEmailAddress($I, $result['order_id'], '');
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Confirm that no Sync Past Order button is displayed.
+		$I->dontSeeElementInDOM('a#ckwc_sync_past_orders');
+	}
+
+	/**
 	 * Test that a button is displayed on the Integration Settings screen
 	 * when:
 	 * - the Integration is enabled,
@@ -232,8 +279,8 @@ class SyncPastOrdersCest
 		$I->seeInSource('Enable Kit integration');
 
 		// Confirm that the Transaction ID is stored in the Order's metadata.
-		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
-		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', $purchaseDataID, true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes');
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', $purchaseDataID);
 	}
 
 	/**
@@ -276,7 +323,7 @@ class SyncPastOrdersCest
 
 		// Remove the Transaction ID metadata in the Order, as if it were sent
 		// by 1.4.2 or older.
-		$I->wooCommerceOrderDeleteMeta($I, $postID, 'ckwc_purchase_data_id', true);
+		$I->wooCommerceOrderDeleteMeta($I, $postID, 'ckwc_purchase_data_id');
 
 		// Login as the Administrator.
 		$I->loginAsAdmin();
@@ -306,8 +353,8 @@ class SyncPastOrdersCest
 		$I->seeElementInDOM('a.cancel[disabled]');
 
 		// Confirm that the Transaction ID is stored in the Order's metadata.
-		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
-		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', $purchaseDataID, true);
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes');
+		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', $purchaseDataID);
 	}
 
 	/**
