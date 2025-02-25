@@ -13,6 +13,8 @@
  * Author: Kit
  * Author URI: https://www.kit.com
  * Text Domain: woocommerce-convertkit
+ * License:     GPLv3 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  *
  * WC requires at least: 3.0
  * WC tested up to: 9.6.1
