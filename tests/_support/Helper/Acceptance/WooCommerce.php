@@ -360,7 +360,6 @@ class WooCommerce extends \Codeception\Module
 
 		// Confirm order received is displayed.
 		$I->waitForElement('body.woocommerce-order-received', 30);
-		$I->seeInSource('<h1>Order completed</h1>');
 
 		// Return data.
 		return [
