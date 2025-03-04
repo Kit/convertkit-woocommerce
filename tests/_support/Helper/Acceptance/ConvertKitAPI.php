@@ -115,6 +115,7 @@ class ConvertKitAPI extends \Codeception\Module
 			[
 				// Check all subscriber states.
 				'status' => 'all',
+				'per_page' => 20,
 			]
 		);
 
