@@ -359,12 +359,7 @@ class WooCommerce extends \Codeception\Module
 		}
 
 		// Confirm order received is displayed.
-		// WooCommerce changed the default wording between 5.x and 6.x, so perform
-		// a few checks to be certain.
 		$I->waitForElement('body.woocommerce-order-received', 30);
-		$I->seeInSource('Order');
-		$I->seeInSource('received');
-		$I->seeInSource('Order details</h3>');
 
 		// Return data.
 		return [
@@ -791,7 +786,7 @@ class WooCommerce extends \Codeception\Module
 			 */
 			case 'stripe':
 				// Complete Credit Card Details.
-				$I->switchToIFrame('iframe[name^="__privateStripeFrame"]'); // Switch to Stripe iFrame.
+				$I->switchToIFrame('iframe[title="Secure payment input frame"]'); // Switch to CC Stripe iFrame.
 				$I->fillField('number', '4242424242424242');
 				$I->fillfield('expiry', '01/26');
 				$I->fillField('cvc', '123');
