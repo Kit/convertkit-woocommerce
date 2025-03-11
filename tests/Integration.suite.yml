@@ -17,5 +17,5 @@ modules:
            domain: '%WORDPRESS_DOMAIN%'
            adminEmail: 'admin@%WORDPRESS_DOMAIN%'
            title: 'Integration Tests'
-           plugins: ['./integrate-convertkit-wpforms.php']
+           plugins: ['./woocommerce-convertkit.php', 'woocommerce/woocommerce.php']
            theme: ''

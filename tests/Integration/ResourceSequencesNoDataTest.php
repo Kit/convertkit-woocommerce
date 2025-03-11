@@ -51,8 +51,8 @@ class ResourceSequencesNoDataTest extends \Codeception\TestCase\WPTestCase
 		WP_CKWC_Integration()->update_option( 'refresh_token', $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN_NO_DATA'] );
 
 		// Initialize the resource class we want to test.
-		$this->resource = new CKWC_Resource_Sequences();
-		$this->assertNotInstanceOf(WP_Error::class, $this->resource->resources);
+		$this->resource = new \CKWC_Resource_Sequences();
+		$this->assertNotInstanceOf(\WP_Error::class, $this->resource->resources);
 	}
 
 	/**
@@ -83,7 +83,7 @@ class ResourceSequencesNoDataTest extends \Codeception\TestCase\WPTestCase
 	{
 		// Confirm that no resources exist in the stored options table data.
 		$result = $this->resource->refresh();
-		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertNotInstanceOf(\WP_Error::class, $result);
 		$this->assertIsArray($result);
 		$this->assertCount(0, $result);
 	}
@@ -114,7 +114,7 @@ class ResourceSequencesNoDataTest extends \Codeception\TestCase\WPTestCase
 	{
 		// Confirm that no resources exist in the stored options table data.
 		$result = $this->resource->get();
-		$this->assertNotInstanceOf(WP_Error::class, $result);
+		$this->assertNotInstanceOf(\WP_Error::class, $result);
 		$this->assertIsArray($result);
 		$this->assertCount(0, $result);
 	}

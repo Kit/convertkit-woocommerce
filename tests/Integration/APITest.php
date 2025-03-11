@@ -41,7 +41,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		activate_plugins('convertkit-woocommerce/woocommerce-convertkit.php');
 
 		// Initialize the classes we want to test.
-		$this->api = new CKWC_API(
+		$this->api = new \CKWC_API(
 			$_ENV['CONVERTKIT_OAUTH_CLIENT_ID'],
 			$_ENV['KIT_OAUTH_REDIRECT_URI'],
 			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
