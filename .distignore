@@ -2,6 +2,7 @@
 /.github
 /.scripts
 /.wordpress-org
+/log
 /tests
 /vendor/autoload.php
 /vendor/composer
@@ -19,7 +20,7 @@ codeception.dist.yml
 codeception.yml
 composer.json
 composer.lock
-convertkit-for-woocommerce.zip
+convertkit.zip
 DEPLOYMENT.md
 DEVELOPMENT.md
 LICENSE
