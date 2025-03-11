@@ -51,7 +51,7 @@ class CKWC_Admin_AJAX {
 		}
 
 		// Get ID.
-		$id = absint( sanitize_text_field( $_REQUEST['id'] ) );
+		$id = absint( sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) );
 
 		// Fetch integration.
 		$this->integration = WP_CKWC_Integration();

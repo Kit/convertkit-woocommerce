@@ -188,7 +188,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Sanitize token.
-		$authorization_code = sanitize_text_field( $_REQUEST['code'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		$authorization_code = sanitize_text_field( wp_unslash( $_REQUEST['code'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
 		// Exchange the authorization code and verifier for an access token.
 		$api    = new CKWC_API( CKWC_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI );
@@ -284,15 +284,18 @@ class CKWC_Integration extends WC_Integration {
 		check_admin_referer( 'woocommerce-settings' );
 
 		// Bail if the file upload failed.
-		if ( $_FILES['woocommerce_ckwc_import']['error'] !== 0 ) {
+		if ( isset( $_FILES['woocommerce_ckwc_import']['error'] ) && $_FILES['woocommerce_ckwc_import']['error'] !== 0 ) {
 			return;
 		}
-		if ( ! $wp_filesystem->exists( $_FILES['woocommerce_ckwc_import']['tmp_name'] ) ) {
+		if ( ! isset( $_FILES['woocommerce_ckwc_import']['tmp_name'] ) ) {
+			return;
+		}
+		if ( ! $wp_filesystem->exists( sanitize_text_field( $_FILES['woocommerce_ckwc_import']['tmp_name'] ) ) ) {
 			return;
 		}
 
 		// Read file.
-		$json = $wp_filesystem->get_contents( $_FILES['woocommerce_ckwc_import']['tmp_name'] );
+		$json = $wp_filesystem->get_contents( sanitize_text_field( $_FILES['woocommerce_ckwc_import']['tmp_name'] ) );
 
 		// Decode.
 		$import = json_decode( $json, true );
@@ -1207,7 +1210,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Return false if the page request isn't for WooCommerce Settings.
-		if ( sanitize_text_field( $_REQUEST['page'] ) !== 'wc-settings' ) {
+		if ( sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) !== 'wc-settings' ) {
 			return false;
 		}
 
@@ -1215,7 +1218,7 @@ class CKWC_Integration extends WC_Integration {
 		if ( ! isset( $_REQUEST['tab'] ) ) {
 			return false;
 		}
-		if ( sanitize_text_field( $_REQUEST['tab'] ) !== 'integration' ) {
+		if ( sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) !== 'integration' ) {
 			return false;
 		}
 
@@ -1225,13 +1228,13 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Return false if the Integration request section isn't for this Plugin.
-		if ( sanitize_text_field( $_REQUEST['section'] ) !== 'ckwc' ) {
+		if ( sanitize_text_field( wp_unslash( $_REQUEST['section'] ) ) !== 'ckwc' ) {
 			return false;
 		}
 
 		// If a sub section is defined, return its name now.
 		if ( isset( $_REQUEST['sub_section'] ) ) {
-			return sanitize_text_field( $_REQUEST['sub_section'] );
+			return sanitize_text_field( wp_unslash( $_REQUEST['sub_section'] ) );
 		}
 		// phpcs:enable
 
