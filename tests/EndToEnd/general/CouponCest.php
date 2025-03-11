@@ -55,7 +55,7 @@ class CouponCest
 		$I->seeInSource('To configure the Kit Form, Tag or Sequence to subscribe Customers to who use this coupon');
 
 		// Check that a link to the Plugin Settings exists.
-		$I->seeInSource('<a href="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-admin/admin.php?page=wc-settings&amp;tab=integration&amp;section=ckwc">enable the Kit WooCommerce integration</a>');
+		$I->seeInSource('<a href="' . $_ENV['WORDPRESS_URL'] . '/wp-admin/admin.php?page=wc-settings&amp;tab=integration&amp;section=ckwc">enable the Kit WooCommerce integration</a>');
 	}
 
 	/**
@@ -142,7 +142,7 @@ class CouponCest
 		$I->seeInSource('To configure the Kit Form, Tag or Sequence to subscribe Customers to who use this coupon');
 
 		// Check that a link to the Plugin Settings exists.
-		$I->seeInSource('<a href="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-admin/admin.php?page=wc-settings&amp;tab=integration&amp;section=ckwc">enable the Kit WooCommerce integration</a>');
+		$I->seeInSource('<a href="' . $_ENV['WORDPRESS_URL'] . '/wp-admin/admin.php?page=wc-settings&amp;tab=integration&amp;section=ckwc">enable the Kit WooCommerce integration</a>');
 	}
 
 	/**

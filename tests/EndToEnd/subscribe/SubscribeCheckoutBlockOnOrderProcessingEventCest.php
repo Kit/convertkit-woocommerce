@@ -69,7 +69,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 			$I,
 			$subscriber['id'],
 			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['TEST_SITE_WP_URL']
+			$_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -140,7 +140,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 			$I,
 			$subscriber['id'],
 			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['TEST_SITE_WP_URL']
+			$_ENV['WORDPRESS_URL']
 		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
@@ -189,7 +189,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 			$I,
 			$subscriber['id'],
 			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['TEST_SITE_WP_URL']
+			$_ENV['WORDPRESS_URL']
 		);
 
 		// Confirm the subscriber's custom field data exists and is correct.
@@ -236,7 +236,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 			$I,
 			$subscriber['id'],
 			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['TEST_SITE_WP_URL']
+			$_ENV['WORDPRESS_URL']
 		);
 
 		// Confirm the subscriber's custom field data exists and is correct, and the name

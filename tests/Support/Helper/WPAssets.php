@@ -19,7 +19,7 @@ class WPAssets extends \Codeception\Module
 	 */
 	public function seeJSEnqueued($I, $url)
 	{
-		$I->seeInSource('<script src="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-content/plugins/' . $url );
+		$I->seeInSource('<script src="' . $_ENV['WORDPRESS_URL'] . '/wp-content/plugins/' . $url );
 	}
 
 	/**
@@ -33,6 +33,6 @@ class WPAssets extends \Codeception\Module
 	 */
 	public function seeCSSEnqueued($I, $url, $id)
 	{
-		$I->seeInSource('<link rel="stylesheet" id="' . $id . '" href="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-content/plugins/' . $url );
+		$I->seeInSource('<link rel="stylesheet" id="' . $id . '" href="' . $_ENV['WORDPRESS_URL'] . '/wp-content/plugins/' . $url );
 	}
 }

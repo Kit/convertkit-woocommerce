@@ -68,7 +68,7 @@ class SubscribeOnOrderProcessingEventCest
 			$I,
 			$subscriber['id'],
 			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['TEST_SITE_WP_URL']
+			$_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -141,7 +141,7 @@ class SubscribeOnOrderProcessingEventCest
 			$I,
 			$subscriber['id'],
 			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['TEST_SITE_WP_URL']
+			$_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -188,7 +188,7 @@ class SubscribeOnOrderProcessingEventCest
 			$I,
 			$subscriber['id'],
 			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['TEST_SITE_WP_URL']
+			$_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -235,7 +235,7 @@ class SubscribeOnOrderProcessingEventCest
 			$I,
 			$subscriber['id'],
 			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['TEST_SITE_WP_URL']
+			$_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.

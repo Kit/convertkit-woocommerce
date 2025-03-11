@@ -55,7 +55,7 @@ class SettingDebugLogCest
 		$I->amOnAdminPage('admin.php?page=wc-status&tab=logs');
 
 		// Confirm that a ConvertKit Log File exists in the table of logs for today's date.
-		$I->seeInSource('<a class="row-title" href="' . $_ENV['TEST_SITE_WP_URL'] . '/wp-admin/admin.php?page=wc-status&amp;tab=logs&amp;view=single_file&amp;file_id=convertkit-' . date('Y-m-d') . '">convertkit</a>');
+		$I->seeInSource('<a class="row-title" href="' . $_ENV['WORDPRESS_URL'] . '/wp-admin/admin.php?page=wc-status&amp;tab=logs&amp;view=single_file&amp;file_id=convertkit-' . date('Y-m-d') . '">convertkit</a>');
 	}
 
 	/**
