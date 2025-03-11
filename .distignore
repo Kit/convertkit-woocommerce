@@ -20,7 +20,7 @@ codeception.dist.yml
 codeception.yml
 composer.json
 composer.lock
-convertkit.zip
+convertkit-for-woocommerce.zip
 DEPLOYMENT.md
 DEVELOPMENT.md
 LICENSE
