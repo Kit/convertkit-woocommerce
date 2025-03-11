@@ -13,6 +13,7 @@ modules:
         - lucatume\WPBrowser\Module\WPDb
         - lucatume\WPBrowser\Module\WPFilesystem
         - lucatume\WPBrowser\Module\WPLoader
+        - lucatume\WPBrowser\Module\WPCLI
 
         # Codeception supplied classes, which provide assertions and filesystem functions
         - \Codeception\Module\Asserts
@@ -33,6 +34,9 @@ modules:
         - \Tests\Support\Helper\WPQuickEdit
         - \Tests\Support\Helper\Xdebug
     config:
+        lucatume\WPBrowser\Module\WPCLI:
+            path: '%WORDPRESS_ROOT_DIR%'
+            throw: true
         lucatume\WPBrowser\Module\WPWebDriver:
             url: '%WORDPRESS_URL%'
             adminUsername: '%WORDPRESS_ADMIN_USER%'

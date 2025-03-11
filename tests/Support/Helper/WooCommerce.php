@@ -1064,7 +1064,7 @@ class WooCommerce extends \Codeception\Module
 		$I->dontHavePostInDatabase([ 'post_type' => 'shop_order' ]);
 
 		// Delete from wp_wc_orders and wp_wc_orders_meta HPOS tables.
-		$I->dontHaveInDatabase('wp_wc_orders', [ 'parent_order_id' => 0 ]);
-		$I->dontHaveInDatabase('wp_wc_orders_meta', [ 'id >=', '0' ]);
+		$I->dontHaveInDatabase('wp_wc_orders', [ 'a' => 'a' ]);
+		$I->dontHaveInDatabase('wp_wc_orders_meta', [ 'a' => 'a' ]);
 	}
 }
