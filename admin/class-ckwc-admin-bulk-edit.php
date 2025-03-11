@@ -92,12 +92,17 @@ class CKWC_Admin_Bulk_Edit {
 		}
 
 		// Bail if the value is -1, as this means don't change the setting.
-		if ( sanitize_text_field( $_REQUEST['ckwc_subscription'] ) === '-1' ) {
+		if ( sanitize_text_field( wp_unslash( $_REQUEST['ckwc_subscription'] ) ) === '-1' ) {
+			return;
+		}
+
+		// Bail if the Post Type or Post IDs are not specified.
+		if ( ! isset( $_REQUEST['post_type'] ) || ! isset( $_REQUEST['post'] ) ) {
 			return;
 		}
 
 		// Get Post Type object.
-		$post_type = get_post_type_object( $_REQUEST['post_type'] );
+		$post_type = get_post_type_object( sanitize_text_field( wp_unslash( $_REQUEST['post_type'] ) ) );
 
 		// Bail if the logged in user cannot edit Pages/Posts.
 		if ( ! current_user_can( $post_type->cap->edit_posts ) ) {
