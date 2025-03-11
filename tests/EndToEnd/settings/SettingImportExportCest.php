@@ -44,19 +44,19 @@ class SettingImportExportCest
 	public function testExportConfiguration(EndToEndTester $I)
 	{
 		// Click the Export button.
-		// This will download the file to $_ENV['WP_ROOT_FOLDER'].
+		// This will download the file to $_ENV['WORDPRESS_ROOT_DIR'].
 		$I->click('#mainform a#export');
 
 		// Wait 2 seconds for the download to complete.
 		sleep(2);
 
 		// Check downloaded file exists and contains some expected information.
-		$I->openFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
+		$I->openFile($_ENV['WORDPRESS_ROOT_DIR'] . '/ckwc-export.json');
 		$I->seeInThisFile('{"settings":{"enabled":"yes"');
 		$I->seeInThisFile('"access_token":"' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] . '","refresh_token":"' . $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] . '",');
 
 		// Delete the file.
-		$I->deleteFile($_ENV['WP_ROOT_FOLDER'] . '/ckwc-export.json');
+		$I->deleteFile($_ENV['WORDPRESS_ROOT_DIR'] . '/ckwc-export.json');
 	}
 
 	/**
