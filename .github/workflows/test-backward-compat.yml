@@ -54,11 +54,11 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest' ] #[ '6.1.1', 'latest' ]
-        php-versions: [ '7.4', '8.0', '8.1', '8.2', '8.3' ] #[ '7.4', '8.0', '8.1' ]
+        php-versions: [ '8.1', '8.2', '8.3' ] #[ '7.4', '8.0', '8.1' ]
         
         # Folder names within the 'tests' folder to run tests in parallel.
         test-groups: [
-          'acceptance/backward-compat'
+          'EndToEnd/backward-compat'
         ]
 
     # Steps to install, configure and run tests
@@ -121,7 +121,7 @@ jobs:
       # env.INSTALL_PLUGINS is a list of Plugin slugs, space separated e.g. contact-form-7 woocommerce.
       # We activate the Plugins so that any directories they create are added now, before we later set
       # directory permissions in this action.
-      # These Plugins won't be active when Codeception's acceptance tests run, as Codeception copies
+      # These Plugins won't be active when Codeception's End to End tests run, as Codeception copies
       # the tests/_data/dump.sql, which has no active Plugins specified.
       - name: Install Free Third Party WordPress Plugins
         working-directory: ${{ env.ROOT_DIR }}
@@ -279,14 +279,7 @@ jobs:
         working-directory: ${{ env.PLUGIN_DIR }}
         run: php vendor/bin/codecept build
 
-      # Run Codeception WPUnit Tests on the PHP 7.4 instance before the acceptance/general acceptance tests.
-      # We run these once to avoid hitting API rate limits.
-      - name: Run tests/wpunit
-        if: ${{ matrix.php-versions == '7.4' && matrix.test-groups == 'acceptance/general' }}
-        working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/codecept run tests/wpunit --fail-fast
-
-      # Run Codeception Acceptance Tests.
+      # Run Codeception End to End Tests.
       - name: Run tests/${{ matrix.test-groups }}
         working-directory: ${{ env.PLUGIN_DIR }}
         run: php vendor/bin/codecept run tests/${{ matrix.test-groups }} --fail-fast
