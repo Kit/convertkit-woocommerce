@@ -79,7 +79,8 @@ class CKWC_Setup {
 		$api    = new CKWC_API( CKWC_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI );
 		$result = $api->get_access_token_by_api_key_and_secret(
 			$integration->get_api_key(),
-			$integration->get_api_secret()
+			$integration->get_api_secret(),
+			get_site_url()
 		);
 
 		// Bail if an error occured.
