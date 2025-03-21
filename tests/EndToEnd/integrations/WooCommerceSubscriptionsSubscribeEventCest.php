@@ -72,6 +72,9 @@ class WooCommerceSubscriptionsSubscribeEventCest
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
 
+		// Logout as the customer.
+		$I->logOut();
+
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 
@@ -125,6 +128,9 @@ class WooCommerceSubscriptionsSubscribeEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
+
+		// Logout as the customer.
+		$I->logOut();
 	}
 
 	/**
