@@ -22,8 +22,8 @@ class ThirdPartyPlugin extends \Codeception\Module
 	public function activateThirdPartyPlugin($I, $name, $wizardExpectsToDisplay = true)
 	{
 		// Login as the Administrator, if we're not already logged in.
-		if ( ! $this->amLoggedInAsAdmin($I) ) {
-			$this->doLoginAsAdmin($I);
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
 		}
 
 		// Go to the Plugins screen in the WordPress Administration interface.
@@ -66,8 +66,8 @@ class ThirdPartyPlugin extends \Codeception\Module
 	public function deactivateThirdPartyPlugin($I, $name)
 	{
 		// Login as the Administrator, if we're not already logged in.
-		if ( ! $this->amLoggedInAsAdmin($I) ) {
-			$this->doLoginAsAdmin($I);
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
 		}
 
 		// Go to the Plugins screen in the WordPress Administration interface.

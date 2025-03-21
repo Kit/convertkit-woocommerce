@@ -67,6 +67,10 @@ class UpgradePathsCest
 
 		// Save changes (avoids a JS alert box which would prevent other tests from running due to changes made on screen).
 		$I->click('Save changes');
+
+		// Wait for something.
+		$I->waitForElementVisible('div.updated.inline');
+		$I->see('Your settings have been saved.');
 	}
 
 	/**

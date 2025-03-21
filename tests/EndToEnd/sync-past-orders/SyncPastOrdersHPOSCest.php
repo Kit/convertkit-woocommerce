@@ -78,8 +78,10 @@ class SyncPastOrdersHPOSCest
 			'order_id'      => (int) $I->grabTextFrom('ul.wc-block-order-confirmation-summary-list li:first-child span.wc-block-order-confirmation-summary-list-item__value'),
 		];
 
-		// Login as the Administrator.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -200,8 +202,10 @@ class SyncPastOrdersHPOSCest
 			]
 		);
 
-		// Login as the Administrator.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -240,8 +244,10 @@ class SyncPastOrdersHPOSCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
-		// Login as the Administrator.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -331,8 +337,10 @@ class SyncPastOrdersHPOSCest
 		// by 1.4.2 or older.
 		$I->wooCommerceOrderDeleteMeta($I, $postID, 'ckwc_purchase_data_id', true);
 
-		// Login as the Administrator.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -381,8 +389,10 @@ class SyncPastOrdersHPOSCest
 		// to ConvertKit.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig($I);
 
-		// Login as the Administrator.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// Specify invalid API credentials.
 		$I->haveOptionInDatabase(
