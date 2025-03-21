@@ -132,10 +132,14 @@ class SettingOAuthCest
 		// Save changes.
 		$I->click('Save changes');
 
+		// Wait for confirmation message to display.
+		$I->waitForElementVisible('div.updated.inline');
+
 		// Disconnect the Plugin connection to ConvertKit.
 		$I->click('Disconnect');
 
 		// Confirm the Connect button displays.
+		$I->waitForElementVisible('#oauth a.button-primary');
 		$I->see('Connect');
 		$I->dontSee('Disconnect');
 		$I->dontSeeElementInDOM('button.woocommerce-save-button');

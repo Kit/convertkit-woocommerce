@@ -77,6 +77,9 @@ class SettingImportExportCest
 		// Click the Save changes button.
 		$I->click('Save changes');
 
+		// Wait for confirmation message to display.
+		$I->waitForElementVisible('div.updated.inline');
+
 		// Confirm success message displays.
 		$I->seeInSource('Configuration imported successfully.');
 
@@ -107,6 +110,9 @@ class SettingImportExportCest
 		// Click the Save changes button.
 		$I->click('Save changes');
 
+		// Wait for error message to display.
+		$I->waitForElementVisible('div.error.inline');
+
 		// Confirm error message displays.
 		$I->seeInSource('The uploaded configuration file contains no settings.');
 	}
@@ -129,6 +135,9 @@ class SettingImportExportCest
 
 		// Click the Save changes button.
 		$I->click('Save changes');
+
+		// Wait for error message to display.
+		$I->waitForElementVisible('div.error.inline');
 
 		// Confirm error message displays.
 		$I->seeInSource('The uploaded configuration file isn\'t valid.');

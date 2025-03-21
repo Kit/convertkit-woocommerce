@@ -311,6 +311,7 @@ class WooCommerce extends \Codeception\Module
 
 		// Apply Coupon Code.
 		if (isset($couponID)) {
+			$I->waitForElementVisible('a.showcoupon');
 			$I->click('a.showcoupon');
 			$I->waitForElementNotVisible('.blockOverlay');
 			$I->waitForElementVisible('input#coupon_code');
@@ -383,7 +384,10 @@ class WooCommerce extends \Codeception\Module
 	{
 		// We perform the order status change by editing the Order as a WordPress Administrator would,
 		// so that WooCommerce triggers its actions and filters that our integration hooks into.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
 		if (strpos($orderID, '-') !== false) {
@@ -392,6 +396,7 @@ class WooCommerce extends \Codeception\Module
 		}
 
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+		$I->waitForElementVisible('div.wrap form');
 		$I->submitForm(
 			'div.wrap > form',
 			[
@@ -413,7 +418,10 @@ class WooCommerce extends \Codeception\Module
 	{
 		// We perform the order status change by editing the Order as a WordPress Administrator would,
 		// so that WooCommerce triggers its actions and filters that our integration hooks into.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
 		if (strpos($orderID, '-') !== false) {
@@ -425,6 +433,7 @@ class WooCommerce extends \Codeception\Module
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
 
 		// Refund the entire order.
+		$I->waitForElementVisible('button.refund-items');
 		$I->click('button.refund-items');
 		$I->waitForElementVisible('input#refund_amount');
 		$I->fillField('input#refund_amount', $amount);
@@ -448,7 +457,10 @@ class WooCommerce extends \Codeception\Module
 	{
 		// We perform the order status change by editing the Order as a WordPress Administrator would,
 		// so that WooCommerce triggers its actions and filters that our integration hooks into.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
 		if (strpos($orderID, '-') !== false) {
@@ -460,6 +472,7 @@ class WooCommerce extends \Codeception\Module
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
 
 		// Change the email address.
+		$I->waitForElementVisible('a.edit_address:first-child');
 		$I->click('a.edit_address:first-child');
 		$I->waitForElementVisible('#_billing_email');
 
@@ -818,7 +831,10 @@ class WooCommerce extends \Codeception\Module
 	public function wooCommerceCreateManualOrder($I, $productID, $productName, $orderStatus, $paymentMethod)
 	{
 		// Login as Administrator.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// Define Email Address for this Manual Order.
 		$emailAddress = $I->generateEmailAddress();
@@ -834,6 +850,9 @@ class WooCommerce extends \Codeception\Module
 
 		// Load New Order screen.
 		$I->amOnAdminPage('post-new.php?post_type=shop_order');
+
+		// Wait for the New Order screen to load.
+		$I->waitForElementVisible('body.woocommerce_page_wc-orders');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -883,11 +902,10 @@ class WooCommerce extends \Codeception\Module
 	 */
 	public function wooCommerceOrderNoteExists($I, $orderID, $noteText)
 	{
-		// Logout.
-		$I->logOut();
-
-		// Login as Administrator.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
 		if (strpos($orderID, '-') !== false) {
@@ -897,6 +915,9 @@ class WooCommerce extends \Codeception\Module
 
 		// Load Edit Order screen.
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+
+		// Wait for the Order Notes to load.
+		$I->waitForElementVisible('#woocommerce-order-notes');
 
 		// Confirm note text exists.
 		$I->seeInSource($noteText);
@@ -913,8 +934,10 @@ class WooCommerce extends \Codeception\Module
 	 */
 	public function wooCommerceOrderNoteDoesNotExist($I, $orderID, $noteText)
 	{
-		// Login as Administrator.
-		$I->loginAsAdmin();
+		// Login as the Administrator, if we're not already logged in.
+		if ( ! $I->amLoggedInAsAdmin($I) ) {
+			$I->doLoginAsAdmin($I);
+		}
 
 		// If the Order ID contains dashes, it's prefixed by the Custom Order Numbers Plugin.
 		if (strpos($orderID, '-') !== false) {
@@ -924,6 +947,9 @@ class WooCommerce extends \Codeception\Module
 
 		// Load Edit Order screen.
 		$I->amOnAdminPage('post.php?post=' . $orderID . '&action=edit');
+
+		// Wait for the Order Notes to load.
+		$I->waitForElementVisible('#woocommerce-order-notes');
 
 		// Confirm note text does not exist.
 		$I->dontSeeInSource($noteText);
