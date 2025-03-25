@@ -17,9 +17,8 @@ class ThirdPartyPlugin extends \Codeception\Module
 	 *
 	 * @param   EndToEndTester $I                       EndToEndTester.
 	 * @param   string         $name                    Plugin Slug.
-	 * @param   bool           $wizardExpectsToDisplay  Whether the Plugin Setup Wizard is expected to display.
 	 */
-	public function activateThirdPartyPlugin($I, $name, $wizardExpectsToDisplay = true)
+	public function activateThirdPartyPlugin($I, $name)
 	{
 		// Login as the Administrator, if we're not already logged in.
 		if ( ! $I->amLoggedInAsAdmin($I) ) {
