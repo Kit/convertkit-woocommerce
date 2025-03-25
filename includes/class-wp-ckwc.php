@@ -56,9 +56,6 @@ class WP_CKWC {
 		// Update.
 		add_action( 'convertkit_for_woocommerce_initialize_global', array( $this, 'update' ) );
 
-		// Load language files.
-		add_action( 'init', array( $this, 'load_language_files' ) );
-
 	}
 
 	/**
@@ -276,20 +273,6 @@ class WP_CKWC {
 	public function update() {
 
 		$this->get_class( 'setup' )->update();
-
-	}
-
-	/**
-	 * Loads plugin textdomain
-	 *
-	 * @since   1.0.0
-	 */
-	public function load_language_files() {
-
-		// If the .mo file for a given language is available in WP_LANG_DIR/convertkit
-		// i.e. it's available as a translation at https://translate.wordpress.org/projects/wp-plugins/convertkit-for-woocommerce/,
-		// it will be used instead of the .mo file in convertkit-for-woocommerce/languages.
-		load_plugin_textdomain( 'woocommerce-convertkit', false, 'convertkit-for-woocommerce/languages' );
 
 	}
 
