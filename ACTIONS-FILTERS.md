@@ -447,7 +447,7 @@ add_filter( 'convertkit_for_woocommerce_custom_field_data', function( $fields, $
 					</tbody>
 				</table><h3 id="convertkit_for_woocommerce_initialize_admin">
 						convertkit_for_woocommerce_initialize_admin
-						<code>includes/class-wp-ckwc.php::173</code>
+						<code>includes/class-wp-ckwc.php::170</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -467,7 +467,7 @@ do_action( 'convertkit_for_woocommerce_initialize_admin', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_cli">
 						convertkit_for_woocommerce_initialize_cli
-						<code>includes/class-wp-ckwc.php::220</code>
+						<code>includes/class-wp-ckwc.php::217</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -487,7 +487,7 @@ do_action( 'convertkit_for_woocommerce_initialize_cli', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_frontend">
 						convertkit_for_woocommerce_initialize_frontend
-						<code>includes/class-wp-ckwc.php::241</code>
+						<code>includes/class-wp-ckwc.php::238</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>
@@ -507,7 +507,7 @@ do_action( 'convertkit_for_woocommerce_initialize_frontend', function(  ) {
 </pre>
 <h3 id="convertkit_for_woocommerce_initialize_global">
 						convertkit_for_woocommerce_initialize_global
-						<code>includes/class-wp-ckwc.php::264</code>
+						<code>includes/class-wp-ckwc.php::261</code>
 					</h3><h4>Parameters</h4>
 					<table>
 						<thead>

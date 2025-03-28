@@ -221,10 +221,13 @@ class ProductCest
 
 		// Reload the Products admin screen.
 		$I->amOnAdminPage('edit.php?post_type=product');
+		$I->waitForElementVisible('body.post-type-product');
 
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/bulk-quick-edit.css', 'ckwc-bulk-quick-edit-css' );
 		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/quick-edit.js' );
+
+		$I->wait(1);
 
 		// Confirm that the chosen Resource is the selected option.
 		$I->seePostMetaInDatabase(
