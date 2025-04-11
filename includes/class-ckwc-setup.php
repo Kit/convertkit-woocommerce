@@ -30,6 +30,13 @@ class CKWC_Setup {
 		}
 
 		/**
+		 * 1.9.5: Migrate `Exclude Name and Address` setting to `Address Format` setting.
+		 */
+		if ( ! $current_version || version_compare( $current_version, '1.9.5', '<' ) ) {
+			$this->migrate_exclude_name_and_address_setting_to_address_format();
+		}
+
+		/**
 		 * 1.8.0: Get Access token for API version 4.0 using a v3 API Key and Secret.
 		 */
 		if ( ! $current_version || version_compare( $current_version, '1.8.0', '<' ) ) {
@@ -42,14 +49,13 @@ class CKWC_Setup {
 	}
 
 	/**
-	 * 1.8.0: Fetch an Access Token, Refresh Token and Expiry for v4 API use
-	 * based on the Plugin setting's v3 API Key and Secret.
+	 * 1.9.5: Migrate `Exclude Name and Address` setting to `Address Format` setting.
 	 *
-	 * @since   1.8.0
+	 * @since   1.9.5
 	 */
-	private function maybe_get_access_token_by_api_key_and_secret() {
+	private function migrate_exclude_name_and_address_setting_to_address_format() {
 
-		// Bail if ConverKit for WooCommerce not active.
+		// Bail if Kit for WooCommerce not active.
 		if ( ! function_exists( 'WP_CKWC_Integration' ) ) {
 			return;
 		}
@@ -57,7 +63,39 @@ class CKWC_Setup {
 		// Load integration.
 		$integration = WP_CKWC_Integration();
 
-		// Bail if ConverKit for WooCommerce not active.
+		// Bail if Kit for WooCommerce not active.
+		if ( ! $integration ) {
+			return;
+		}
+
+		// Bail if `Exclude Name and Address` setting is not enabled.
+		if ( $integration->get_option( 'custom_field_address_exclude_name' ) !== 'yes' ) {
+			return;
+		}
+
+		// Update `Address Format` setting, not selecting Name and Company Name.
+		// Don't include country, as this was never included in Custom Field Billing / Shipping Addresses.
+		$integration->update_option( 'custom_field_address_format', array( 'address_1', 'address_2', 'city', 'state', 'postcode' ) );
+
+	}
+
+	/**
+	 * 1.8.0: Fetch an Access Token, Refresh Token and Expiry for v4 API use
+	 * based on the Plugin setting's v3 API Key and Secret.
+	 *
+	 * @since   1.8.0
+	 */
+	private function maybe_get_access_token_by_api_key_and_secret() {
+
+		// Bail if Kit for WooCommerce not active.
+		if ( ! function_exists( 'WP_CKWC_Integration' ) ) {
+			return;
+		}
+
+		// Load integration.
+		$integration = WP_CKWC_Integration();
+
+		// Bail if Kit for WooCommerce not active.
 		if ( ! $integration ) {
 			return;
 		}
