@@ -1034,13 +1034,9 @@ class CKWC_Order {
 
 		$fields = array();
 
-		// If the name and company name should be excluded from the billing and shipping address
-		// fetched using get_formatted_billing_address() / get_formatted_shipping_address(),
-		// add filters now.
-		if ( $this->integration->get_option_bool( 'custom_field_address_exclude_name' ) ) {
-			add_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'remove_name_from_address' ) );
-			add_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'remove_name_from_address' ) );
-		}
+		// Filter the billing and shipping address to only include the address parts specified in the integration settings.
+		add_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'format_address' ) );
+		add_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'format_address' ) );
 
 		if ( $this->integration->get_option( 'custom_field_last_name' ) ) {
 			$fields[ $this->integration->get_option( 'custom_field_last_name' ) ] = $order->get_billing_last_name();
@@ -1061,13 +1057,9 @@ class CKWC_Order {
 			$fields[ $this->integration->get_option( 'custom_field_customer_note' ) ] = $order->get_customer_note();
 		}
 
-		// If the name and company name should be excluded from the billing and shipping address
-		// fetched using get_formatted_billing_address() / get_formatted_shipping_address(),
-		// remove filters now so these WooCommerce functions work correctly for other Plugins.
-		if ( $this->integration->get_option_bool( 'custom_field_address_exclude_name' ) ) {
-			remove_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'remove_name_from_address' ) );
-			remove_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'remove_name_from_address' ) );
-		}
+		// Remove billing and shipping addressfilters now, so these WooCommerce functions work correctly for other Plugins.
+		remove_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'format_address' ) );
+		remove_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'format_address' ) );
 
 		/**
 		 * Returns an array of ConvertKit Custom Field Key/Value pairs, with values
@@ -1088,17 +1080,31 @@ class CKWC_Order {
 	}
 
 	/**
-	 * Removes the first name, last name and company name from the WooCommerce Order address,
-	 * when calling WC_Order->get_formatted_billing_address() and WC_Order->get_formatted_shipping_address().
+	 * Removes the address parts from the WooCommerce Order address when calling WC_Order->get_formatted_billing_address()
+	 * and WC_Order->get_formatted_shipping_address(), based on the integration settings.
 	 *
-	 * @since   1.8.5
+	 * @since   1.9.5
 	 *
 	 * @param   array $address    Billing or Shipping Address.
 	 * @return  array
 	 */
-	public function remove_name_from_address( $address ) {
+	public function format_address( $address ) {
 
-		unset( $address['first_name'], $address['last_name'], $address['company_name'] );
+		// Get address fields to include.
+		$address_fields = $this->integration->get_option( 'custom_field_address_format' );
+
+		// If no address fields are specified, return the full address.
+		if ( empty( $address_fields ) ) {
+			return $address;
+		}
+
+		// Remove address fields that are not specified in the integration settings.
+		foreach ( $address as $key => $value ) {
+			if ( ! in_array( $key, $address_fields, true ) ) {
+				unset( $address[ $key ] );
+			}
+		}
+
 		return $address;
 
 	}
