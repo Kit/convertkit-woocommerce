@@ -817,9 +817,6 @@ class CKWC_Integration extends WC_Integration {
 						'sync_past_orders_confirmation_message' => __( 'Do you want to send past WooCommerce Orders to Kit?', 'woocommerce-convertkit' ),
 					)
 				);
-
-				// Enqueue Select2 JS.
-				ckwc_select2_enqueue_scripts();
 				break;
 
 		}
@@ -852,15 +849,6 @@ class CKWC_Integration extends WC_Integration {
 			 */
 			case 'sync_past_orders':
 				wp_enqueue_style( 'ckwc-sync-past-orders', CKWC_PLUGIN_URL . 'resources/backend/css/sync-past-orders.css', array(), CKWC_PLUGIN_VERSION );
-				break;
-
-			/**
-			 * Settings Screen.
-			 */
-			case 'settings':
-			default:
-				// Enqueue Select2 CSS.
-				ckwc_select2_enqueue_styles();
 				break;
 
 		}
