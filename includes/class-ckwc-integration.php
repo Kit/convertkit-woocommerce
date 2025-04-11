@@ -596,7 +596,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled subscribe wc-enhanced-select',
 			),
 			'custom_field_payment_method'   => array(
 				'title'       => __( 'Send Payment Method', 'woocommerce-convertkit' ),
