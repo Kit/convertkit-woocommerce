@@ -1100,7 +1100,7 @@ class CKWC_Order {
 
 		// Remove address fields that are not specified in the integration settings.
 		foreach ( $address as $key => $value ) {
-			if ( ! in_array( $key, $address_fields, true ) ) {
+			if ( ! in_array( $key, $address_fields, true ) ) { // @phpstan-ignore-line `get_option` can return an array, but WooCommerce's docblock is incorrect.
 				unset( $address[ $key ] );
 			}
 		}
