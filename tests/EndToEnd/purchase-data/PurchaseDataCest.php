@@ -145,11 +145,11 @@ class PurchaseDataCest
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
 			[
-				'display_opt_in'            => false,
-				'check_opt_in'              => false,
-				'send_purchase_data'        => true,
-				'custom_fields'             => true,
-				'address_fields' 			=> $addressFields,
+				'display_opt_in'     => false,
+				'check_opt_in'       => false,
+				'send_purchase_data' => true,
+				'custom_fields'      => true,
+				'address_fields'     => $addressFields,
 			]
 		);
 

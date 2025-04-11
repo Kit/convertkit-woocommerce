@@ -585,14 +585,14 @@ class CKWC_Integration extends WC_Integration {
 				'description' => __( 'The format of the billing and shipping addresses to store in Kit.', 'woocommerce-convertkit' ),
 				'desc_tip'    => false,
 				'options'     => array(
-					'name' 	     => __( 'Name', 'woocommerce-convertkit' ),
-					'company'    => __( 'Company Name', 'woocommerce-convertkit' ),
-					'address_1'  => __( 'Address 1', 'woocommerce-convertkit' ),
-					'address_2'  => __( 'Address 2', 'woocommerce-convertkit' ),
-					'city'       => __( 'City', 'woocommerce-convertkit' ),
-					'state'      => __( 'State', 'woocommerce-convertkit' ),
-					'postcode'   => __( 'Postcode', 'woocommerce-convertkit' ),
-					'country'    => __( 'Country', 'woocommerce-convertkit' ),
+					'name'      => __( 'Name', 'woocommerce-convertkit' ),
+					'company'   => __( 'Company Name', 'woocommerce-convertkit' ),
+					'address_1' => __( 'Address 1', 'woocommerce-convertkit' ),
+					'address_2' => __( 'Address 2', 'woocommerce-convertkit' ),
+					'city'      => __( 'City', 'woocommerce-convertkit' ),
+					'state'     => __( 'State', 'woocommerce-convertkit' ),
+					'postcode'  => __( 'Postcode', 'woocommerce-convertkit' ),
+					'country'   => __( 'Country', 'woocommerce-convertkit' ),
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
