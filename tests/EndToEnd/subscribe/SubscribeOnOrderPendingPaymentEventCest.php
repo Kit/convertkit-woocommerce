@@ -192,6 +192,9 @@ class SubscribeOnOrderPendingPaymentEventCest
 	 */
 	public function testOptInWhenCheckedWithFormCustomFieldsAndExcludeNameFromAddressOnSimpleProduct(EndToEndTester $I)
 	{
+		// Define the address fields to include in the custom field data.
+		$addressFields = array( 'address_1', 'city', 'state', 'postcode', 'country' );
+
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
@@ -201,7 +204,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 				'plugin_form_tag_sequence'  => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
 				'subscription_event'        => 'pending',
 				'custom_fields'             => true,
-				'exclude_name_from_address' => true,
+				'address_fields' 			=> $addressFields,
 			]
 		);
 
@@ -218,7 +221,7 @@ class SubscribeOnOrderPendingPaymentEventCest
 
 		// Confirm the subscriber's custom field data exists and is correct, and the name
 		// is not included in the address.
-		$I->apiCustomFieldDataIsValid($I, $subscriber, true);
+		$I->apiCustomFieldDataIsValid($I, $subscriber, $addressFields );
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);

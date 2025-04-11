@@ -138,6 +138,9 @@ class PurchaseDataCest
 	 */
 	public function testSendPurchaseDataWithCustomFieldsAndExcludeNameFromAddressOnSimpleProductCheckout(EndToEndTester $I)
 	{
+		// Define the address fields to include in the custom field data.
+		$addressFields = array( 'address_1', 'city', 'state', 'postcode', 'country' );
+
 		// Create Product and Checkout for this test.
 		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
 			$I,
@@ -146,7 +149,7 @@ class PurchaseDataCest
 				'check_opt_in'              => false,
 				'send_purchase_data'        => true,
 				'custom_fields'             => true,
-				'exclude_name_from_address' => true,
+				'address_fields' 			=> $addressFields,
 			]
 		);
 
@@ -165,7 +168,7 @@ class PurchaseDataCest
 
 		// Confirm the subscriber's custom field data exists and is correct, and the name
 		// is not included in the address.
-		$I->apiCustomFieldDataIsValid($I, $subscriber, true);
+		$I->apiCustomFieldDataIsValid($I, $subscriber, $addressFields );
 
 		// Check that the Order's Notes include a note from the Plugin confirming the custom field data was added to ConvertKit.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], '[Kit] Purchase Data: Custom Fields sent successfully: Subscriber ID [' . $subscriber['id'] . ']');

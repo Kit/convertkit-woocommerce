@@ -99,7 +99,7 @@ class Plugin extends \Codeception\Module
 	 * @param   bool           $mapCustomFields        Map Order data to Custom Fields.
 	 * @param   bool           $displayOptIn           Display Opt-In Checkbox.
 	 * @param   bool           $sendPurchaseDataEvent  Send Purchase Data to ConvertKit on Order Event.
-	 * @param   bool           $excludeNameFromAddress Exclude name from billing and shipping addresses.
+	 * @param   bool|array     $addressFields 		   Address fields to include in the custom field data (false = all address fields).
 	 */
 	public function setupConvertKitPlugin(
 		$I,
@@ -111,7 +111,7 @@ class Plugin extends \Codeception\Module
 		$mapCustomFields = false,
 		$displayOptIn = false,
 		$sendPurchaseDataEvent = false,
-		$excludeNameFromAddress = false
+		$addressFields = false
 	) {
 		// Define Plugin's settings.
 		$I->haveOptionInDatabase(
@@ -129,10 +129,10 @@ class Plugin extends \Codeception\Module
 				'custom_field_phone'                => ( $mapCustomFields ? 'phone_number' : '' ),
 				'custom_field_billing_address'      => ( $mapCustomFields ? 'billing_address' : '' ),
 				'custom_field_shipping_address'     => ( $mapCustomFields ? 'shipping_address' : '' ),
+				'custom_field_address_format'       => ( $addressFields ? $addressFields : array( 'name', 'address_1', 'address_2', 'city', 'state', 'postcode', 'country' ) ),
 				'custom_field_payment_method'       => ( $mapCustomFields ? 'payment_method' : '' ),
 				'custom_field_customer_note'        => ( $mapCustomFields ? 'notes' : '' ),
-				'custom_field_address_exclude_name' => ( $excludeNameFromAddress ? 'yes' : 'no' ),
-
+				
 				// Opt-In Checkbox.
 				'display_opt_in'                    => ( $displayOptIn ? 'yes' : 'no' ),
 				'opt_in_label'                      => 'I want to subscribe to the newsletter',
