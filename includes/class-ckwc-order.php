@@ -1037,6 +1037,7 @@ class CKWC_Order {
 		// Filter the billing and shipping address to only include the address parts specified in the integration settings.
 		add_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'format_address' ) );
 		add_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'format_address' ) );
+		add_filter( 'woocommerce_formatted_address_force_country_display', array( $this, 'include_country_in_address_array' ) );
 
 		if ( $this->integration->get_option( 'custom_field_last_name' ) ) {
 			$fields[ $this->integration->get_option( 'custom_field_last_name' ) ] = $order->get_billing_last_name();
@@ -1060,6 +1061,7 @@ class CKWC_Order {
 		// Remove billing and shipping addressfilters now, so these WooCommerce functions work correctly for other Plugins.
 		remove_filter( 'woocommerce_order_formatted_billing_address', array( $this, 'format_address' ) );
 		remove_filter( 'woocommerce_order_formatted_shipping_address', array( $this, 'format_address' ) );
+		remove_filter( 'woocommerce_formatted_address_force_country_display', array( $this, 'include_country_in_address_array' ) );
 
 		/**
 		 * Returns an array of ConvertKit Custom Field Key/Value pairs, with values
@@ -1106,6 +1108,25 @@ class CKWC_Order {
 		}
 
 		return $address;
+
+	}
+
+	/**
+	 * Includes the country in the WooCommerce Order address array, overriding the
+	 * logic in WooCommerce's WC_Order->get_formatted_billing_address() which would
+	 * blank the Order's country if it matches the store's base country.
+	 *
+	 * This allows the country to be included in the Custom Field billing / shipping address
+	 * if configured when running the address through format_address().
+	 *
+	 * @since   1.9.5
+	 *
+	 * @param   bool $force_country_display  Whether to force the country to be displayed.
+	 * @return  bool
+	 */
+	public function include_country_in_address_array( $force_country_display ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+
+		return true;
 
 	}
 
