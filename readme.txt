@@ -46,7 +46,7 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 
 == Changelog ==
 
-### 1.9.5 2025-04-15
+### 1.9.5 2025-04-15
 * Added: Custom Fields: Address Format: Option to format Billing and Shipping Address stored in Kit Custom Fields
 * Removed: Custom Fields: Option to exclude name from Billing and Shipping Address. Use above setting instead
 * Updated: Use WordPress Libraries 2.0.8
