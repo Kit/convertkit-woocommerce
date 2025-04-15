@@ -258,13 +258,39 @@ class KitAPI extends \Codeception\Module
 	 *
 	 * @param   EndToEndTester $I                         EndToEndTester.
 	 * @param   array          $subscriber                Subscriber from API.
-	 * @param   bool           $excludeNameFromAddress    Exclude name from billing address.
+	 * @param   bool|array     $addressFields             Expected fields in billing address (false = all fields).
 	 */
-	public function apiCustomFieldDataIsValid($I, $subscriber, $excludeNameFromAddress = false)
+	public function apiCustomFieldDataIsValid($I, $subscriber, $addressFields = false)
 	{
+		// The default address data used for all tests.
+		$address = array(
+			'first_name' => 'First',
+			'last_name'  => 'Last',
+			'company'    => 'Company',
+			'address_1'  => 'Address Line 1',
+			'address_2'  => 'Address Line 2',
+			'city'       => 'City',
+			'state'      => 'CA',
+			'postcode'   => '12345',
+			'country'    => 'United States (US)',
+		);
+
+		// If no address fields are specified, build the expected address based on the integration's default setting.
+		if ( ! $addressFields ) {
+			$addressFields = array( 'name', 'address_1', 'city', 'state', 'postcode', 'country' );
+		}
+
+		// Build address array.
+		$address = array_intersect_key( $address, array_flip( $addressFields ) );
+
+		// WooCommerce has no comma between the state and postcode on addresses, so remove it.
+		$addressString = implode(', ', $address);
+		$addressString = str_replace('CA, 12345', 'CA 12345', $addressString);
+
+		// Check the subscriber's custom field data is valid.
 		$I->assertEquals($subscriber['fields']['last_name'], 'Last');
 		$I->assertEquals($subscriber['fields']['phone_number'], '6159684594');
-		$I->assertEquals($subscriber['fields']['billing_address'], ( $excludeNameFromAddress ? 'Address Line 1, City, CA 12345' : 'First Last, Address Line 1, City, CA 12345' ));
+		$I->assertEquals($subscriber['fields']['billing_address'], $addressString);
 		$I->assertEquals($subscriber['fields']['payment_method'], 'cod');
 		$I->assertEquals($subscriber['fields']['notes'], 'Notes');
 	}

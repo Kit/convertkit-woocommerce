@@ -74,6 +74,39 @@ class UpgradePathsCest
 	}
 
 	/**
+	 * Test that the `Exclude Name and Address` setting is migrated to the `Address Format` setting
+	 * when upgrading to 1.9.5 or later.
+	 *
+	 * @since   1.9.5
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testMigrateExcludeNameAndAddressSettingToAddressFormat(EndToEndTester $I)
+	{
+		// Setup Plugin's settings with the `Exclude Name and Address` setting enabled.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'enabled'                           => 'yes',
+				'access_token'                      => $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+				'refresh_token'                     => $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
+				'custom_field_address_exclude_name' => 'yes',
+			]
+		);
+
+		// Define an installation version older than 1.9.5.
+		$I->haveOptionInDatabase('ckwc_version', '1.4.0');
+
+		// Activate the Plugin, as if we just upgraded to 1.8.0 or higher.
+		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Confirm the options table now contains the address format without Name and Company Name.
+		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
+		$I->assertArrayHasKey('custom_field_address_format', $settings);
+		$I->assertEquals(array( 'address_1', 'address_2', 'city', 'state', 'postcode' ), $settings['custom_field_address_format']);
+	}
+
+	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.

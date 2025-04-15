@@ -58,7 +58,7 @@ class SettingCustomFieldsCest
 		$I->selectOption('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
 		$I->selectOption('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
 		$I->selectOption('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
-		$I->checkOption('#woocommerce_ckwc_custom_field_address_exclude_name');
+		$I->selectOption('#woocommerce_ckwc_custom_field_address_format', [ 'Name', 'Company Name', 'Address 1', 'City', 'State', 'Postcode', 'Country' ]);
 		$I->selectOption('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
 		$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
 
@@ -73,7 +73,13 @@ class SettingCustomFieldsCest
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_phone', 'Phone Number');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_billing_address', 'Billing Address');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_shipping_address', 'Shipping Address');
-		$I->seeCheckboxIsChecked('#woocommerce_ckwc_custom_field_address_exclude_name');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_address_format', 'Name');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_address_format', 'Company Name');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_address_format', 'Address 1');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_address_format', 'City');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_address_format', 'State');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_address_format', 'Postcode');
+		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_address_format', 'Country');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_payment_method', 'Payment Method');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
 	}
