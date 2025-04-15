@@ -388,7 +388,7 @@ add_filter( 'convertkit_for_woocommerce_last_name', function( $last_name, $order
 </pre>
 <h3 id="convertkit_for_woocommerce_custom_field_data">
 						convertkit_for_woocommerce_custom_field_data
-						<code>includes/class-ckwc-order.php::1083</code>
+						<code>includes/class-ckwc-order.php::1077</code>
 					</h3><h4>Overview</h4>
 						<p>Returns an array of ConvertKit Custom Field Key/Value pairs, with values comprising of Order data based, to be sent to ConvertKit when an Order's Customer is subscribed via a Form, Tag or Sequence. Returns false if no Order data should be stored in ConvertKit Custom Fields.</p><h4>Parameters</h4>
 					<table>
