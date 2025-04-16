@@ -3,9 +3,9 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://kit.com
 Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
-Tested up to: 6.7.2
+Tested up to: 6.8
 Requires PHP: 5.6.20
-Stable tag: 1.9.4
+Stable tag: 1.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,11 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.9.5 2025-04-15
+* Added: Custom Fields: Address Format: Option to format Billing and Shipping Address stored in Kit Custom Fields
+* Removed: Custom Fields: Option to exclude name from Billing and Shipping Address. Use above setting instead
+* Updated: Use WordPress Libraries 2.0.8
 
 ### 1.9.4 2025-03-25
 * Fix: Remove `load_plugin_textdomain` call, as it's not needed since WordPress 4.6
