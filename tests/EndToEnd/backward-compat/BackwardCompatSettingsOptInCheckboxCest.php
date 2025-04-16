@@ -52,7 +52,7 @@ class BackwardCompatSettingOptInCheckboxCest
 		// Wait for the page to load.
 		$I->waitForElementVisible('div.updated.inline');
 
-		// Edit Checkout Page.
+		// Get Checkout Page.
 		$pageID = $I->grabFromDatabase(
 			'wp_posts',
 			'ID',
@@ -60,7 +60,11 @@ class BackwardCompatSettingOptInCheckboxCest
 				'post_name' => 'checkout',
 			]
 		);
+
+		// Edit Checkout Page.
 		$I->amOnAdminPage('post.php?post=' . $pageID . '&action=edit');
+
+		// Wait for the page to load.
 		$I->waitForElementVisible('body.post-type-page');
 
 		// Close Gutenberg modal.
