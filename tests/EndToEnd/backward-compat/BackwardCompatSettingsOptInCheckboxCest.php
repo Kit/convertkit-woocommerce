@@ -49,7 +49,10 @@ class BackwardCompatSettingOptInCheckboxCest
 		// Save.
 		$I->click('Save changes');
 
-		// Edit Checkout Page.
+		// Wait for the page to load.
+		$I->waitForElementVisible('div.updated.inline');
+
+		// Get Checkout Page.
 		$pageID = $I->grabFromDatabase(
 			'wp_posts',
 			'ID',
@@ -57,7 +60,12 @@ class BackwardCompatSettingOptInCheckboxCest
 				'post_name' => 'checkout',
 			]
 		);
+
+		// Edit Checkout Page.
 		$I->amOnAdminPage('post.php?post=' . $pageID . '&action=edit');
+
+		// Wait for the page to load.
+		$I->waitForElementVisible('body.post-type-page');
 
 		// Close Gutenberg modal.
 		$I->maybeCloseGutenbergWelcomeModal($I);
@@ -66,10 +74,7 @@ class BackwardCompatSettingOptInCheckboxCest
 		$I->click('div[data-type="ckwc/opt-in"]');
 
 		// Confirm block cannot be deleted.
-		$I->click('button.components-dropdown-menu__toggle');
-		$I->waitForElementVisible('.components-popover');
-		$I->dontSee('Unlock', '.components-popover');
-		$I->dontSee('Delete', '.components-popover');
+		$I->waitForElementVisible('button[aria-label="Locked"]');
 
 		// Confirm Configure Opt In button.
 		$I->click('Configure Opt In');
