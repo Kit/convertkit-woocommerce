@@ -7,7 +7,7 @@ wp plugin install classic-editor woocommerce
 wp theme install twentytwentyfive
 
 # Symlink Plugin
-ln -s /workspaces/convertkit-for-woocommerce /wp/wp-content/plugins/convertkit-for-woocommerce
+ln -s /workspaces/convertkit-woocommerce /wp/wp-content/plugins/convertkit-for-woocommerce
 
 # Run Composer in Plugin Directory to build
 cd /wp/wp-content/plugins/convertkit-for-woocommerce
