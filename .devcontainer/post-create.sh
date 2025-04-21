@@ -13,5 +13,6 @@ ln -s /workspaces/convertkit-woocommerce /wp/wp-content/plugins/convertkit-for-w
 cd /wp/wp-content/plugins/convertkit-for-woocommerce
 composer update
 
-# Activate Plugin
+# Activate Plugins
 wp plugin activate convertkit-for-woocommerce
+wp plugin activate woocommerce
