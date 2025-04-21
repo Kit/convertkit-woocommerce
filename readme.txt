@@ -6,8 +6,8 @@ Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 5.6.20
 Stable tag: 1.9.5
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Integrates WooCommerce with Kit allowing customers to be automatically sent to your Kit account.
 
