@@ -12,7 +12,7 @@ rm -rf vendor
 composer install --no-dev
 
 # Build ZIP file, excluding non-Plugin files
-rm convertkit-for-woocommerce.zip
+[ -e convertkit-for-woocommerce.zip ] && rm convertkit-for-woocommerce.zip
 zip -r convertkit-for-woocommerce.zip . \
 -x "*.git*" \
 -x ".devcontainer/*" \
