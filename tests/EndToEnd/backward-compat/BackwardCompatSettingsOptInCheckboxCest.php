@@ -28,6 +28,9 @@ class BackwardCompatSettingOptInCheckboxCest
 
 		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
+
+		// Setup Resources.
+		$I->setupConvertKitPluginResources($I);
 	}
 
 	/**
@@ -132,8 +135,6 @@ class BackwardCompatSettingOptInCheckboxCest
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
 		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 	}
-
-
 
 	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
