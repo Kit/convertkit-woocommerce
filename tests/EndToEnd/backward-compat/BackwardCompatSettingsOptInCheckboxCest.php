@@ -29,8 +29,8 @@ class BackwardCompatSettingOptInCheckboxCest
 		// Enable Integration and define its Access and Refresh Tokens.
 		$I->setupConvertKitPlugin($I);
 
-		// Load Settings screen.
-		$I->loadConvertKitSettingsScreen($I);
+		// Setup Resources.
+		$I->setupConvertKitPluginResources($I);
 	}
 
 	/**
@@ -43,6 +43,9 @@ class BackwardCompatSettingOptInCheckboxCest
 	 */
 	public function testOptInCheckboxBlockInEditor(EndToEndTester $I)
 	{
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
@@ -84,6 +87,53 @@ class BackwardCompatSettingOptInCheckboxCest
 
 		// Confirm this displays the integration settings screen.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
+	}
+
+	/**
+	 * Test that the Customer is subscribed to Kit when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as processing.
+	 *
+	 * @since   1.9.6
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testOptInWhenCheckedWithFormAndSimpleProduct(EndToEndTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'display_opt_in'           => true,
+				'check_opt_in'             => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'processing',
+				'use_legacy_checkout'      => true,
+			]
+		);
+
+		// Confirm that the email address was now added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+
+		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
+		// in the integration's settings.
+		$I->apiCustomFieldDataIsEmpty($I, $subscriber);
+
+		// Check that the subscriber has the expected form and referrer value set.
+		$I->apiCheckSubscriberHasForm(
+			$I,
+			$subscriber['id'],
+			$_ENV['CONVERTKIT_API_FORM_ID'],
+			$_ENV['WORDPRESS_URL']
+		);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($subscriber['id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
 	}
 
 	/**
