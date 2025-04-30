@@ -148,9 +148,9 @@ jobs:
         run: mv /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/convertkit-woocommerce ${{ env.PLUGIN_DIR }}
       
       # WP_DEBUG = true is required so all PHP errors are output and caught by tests (E_ALL).
-      # WP_DEBUG = false for PHP 8.1+, otherwise E_DEPRECATED is output due to WooCommerce.
+      # WP_DEBUG = false for PHP 8.4 integration tests, otherwise E_DEPRECATED is output due to WooCommerce.
       - name: Enable WP_DEBUG
-        if: ${{ matrix.php-versions != '8.1' && matrix.php-versions != '8.2' && matrix.php-versions != '8.3' }}
+        if: ${{ matrix.test-groups != 'EndToEnd/integrations' && matrix.php-versions != '8.4' }}
         working-directory: ${{ env.ROOT_DIR }}
         run: |
           wp-cli config set WP_DEBUG true --raw
