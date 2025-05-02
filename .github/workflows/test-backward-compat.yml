@@ -54,7 +54,7 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest' ] #[ '6.1.1', 'latest' ]
-        php-versions: [ '8.1', '8.2', '8.3' ] #[ '7.4', '8.0', '8.1' ]
+        php-versions: [ '8.1', '8.2', '8.3', '8.4' ] #[ '7.4', '8.0', '8.1' ]
         
         # Folder names within the 'tests' folder to run tests in parallel.
         test-groups: [
@@ -141,14 +141,6 @@ jobs:
       # Move Plugin
       - name: Move Plugin
         run: mv /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/convertkit-woocommerce ${{ env.PLUGIN_DIR }}
-      
-      # WP_DEBUG = true is required so all PHP errors are output and caught by tests (E_ALL).
-      # WP_DEBUG = false for PHP 8.1+, otherwise E_DEPRECATED is output due to WooCommerce.
-      - name: Enable WP_DEBUG
-        if: ${{ matrix.php-versions != '8.1' && matrix.php-versions != '8.2' && matrix.php-versions != '8.3' }}
-        working-directory: ${{ env.ROOT_DIR }}
-        run: |
-          wp-cli config set WP_DEBUG true --raw
 
       # FS_METHOD = direct is required for WP_Filesystem to operate without suppressed PHP fopen() errors that trip up tests.
       - name: Enable FS_METHOD
