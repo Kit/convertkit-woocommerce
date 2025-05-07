@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.9.6
+Stable tag: 1.9.7
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,10 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.9.7 2025-05-07
+* Updated: Require PHP 7.1 or greater
+* Updated: Use WordPress Libraries 2.0.9
 
 ### 1.9.6 2025-04-24
 * Fix: Checkout: PHP Fatal error when using WooCommerce 8.4.0 or older opt-in checkout block
