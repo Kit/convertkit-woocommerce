@@ -116,14 +116,10 @@ class CouponCest
 		// Enable Integration and define no Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			'', // No Access Token.
-			'', // No Refresh Token.
-			false, // Don't define a subscribe event.
-			false, // Don't subscribe the customer to anything.
-			'first', // Name format.
-			false, // Don't map custom fields.
-			false, // Don't display an opt in.
-			'processing' // Send purchase data on 'processing' event.
+			accessToken: '',
+			refreshToken: '',
+			subscribeEvent: false,
+			sendPurchaseDataEvent: 'processing'
 		);
 
 		// Navigate to Marketing > Coupons > Add New.
@@ -158,14 +154,10 @@ class CouponCest
 		// Enable Integration and define invalid Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			'fakeAccessToken',
-			'fakeRefreshToken',
-			false, // Don't define a subscribe event.
-			false, // Don't subscribe the customer to anything.
-			'first', // Name format.
-			false, // Don't map custom fields.
-			false, // Don't display an opt in.
-			'processing' // Send purchase data on 'processing' event.
+			accessToken: 'fakeAccessToken',
+			refreshToken: 'fakeRefreshToken',
+			subscribeEvent: false,
+			sendPurchaseDataEvent: 'processing'
 		);
 
 		// Navigate to Marketing > Coupons > Add New.
@@ -207,7 +199,11 @@ class CouponCest
 		);
 
 		// Open Bulk Edit.
-		$I->openBulkEdit($I, 'shop_coupon', $couponIDs);
+		$I->openBulkEdit(
+			$I,
+			postType: 'shop_coupon',
+			postIDs: $couponIDs
+		);
 
 		// Confirm the Bulk Edit field isn't displayed.
 		$I->dontSeeElementInDOM('#ckwc-bulk-edit #ckwc_subscription');
@@ -248,12 +244,12 @@ class CouponCest
 		// Bulk Edit the Coupons in the Pages WP_List_Table.
 		$I->bulkEdit(
 			$I,
-			'shop_coupon',
-			$couponIDs,
-			[
+			postType: 'shop_coupon',
+			postIDs: $couponIDs,
+			configuration: [
 				'ckwc_subscription' => [ 'select', $_ENV['CONVERTKIT_API_FORM_NAME'] ],
 			],
-			'coupon'
+			noticePostType: 'coupon'
 		);
 
 		// Iterate through Coupons to observe expected changes were made to the settings in the database.
@@ -309,12 +305,12 @@ class CouponCest
 		// Bulk Edit the Coupons in the Coupons WP_List_Table.
 		$I->bulkEdit(
 			$I,
-			'shop_coupon',
-			$couponIDs,
-			[
+			postType: 'shop_coupon',
+			postIDs: $couponIDs,
+			configuration: [
 				'ckwc_subscription' => [ 'select', '— No Change —' ],
 			],
-			'coupon'
+			noticePostType: 'coupon'
 		);
 
 		// Iterate through Coupons to observe no changes were made to the settings in the database.

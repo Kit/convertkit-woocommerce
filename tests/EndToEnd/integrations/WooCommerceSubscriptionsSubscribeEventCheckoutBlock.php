@@ -74,7 +74,11 @@ class WooCommerceSubscriptionsSubscribeEventCheckoutBlockCest
 		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
 
 		// Trigger a renewal of the subscription, as if the recurring payment was made, by visiting WooCommerce > Status >
 		// Scheduled Actions and searching for the Subscription ID.
