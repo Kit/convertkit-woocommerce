@@ -57,7 +57,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -66,9 +70,9 @@ class SubscribeOnOrderProcessingEventCest
 		// Check that the subscriber has the expected form and referrer value set.
 		$I->apiCheckSubscriberHasForm(
 			$I,
-			$subscriber['id'],
-			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['WORDPRESS_URL']
+			subscriberID: $subscriber['id'],
+			formID: $_ENV['CONVERTKIT_API_FORM_ID'],
+			referrer: $_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -130,7 +134,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -139,9 +147,9 @@ class SubscribeOnOrderProcessingEventCest
 		// Check that the subscriber has the expected form and referrer value set.
 		$I->apiCheckSubscriberHasForm(
 			$I,
-			$subscriber['id'],
-			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['WORDPRESS_URL']
+			subscriberID: $subscriber['id'],
+			formID: $_ENV['CONVERTKIT_API_FORM_ID'],
+			referrer: $_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -178,7 +186,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -186,9 +198,9 @@ class SubscribeOnOrderProcessingEventCest
 		// Check that the subscriber has the expected form and referrer value set.
 		$I->apiCheckSubscriberHasForm(
 			$I,
-			$subscriber['id'],
-			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['WORDPRESS_URL']
+			subscriberID: $subscriber['id'],
+			formID: $_ENV['CONVERTKIT_API_FORM_ID'],
+			referrer: $_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -227,18 +239,26 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data exists and is correct, and the name
 		// is not included in the address.
-		$I->apiCustomFieldDataIsValid($I, $subscriber, $addressFields );
+		$I->apiCustomFieldDataIsValid(
+			$I,
+			subscriber: $subscriber,
+			addressFields: $addressFields
+		);
 
 		// Check that the subscriber has the expected form and referrer value set.
 		$I->apiCheckSubscriberHasForm(
 			$I,
-			$subscriber['id'],
-			$_ENV['CONVERTKIT_API_FORM_ID'],
-			$_ENV['WORDPRESS_URL']
+			subscriberID: $subscriber['id'],
+			formID: $_ENV['CONVERTKIT_API_FORM_ID'],
+			referrer: $_ENV['WORDPRESS_URL']
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
@@ -272,7 +292,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -308,7 +332,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data exists and is correct.
 		$I->apiCustomFieldDataIsValid($I, $subscriber);
@@ -345,7 +373,11 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
 
 		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
-		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
+		$I->wooCommerceOrderNoteDoesNotExist(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed'
+		);
 	}
 
 	/**
@@ -375,7 +407,11 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
 
 		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
-		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
+		$I->wooCommerceOrderNoteDoesNotExist(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed'
+		);
 	}
 
 	/**
@@ -403,7 +439,11 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
 
 		// Check that the Order's Notes does include a note from the Plugin confirming the Customer was subscribed.
-		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed');
+		$I->wooCommerceOrderNoteDoesNotExist(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed'
+		);
 	}
 
 	/**
@@ -433,7 +473,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -443,10 +487,18 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']'
+		);
 	}
 
 	/**
@@ -476,7 +528,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -486,10 +542,18 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Tag.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']'
+		);
 	}
 
 	/**
@@ -519,7 +583,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -529,10 +597,18 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Sequence.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']'
+		);
 	}
 
 	/**
@@ -562,7 +638,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -572,10 +652,18 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']'
+		);
 	}
 
 	/**
@@ -605,7 +693,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -615,10 +707,18 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Tag.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']'
+		);
 	}
 
 	/**
@@ -648,7 +748,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -658,10 +762,18 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiUnsubscribe($subscriber['id']);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Sequence.
-		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']');
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']'
+		);
 	}
 
 	/**
@@ -692,7 +804,11 @@ class SubscribeOnOrderProcessingEventCest
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address'], 'First');
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+			firstName: 'First'
+		);
 
 		// Confirm the subscriber's custom field data is empty, as no Order to Custom Field mapping was specified
 		// in the integration's settings.
@@ -702,10 +818,18 @@ class SubscribeOnOrderProcessingEventCest
 		$I->apiUnsubscribe($subscriber['id']);
 
 		// Change the Order's Status to any status other than 'Processing'.
-		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'Pending payment');
+		$I->wooCommerceChangeOrderStatus(
+			$I,
+			orderID: $result['order_id'],
+			orderStatus: 'Pending payment'
+		);
 
 		// Change the Order's Status to 'Processing'.
-		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'Processing');
+		$I->wooCommerceChangeOrderStatus(
+			$I,
+			orderID: $result['order_id'],
+			orderStatus: 'Processing'
+		);
 
 		// Confirm that the email address was not added to ConvertKit a second time.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);

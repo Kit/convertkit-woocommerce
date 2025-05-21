@@ -61,7 +61,12 @@ class SyncPastOrdersHPOSCest
 		$I->logOut();
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress);
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: $productName,
+			emailAddress: $emailAddress
+		);
 
 		// Click Place order button.
 		$I->waitForElementNotVisible('.blockOverlay');
@@ -279,7 +284,12 @@ class SyncPastOrdersHPOSCest
 		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to Kit Purchase Data successfully.');
 
 		// Confirm that the purchase was added to ConvertKit.
-		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists(
+			$I,
+			orderID: $result['order_id'],
+			emailAddress: $result['email_address'],
+			productID: $result['product_id']
+		);
 
 		// Confirm that the Cancel Sync button is disabled.
 		$I->seeElementInDOM('a.cancel[disabled]');
@@ -291,8 +301,20 @@ class SyncPastOrdersHPOSCest
 		$I->seeInSource('Enable Kit integration');
 
 		// Confirm that the Transaction ID is stored in the Order's metadata.
-		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
-		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', $purchaseDataID, true);
+		$I->wooCommerceOrderMetaKeyAndValueExist(
+			$I,
+			orderID: $result['order_id'],
+			metaKey: 'ckwc_purchase_data_sent',
+			metaValue: 'yes',
+			hposEnabled: true
+		);
+		$I->wooCommerceOrderMetaKeyAndValueExist(
+			$I,
+			orderID: $result['order_id'],
+			metaKey: 'ckwc_purchase_data_id',
+			metaValue: $purchaseDataID,
+			hposEnabled: true
+		);
 	}
 
 	/**
@@ -361,14 +383,31 @@ class SyncPastOrdersHPOSCest
 		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to Kit Purchase Data successfully.');
 
 		// Confirm that the purchase was added to ConvertKit.
-		$purchaseDataID = $I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$purchaseDataID = $I->apiCheckPurchaseExists(
+			$I,
+			orderID: $result['order_id'],
+			emailAddress: $result['email_address'],
+			productID: $result['product_id']
+		);
 
 		// Confirm that the Cancel Sync button is disabled.
 		$I->seeElementInDOM('a.cancel[disabled]');
 
 		// Confirm that the Transaction ID is stored in the Order's metadata.
-		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_sent', 'yes', true);
-		$I->wooCommerceOrderMetaKeyAndValueExist($I, $postID, 'ckwc_purchase_data_id', $purchaseDataID, true);
+		$I->wooCommerceOrderMetaKeyAndValueExist(
+			$I,
+			orderID: $result['order_id'],
+			metaKey: 'ckwc_purchase_data_sent',
+			metaValue: 'yes',
+			hposEnabled: true
+		);
+		$I->wooCommerceOrderMetaKeyAndValueExist(
+			$I,
+			orderID: $result['order_id'],
+			metaKey: 'ckwc_purchase_data_id',
+			metaValue: $purchaseDataID,
+			hposEnabled: true
+		);
 	}
 
 	/**
@@ -419,7 +458,11 @@ class SyncPastOrdersHPOSCest
 		$I->dontSeeElementInDOM('button.woocommerce-save-button');
 
 		// Confirm that the purchase was not added to ConvertKit.
-		$I->apiCheckPurchaseDoesNotExist($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$I->apiCheckPurchaseDoesNotExist(
+			$I,
+			orderID: $result['order_id'],
+			emailAddress: $result['email_address']
+		);
 	}
 
 	/**
