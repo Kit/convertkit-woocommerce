@@ -357,7 +357,12 @@ class SyncPastOrdersHPOSCest
 
 		// Remove the Transaction ID metadata in the Order, as if it were sent
 		// by 1.4.2 or older.
-		$I->wooCommerceOrderDeleteMeta($I, $postID, 'ckwc_purchase_data_id', true);
+		$I->wooCommerceOrderDeleteMeta(
+			$I,
+			orderID: $postID,
+			metaKey: 'ckwc_purchase_data_id',
+			hposEnabled: true
+		);
 
 		// Login as the Administrator, if we're not already logged in.
 		if ( ! $I->amLoggedInAsAdmin($I) ) {

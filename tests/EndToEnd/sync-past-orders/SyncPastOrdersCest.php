@@ -363,7 +363,7 @@ class SyncPastOrdersCest
 		// by 1.4.2 or older.
 		$I->wooCommerceOrderDeleteMeta(
 			$I,
-			orderID: $result['order_id'],
+			orderID: $postID,
 			metaKey: 'ckwc_purchase_data_id'
 		);
 
