@@ -83,7 +83,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
 		);
 	}
 
@@ -118,7 +118,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteDoesNotExist(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed'
+			noteText: 'Customer subscribed'
 		);
 	}
 
@@ -170,7 +170,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
 		);
 	}
 
@@ -399,7 +399,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteDoesNotExist(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed'
+			noteText: 'Customer subscribed'
 		);
 	}
 
@@ -434,7 +434,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteDoesNotExist(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed'
+			noteText: 'Customer subscribed'
 		);
 	}
 
@@ -467,7 +467,7 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteDoesNotExist(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed'
+			noteText: 'Customer subscribed'
 		);
 	}
 
@@ -516,14 +516,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
 		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']'
 		);
 	}
 
@@ -572,14 +572,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
 		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Tag.
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']'
+			noteText: 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']'
 		);
 	}
 
@@ -628,14 +628,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
 		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Sequence.
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']'
+			noteText: 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']'
 		);
 	}
 
@@ -684,14 +684,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
 		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Legacy Form.
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_LEGACY_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_LEGACY_FORM_ID'] . ']'
 		);
 	}
 
@@ -740,14 +740,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
 		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Tag.
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']'
+			noteText: 'Customer subscribed to the Tag: ' . $_ENV['CONVERTKIT_API_TAG_NAME'] . ' [' . $_ENV['CONVERTKIT_API_TAG_ID'] . ']'
 		);
 	}
 
@@ -796,14 +796,14 @@ class SubscribeCheckoutBlockOnOrderProcessingEventCest
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
 		);
 
 		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Sequence.
 		$I->wooCommerceOrderNoteExists(
 			$I,
 			orderID: $result['order_id'],
-			note: 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']'
+			noteText: 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']'
 		);
 	}
 
