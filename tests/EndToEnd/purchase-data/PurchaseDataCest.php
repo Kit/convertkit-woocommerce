@@ -1267,7 +1267,7 @@ class PurchaseDataCest
 		$subscriber = $I->apiCheckSubscriberExists(
 			$I,
 			emailAddress: $result['email_address'],
-			name: 'First Last'
+			firstName: 'First Last'
 		);
 
 		// Confirm that the purchase was added to ConvertKit.

@@ -122,7 +122,7 @@ class ProductCest
 			$I,
 			accessToken: '',
 			refreshToken: '',
-			subscribeEvent: false,
+			subscriptionEvent: false,
 			sendPurchaseDataEvent: 'processing'
 		);
 
@@ -160,7 +160,7 @@ class ProductCest
 			$I,
 			accessToken: 'fakeAccessToken',
 			refreshToken: 'fakeRefreshToken',
-			subscribeEvent: false,
+			subscriptionEvent: false,
 			sendPurchaseDataEvent: 'processing'
 		);
 

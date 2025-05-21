@@ -118,7 +118,7 @@ class CouponCest
 			$I,
 			accessToken: '',
 			refreshToken: '',
-			subscribeEvent: false,
+			subscriptionEvent: false,
 			sendPurchaseDataEvent: 'processing'
 		);
 
@@ -156,7 +156,7 @@ class CouponCest
 			$I,
 			accessToken: 'fakeAccessToken',
 			refreshToken: 'fakeRefreshToken',
-			subscribeEvent: false,
+			subscriptionEvent: false,
 			sendPurchaseDataEvent: 'processing'
 		);
 
