@@ -81,7 +81,11 @@ class RefreshResourcesButtonCest
 		);
 
 		// Open Bulk Edit form for the Products in the WooCommerce Products WP_List_Table.
-		$I->openBulkEdit($I, 'product', $productIDs);
+		$I->openBulkEdit(
+			$I,
+			postType: 'product',
+			postIDs: $productIDs
+		);
 
 		// Confirm JS is output by the Plugin.
 		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js' );
@@ -170,7 +174,11 @@ class RefreshResourcesButtonCest
 		);
 
 		// Open Quick Edit form for the Product in the WooCommerce Products WP_List_Table.
-		$I->openQuickEdit($I, 'product', $pageID);
+		$I->openQuickEdit(
+			$I,
+			postType: 'product',
+			postID: $pageID
+		);
 
 		// Click the refresh button.
 		$I->click('#ckwc-quick-edit button.ckwc-refresh-resources');

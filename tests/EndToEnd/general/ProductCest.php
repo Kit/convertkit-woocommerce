@@ -120,14 +120,10 @@ class ProductCest
 		// Enable Integration and define no Access or Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			'', // No Access Token.
-			'', // No Refresh Token.
-			false, // Don't define a subscribe event.
-			false, // Don't subscribe the customer to anything.
-			'first', // Name format.
-			false, // Don't map custom fields.
-			false, // Don't display an opt in.
-			'processing' // Send purchase data on 'processing' event.
+			accessToken: '',
+			refreshToken: '',
+			subscriptionEvent: false,
+			sendPurchaseDataEvent: 'processing'
 		);
 
 		// Navigate to Products > Add New.
@@ -162,14 +158,10 @@ class ProductCest
 		// Enable Integration and define invalid Access and Refresh Tokens.
 		$I->setupConvertKitPlugin(
 			$I,
-			'fakeAccessToken',
-			'fakeRefreshToken',
-			false, // Don't define a subscribe event.
-			false, // Don't subscribe the customer to anything.
-			'first', // Name format.
-			false, // Don't map custom fields.
-			false, // Don't display an opt in.
-			'processing' // Send purchase data on 'processing' event.
+			accessToken: 'fakeAccessToken',
+			refreshToken: 'fakeRefreshToken',
+			subscriptionEvent: false,
+			sendPurchaseDataEvent: 'processing'
 		);
 
 		// Navigate to Products > Add New.
@@ -212,9 +204,9 @@ class ProductCest
 		// Quick Edit the Product in the Products WP_List_Table.
 		$I->quickEdit(
 			$I,
-			'product',
-			$productID,
-			[
+			postType: 'product',
+			postID: $productID,
+			configuration: [
 				'ckwc_subscription' => [ 'select', $_ENV['CONVERTKIT_API_FORM_NAME'] ],
 			]
 		);
@@ -265,7 +257,11 @@ class ProductCest
 		);
 
 		// Open Bulk Edit.
-		$I->openBulkEdit($I, 'product', $productIDs);
+		$I->openBulkEdit(
+			$I,
+			postType: 'product',
+			postIDs: $productIDs
+		);
 
 		// Confirm the Bulk Edit field isn't displayed.
 		$I->dontSeeElementInDOM('#ckwc-bulk-edit #ckwc_subscription');
@@ -306,9 +302,9 @@ class ProductCest
 		// Bulk Edit the Products in the Pages WP_List_Table.
 		$I->bulkEdit(
 			$I,
-			'product',
-			$productIDs,
-			[
+			postType: 'product',
+			postIDs: $productIDs,
+			configuration: [
 				'ckwc_subscription' => [ 'select', $_ENV['CONVERTKIT_API_FORM_NAME'] ],
 			]
 		);
@@ -373,9 +369,9 @@ class ProductCest
 		// Bulk Edit the Products in the Products WP_List_Table.
 		$I->bulkEdit(
 			$I,
-			'product',
-			$productIDs,
-			[
+			postType: 'product',
+			postIDs: $productIDs,
+			configuration: [
 				'ckwc_subscription' => [ 'select', '— No Change —' ],
 			]
 		);

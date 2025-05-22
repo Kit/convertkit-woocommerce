@@ -828,7 +828,7 @@ class WooCommerce extends \Codeception\Module
 	 * @param   string         $paymentMethod  Payment Method.
 	 * @return  int                                 Order ID
 	 */
-	public function wooCommerceCreateManualOrder($I, $productID, $productName, $orderStatus, $paymentMethod)
+	public function wooCommerceCreateManualOrder($I, $productID, $productName, $orderStatus, $paymentMethod = '')
 	{
 		// Login as Administrator.
 		// Login as the Administrator, if we're not already logged in.
