@@ -81,7 +81,12 @@ class SyncPastOrdersCLICest
 		$I->seeInShellOutput('WooCommerce Order ID #' . $orderID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #');
 
 		// Confirm that the Order was added to ConvertKit.
-		$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+		$I->apiCheckPurchaseExists(
+			$I,
+			orderID: $result['order_id'],
+			emailAddress: $result['email_address'],
+			productID: $result['product_id']
+		);
 	}
 
 	/**
@@ -113,7 +118,12 @@ class SyncPastOrdersCLICest
 			$I->seeInShellOutput('WooCommerce Order ID #' . $orderID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #');
 
 			// Confirm that the Order was added to ConvertKit.
-			$I->apiCheckPurchaseExists($I, $result['order_id'], $result['email_address'], $result['product_id']);
+			$I->apiCheckPurchaseExists(
+				$I,
+				orderID: $result['order_id'],
+				emailAddress: $result['email_address'],
+				productID: $result['product_id']
+			);
 		}
 	}
 

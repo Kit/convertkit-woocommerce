@@ -173,7 +173,11 @@ class SettingOptInCheckboxCest
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: 'Simple Product'
+		);
 
 		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
 		$I->seeElementInDOM('#ckwc_opt_in');
@@ -212,7 +216,11 @@ class SettingOptInCheckboxCest
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: 'Simple Product'
+		);
 
 		// Confirm that the Opt-In checkbox is displayed on the Checkout screen.
 		$I->seeElementInDOM('#ckwc_opt_in');
@@ -251,7 +259,11 @@ class SettingOptInCheckboxCest
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: 'Simple Product'
+		);
 
 		// Confirm that the Opt-In checkbox is displayed in the Billing section on the Checkout screen.
 		$I->seeElementInDOM('.woocommerce-billing-fields #ckwc_opt_in');
@@ -287,7 +299,11 @@ class SettingOptInCheckboxCest
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: 'Simple Product'
+		);
 
 		// Confirm that the Opt-In checkbox is displayed in the Order section on the Checkout screen.
 		$I->seeElementInDOM('.woocommerce-additional-fields #ckwc_opt_in');

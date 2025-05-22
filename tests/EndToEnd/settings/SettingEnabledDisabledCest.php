@@ -42,7 +42,11 @@ class SettingEnabledDisabledCest
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, 'Simple Product');
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: 'Simple Product'
+		);
 
 		// Click Place order button.
 		$I->waitForElementNotVisible('.blockOverlay');
