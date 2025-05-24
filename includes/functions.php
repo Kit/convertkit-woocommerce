@@ -7,6 +7,86 @@
  */
 
 /**
+ * Runs the activation and update routines when the plugin is activated.
+ *
+ * @since   1.9.8
+ *
+ * @param   bool $network_wide   Is network wide activation.
+ */
+function ckwc_plugin_activate( $network_wide ) {
+
+	// Check if we are on a multisite install, activating network wide, or a single install.
+	if ( ! is_multisite() || ! $network_wide ) {
+		// Single Site activation.
+		ckwc_schedule_refresh_token_event();
+	} else {
+		// Multisite network wide activation.
+		$sites = get_sites(
+			array(
+				'number' => 0,
+			)
+		);
+		foreach ( $sites as $site ) {
+			switch_to_blog( (int) $site->blog_id );
+			ckwc_schedule_refresh_token_event();
+			restore_current_blog();
+		}
+	}
+
+}
+
+/**
+ * Runs the activation and update routines when the plugin is activated
+ * on a WordPress multisite setup.
+ *
+ * @since   1.9.8
+ *
+ * @param   WP_Site|int $site_or_blog_id    WP_Site or Blog ID.
+ */
+function ckwc_plugin_activate_new_site( $site_or_blog_id ) {
+
+	// Check if $site_or_blog_id is a WP_Site or a blog ID.
+	if ( is_a( $site_or_blog_id, 'WP_Site' ) ) {
+		$site_or_blog_id = $site_or_blog_id->blog_id;
+	}
+
+	// Run activation routine.
+	switch_to_blog( $site_or_blog_id );
+	ckwc_schedule_refresh_token_event();
+	restore_current_blog();
+
+}
+
+/**
+ * Runs the deactivation routine when the plugin is deactivated.
+ *
+ * @since   1.9.8
+ *
+ * @param   bool $network_wide   Is network wide deactivation.
+ */
+function ckwc_plugin_deactivate( $network_wide ) {
+
+	// Check if we are on a multisite install, activating network wide, or a single install.
+	if ( ! is_multisite() || ! $network_wide ) {
+		// Single Site deactivation.
+		ckwc_unschedule_refresh_token_event();
+	} else {
+		// Multisite network wide deactivation.
+		$sites = get_sites(
+			array(
+				'number' => 0,
+			)
+		);
+		foreach ( $sites as $site ) {
+			switch_to_blog( (int) $site->blog_id );
+			wp_clear_scheduled_hook( 'ckwc_refresh_token' );
+			restore_current_blog();
+		}
+	}
+
+}
+
+/**
  * Helper method to return the Plugin Settings Link
  *
  * @since   1.4.2

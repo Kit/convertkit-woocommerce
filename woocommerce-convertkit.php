@@ -49,6 +49,7 @@ if ( ! class_exists( 'ConvertKit_Review_Request' ) ) {
 }
 
 // Load plugin files that are always required.
+require_once CKWC_PLUGIN_PATH . '/includes/cron-functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';
@@ -72,6 +73,12 @@ require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-refresh-resources.php';
+
+// Register Plugin activation and deactivation functions.
+register_activation_hook( __FILE__, 'ckwc_plugin_activate' );
+add_action( 'wp_insert_site', 'ckwc_plugin_activate_new_site' );
+add_action( 'activate_blog', 'ckwc_plugin_activate_new_site' );
+register_deactivation_hook( __FILE__, 'ckwc_plugin_deactivate' );
 
 /**
  * Main function to return Plugin instance.
