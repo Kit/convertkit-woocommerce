@@ -7,28 +7,6 @@
  */
 
 /**
- * Schedule the refresh token event.
- *
- * @since   1.9.8
- */
-function ckwc_schedule_refresh_token_event() {
-
-	wp_schedule_event( time(), 'twicedaily', 'ckwc_refresh_token' );
-
-}
-
-/**
- * Unschedule the refresh token event.
- *
- * @since   1.9.8
- */
-function ckwc_unschedule_refresh_token_event() {
-
-	wp_clear_scheduled_hook( 'ckwc_refresh_token' );
-
-}
-
-/**
  * Refresh the OAuth access token, triggered by WordPress' Cron.
  *
  * @since   1.9.8
@@ -42,6 +20,14 @@ function ckwc_refresh_token() {
 
 	// Bail if the integration is not enabled.
 	if ( ! WP_CKWC_Integration()->is_enabled() ) {
+		return;
+	}
+
+	// Bail if no access and refresh token exists.
+	if ( empty( WP_CKWC_Integration()->get_option( 'access_token' ) ) ) {
+		return;
+	}
+	if ( empty( WP_CKWC_Integration()->get_option( 'refresh_token' ) ) ) {
 		return;
 	}
 

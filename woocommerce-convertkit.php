@@ -74,12 +74,6 @@ require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-refresh-resources.php';
 
-// Register Plugin activation and deactivation functions.
-register_activation_hook( __FILE__, 'ckwc_plugin_activate' );
-add_action( 'wp_insert_site', 'ckwc_plugin_activate_new_site' );
-add_action( 'activate_blog', 'ckwc_plugin_activate_new_site' );
-register_deactivation_hook( __FILE__, 'ckwc_plugin_deactivate' );
-
 /**
  * Main function to return Plugin instance.
  *
