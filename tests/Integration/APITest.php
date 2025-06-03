@@ -90,8 +90,8 @@ class APITest extends \Codeception\TestCase\WPTestCase
 
 	/**
 	 * Test that a WordPress Cron event is created when an access token is obtained.
-	 * 
-	 * @since 	1.9.8
+	 *
+	 * @since   1.9.8
 	 */
 	public function testCronEventCreatedWhenAccessTokenObtained()
 	{
@@ -100,16 +100,16 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		add_filter( 'pre_http_request', array( $this, 'mockTokenResponse' ), 10, 3 );
 
 		// Run request, as if the access token was obtained successfully.
-		$result = $this->api->access_token();
+		$result = $this->api->get_access_token( 'mockAuthCode' );
 
 		// Confirm the Cron event to refresh the access token before its expiry was created.
-		// @TODO.
+		$this->assertNotFalse( wp_next_scheduled( 'ckwc_refresh_token' ) );
 	}
 
 	/**
 	 * Test that a WordPress Cron event is created when an access token is refreshed.
-	 * 
-	 * @since 	1.9.8
+	 *
+	 * @since   1.9.8
 	 */
 	public function testCronEventCreatedWhenTokenRefreshed()
 	{
@@ -121,7 +121,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		$result = $this->api->refresh_token();
 
 		// Confirm the Cron event to refresh the access token before its expiry was created.
-		// @TODO.
+		$this->assertNotFalse( wp_next_scheduled( 'ckwc_refresh_token' ) );
 	}
 
 	/**

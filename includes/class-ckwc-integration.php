@@ -137,7 +137,7 @@ class CKWC_Integration extends WC_Integration {
 		wp_clear_scheduled_hook( 'ckwc_refresh_token' );
 
 		// Schedule a WordPress Cron event to refresh the token an hour before it expires.
-		wp_schedule_single_event( ( $result['created_at'] + $result['expires_in'] ) - HOUR_IN_MINUTES, 'ckwc_refresh_token' );
+		wp_schedule_single_event( ( $result['created_at'] + $result['expires_in'] ) - HOUR_IN_SECONDS, 'ckwc_refresh_token' );
 
 	}
 
