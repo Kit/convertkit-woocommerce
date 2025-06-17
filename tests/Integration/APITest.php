@@ -28,6 +28,14 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	private $api;
 
 	/**
+	 * Holds the current timestamp, defined in setUp to fix
+	 * it for all tests.
+	 * 
+	 * @var 	int
+	 */
+	private $now = 0;
+
+	/**
 	 * Performs actions before each test.
 	 *
 	 * @since   1.5.7
@@ -35,6 +43,9 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
+
+		// Set the current timestamp to the start of the test.
+		$this->now = strtotime( 'now' );
 
 		// Activate Plugin, to include the Plugin's constants in tests.
 		activate_plugins('woocommerce/woocommerce.php');
@@ -102,8 +113,10 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		// Run request, as if the access token was obtained successfully.
 		$result = $this->api->get_access_token( 'mockAuthCode' );
 
-		// Confirm the Cron event to refresh the access token before its expiry was created.
-		$this->assertNotFalse( wp_next_scheduled( 'ckwc_refresh_token' ) );
+		// Confirm the Cron event to refresh the access token was created, and the timestamp to
+		// run the refresh token call matches the expiry of the access token.
+		$nextScheduledTimestamp = wp_next_scheduled( 'ckwc_refresh_token' );
+		$this->assertEquals( $nextScheduledTimestamp, $this->now + 10000 );
 	}
 
 	/**
@@ -120,8 +133,10 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		// Run request, as if the token was refreshed.
 		$result = $this->api->refresh_token();
 
-		// Confirm the Cron event to refresh the access token before its expiry was created.
-		$this->assertNotFalse( wp_next_scheduled( 'ckwc_refresh_token' ) );
+		// Confirm the Cron event to refresh the access token was created, and the timestamp to
+		// run the refresh token call matches the expiry of the access token.
+		$nextScheduledTimestamp = wp_next_scheduled( 'ckwc_refresh_token' );
+		$this->assertEquals( $nextScheduledTimestamp, $this->now + 10000 );
 	}
 
 	/**
@@ -220,7 +235,7 @@ class APITest extends \Codeception\TestCase\WPTestCase
 					'access_token'  => $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
 					'refresh_token' => $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
 					'token_type'    => 'bearer',
-					'created_at'    => strtotime( 'now' ),
+					'created_at'    => $this->now,
 					'expires_in'    => 10000,
 					'scope'         => 'public',
 				)
