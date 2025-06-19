@@ -30,8 +30,8 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	/**
 	 * Holds the current timestamp, defined in setUp to fix
 	 * it for all tests.
-	 * 
-	 * @var 	int
+	 *
+	 * @var     int
 	 */
 	private $now = 0;
 
