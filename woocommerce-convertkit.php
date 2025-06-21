@@ -49,6 +49,7 @@ if ( ! class_exists( 'ConvertKit_Review_Request' ) ) {
 }
 
 // Load plugin files that are always required.
+require_once CKWC_PLUGIN_PATH . '/includes/cron-functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';

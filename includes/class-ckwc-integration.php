@@ -87,6 +87,7 @@ class CKWC_Integration extends WC_Integration {
 		$this->init_settings();
 
 		// Update Access Token when refreshed by the API class.
+		add_action( 'convertkit_api_get_access_token', array( $this, 'update_credentials' ), 10, 2 );
 		add_action( 'convertkit_api_refresh_token', array( $this, 'update_credentials' ), 10, 2 );
 
 		// Load Admin screens, save settings.
@@ -111,8 +112,8 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
-	 * Saves the new access token, refresh token and its expiry when the API
-	 * class automatically refreshes an outdated access token.
+	 * Saves the new access token, refresh token and its expiry, and schedules
+	 * a WordPress Cron event to refresh the token on expiry.
 	 *
 	 * @since   1.8.0
 	 *
@@ -122,7 +123,7 @@ class CKWC_Integration extends WC_Integration {
 	public function update_credentials( $result, $client_id ) {
 
 		// Don't save these credentials if they're not for this Client ID.
-		// They're for another ConvertKit Plugin that uses OAuth.
+		// They're for another Kit Plugin that uses OAuth.
 		if ( $client_id !== CKWC_OAUTH_CLIENT_ID ) {
 			return;
 		}
@@ -131,6 +132,12 @@ class CKWC_Integration extends WC_Integration {
 		$this->update_option( 'access_token', $result['access_token'] );
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
 		$this->update_option( 'token_expires', ( $result['created_at'] + $result['expires_in'] ) );
+
+		// Clear any existing scheduled WordPress Cron event.
+		wp_clear_scheduled_hook( 'ckwc_refresh_token' );
+
+		// Schedule a WordPress Cron event to refresh the token on expiry.
+		wp_schedule_single_event( ( $result['created_at'] + $result['expires_in'] ), 'ckwc_refresh_token' );
 
 	}
 
