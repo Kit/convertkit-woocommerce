@@ -52,7 +52,7 @@ function ckwc_refresh_token() {
 	// Update settings with new tokens.
 	WP_CKWC_Integration()->update_option( 'access_token', $result['access_token'] );
 	WP_CKWC_Integration()->update_option( 'refresh_token', $result['refresh_token'] );
-	WP_CKWC_Integration()->update_option( 'token_expires', ( $result['created_at'] + $result['expires_in'] ) );
+	WP_CKWC_Integration()->update_option( 'token_expires', ( time() + $result['expires_in'] ) );
 
 }
 

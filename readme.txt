@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 6.8
 Requires PHP: 7.1
-Stable tag: 1.9.8
+Stable tag: 1.9.9
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.9.9 2025-06-30
+* Fix: Schedule refresh token cron event relative to time(), not token's `created_at`
 
 ### 1.9.8 2025-06-23
 * Fix: Automatically refresh Access Token when expired
