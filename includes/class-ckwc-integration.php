@@ -131,13 +131,13 @@ class CKWC_Integration extends WC_Integration {
 		// Update settings.
 		$this->update_option( 'access_token', $result['access_token'] );
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
-		$this->update_option( 'token_expires', ( $result['created_at'] + $result['expires_in'] ) );
+		$this->update_option( 'token_expires', ( time() + $result['expires_in'] ) );
 
 		// Clear any existing scheduled WordPress Cron event.
 		wp_clear_scheduled_hook( 'ckwc_refresh_token' );
 
 		// Schedule a WordPress Cron event to refresh the token on expiry.
-		wp_schedule_single_event( ( $result['created_at'] + $result['expires_in'] ), 'ckwc_refresh_token' );
+		wp_schedule_single_event( ( time() + $result['expires_in'] ), 'ckwc_refresh_token' );
 
 	}
 
@@ -216,7 +216,7 @@ class CKWC_Integration extends WC_Integration {
 		// Update settings.
 		$this->update_option( 'access_token', $result['access_token'] );
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
-		$this->update_option( 'token_expires', ( $result['created_at'] + $result['expires_in'] ) );
+		$this->update_option( 'token_expires', ( time() + $result['expires_in'] ) );
 
 		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
 		// is now authenticated.
