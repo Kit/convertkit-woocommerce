@@ -244,7 +244,8 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (127, 'widget_wishlistwidget',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
 (128, 'WishListMemberOptions_MigrateLevelData', '1',  'yes'),
 (129, 'WishListMemberOptions_MigrateContentLevelData',  '1',  'yes'),
-(130, 'woocommerce_version',  '9.7.1',  'yes');
+(130, 'woocommerce_version',  '9.7.1',  'yes'),
+(131, 'woocommerce_stripe_settings',  'a:28:{s:7:"enabled";s:2:"no";s:5:"title";s:20:"Credit Card (Stripe)";s:11:"description";s:37:"Pay with your credit card via Stripe.";s:15:"api_credentials";s:0:"";s:8:"testmode";s:3:"yes";s:20:"test_publishable_key";s:0:"";s:15:"test_secret_key";s:0:"";s:15:"publishable_key";s:0:"";s:10:"secret_key";s:0:"";s:7:"webhook";s:0:"";s:19:"test_webhook_secret";s:0:"";s:14:"webhook_secret";s:0:"";s:14:"inline_cc_form";s:2:"no";s:20:"statement_descriptor";s:0:"";s:26:"short_statement_descriptor";s:0:"";s:7:"capture";s:3:"yes";s:15:"payment_request";s:3:"yes";s:27:"payment_request_button_type";s:7:"default";s:28:"payment_request_button_theme";s:4:"dark";s:32:"payment_request_button_locations";a:3:{i:0;s:7:"product";i:1;s:4:"cart";i:2;s:8:"checkout";}s:27:"payment_request_button_size";s:7:"default";s:11:"saved_cards";s:3:"yes";s:29:"sepa_tokens_for_other_methods";s:3:"yes";s:7:"logging";s:2:"no";s:27:"amazon_pay_button_locations";a:2:{i:0;s:7:"product";i:1;s:4:"cart";}s:22:"amazon_pay_button_size";s:7:"default";s:31:"upe_checkout_experience_enabled";s:3:"yes";s:41:"upe_checkout_experience_accepted_payments";a:2:{i:0;s:4:"card";i:1;s:4:"link";}}',  'yes');
 
 DROP TABLE IF EXISTS `wp_postmeta`;
 CREATE TABLE `wp_postmeta` (
