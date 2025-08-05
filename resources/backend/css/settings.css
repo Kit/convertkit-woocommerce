@@ -4,6 +4,9 @@
 body.woocommerce_page_wc-settings {
 	background: #f6f8fa;
 }
+body.woocommerce_page_wc-settings #wpbody-content {
+	background: none !important;
+}
 
 /**
  * First Section
