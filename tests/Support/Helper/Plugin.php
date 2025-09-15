@@ -527,7 +527,7 @@ class Plugin extends \Codeception\Module
 		// Define options.
 		$options = [
 			'Billing Address', // First item.
-			'Test', // Last item.
+			'URL', // Last item.
 		];
 
 		// Prepend options, such as 'Default' and 'None' to the options, if required.
