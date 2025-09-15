@@ -199,9 +199,9 @@ class Plugin extends \Codeception\Module
 				],
 				321150 => [
 					'id'    => 321150,
-					'name'  => 'ck_field_321150_test',
-					'key'   => 'test',
-					'label' => 'Test',
+					'name'  => 'ck_field_321150_url',
+					'key'   => 'url',
+					'label' => 'URL',
 				],
 				276272 => [
 					'id'    => 276272,

@@ -131,7 +131,7 @@ class ResourceCustomFieldsTest extends \Codeception\TestCase\WPTestCase
 
 		// Assert order of data is in ascending alphabetical order.
 		$this->assertEquals('Billing Address', reset($result)[ $this->resource->order_by ]);
-		$this->assertEquals('Test', end($result)[ $this->resource->order_by ]);
+		$this->assertEquals('URL', end($result)[ $this->resource->order_by ]);
 	}
 
 	/**
@@ -163,7 +163,7 @@ class ResourceCustomFieldsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('label', reset($result));
 
 		// Assert order of data is in descending alphabetical order.
-		$this->assertEquals('test', reset($result)[ $this->resource->order_by ]);
+		$this->assertEquals('url', reset($result)[ $this->resource->order_by ]);
 		$this->assertEquals('billing_address', end($result)[ $this->resource->order_by ]);
 	}
 
@@ -195,7 +195,7 @@ class ResourceCustomFieldsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('label', reset($result));
 
 		// Assert order of data has not changed.
-		$this->assertEquals('Test', reset($result)['label']);
+		$this->assertEquals('URL', reset($result)['label']);
 		$this->assertEquals('Notes', end($result)['label']);
 	}
 
