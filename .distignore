@@ -3,6 +3,7 @@
 /.scripts
 /.wordpress-org
 /log
+/node_modules
 /tests
 /vendor/autoload.php
 /vendor/composer
@@ -15,6 +16,7 @@
 .env.testing
 .env
 .gitignore
+.stylelintrc.json
 ACTIONS-FILTERS.md
 codeception.dist.yml
 codeception.yml
