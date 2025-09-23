@@ -752,18 +752,15 @@ class WooCommerce extends \Codeception\Module
 		$I->click('button[name=add-to-cart]');
 
 		// View Cart.
+		$I->waitForElementVisible('a.wc-forward');
 		$I->click('a.wc-forward');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Check that the Product exists in the Cart.
-		if ($useLegacyCheckout) {
-			$I->seeInSource($productName);
-		} else {
-			$I->waitForElementVisible('.wc-block-components-product-name');
-			$I->assertEquals($productName, $I->grabTextFrom('.wc-block-components-product-name'));
-		}
+		$I->waitForElementVisible('.wc-block-components-product-name');
+		$I->assertEquals($productName, $I->grabTextFrom('.wc-block-components-product-name'));
 
 		// Proceed to Checkout.
 		$I->click('Proceed to Checkout');
