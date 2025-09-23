@@ -307,7 +307,14 @@ class WooCommerce extends \Codeception\Module
 		$I->logOut();
 
 		// Add Product to Cart and load Checkout.
-		$I->wooCommerceCheckoutWithProduct($I, $productID, $productName, $emailAddress, $paymentMethod, $options['use_legacy_checkout']);
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: $productName,
+			emailAddress: $emailAddress,
+			paymentMethod: $paymentMethod,
+			useLegacyCheckout: $options['use_legacy_checkout']
+		);
 
 		// Apply Coupon Code.
 		if (isset($couponID)) {
@@ -751,7 +758,12 @@ class WooCommerce extends \Codeception\Module
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Check that the Product exists in the Cart.
-		$I->seeInSource($productName);
+		if ($useLegacyCheckout) {
+			$I->seeInSource($productName);
+		} else {
+			$I->waitForElementVisible('.wc-block-components-product-name');
+			$I->assertEquals($productName, $I->grabTextFrom('.wc-block-components-product-name'));
+		}
 
 		// Proceed to Checkout.
 		$I->click('Proceed to Checkout');
