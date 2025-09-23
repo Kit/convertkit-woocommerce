@@ -13,113 +13,144 @@
  * Your server-side script will be sent all data as a POST array, including POST['current_index'], telling your script what number this
  * request is.
  *
- * @package CKWC
- * @author ConvertKit
+ * @param {jQuery} $
  */
-
-( function ( $ ) {
-
+(function ($) {
 	/**
 	 * Init Synchronous Request
 	 *
-	 * @param object options Override Default Settings
+	 * @param {Object} options Override Default Settings
 	 */
-	$.fn.synchronous_request = function ( options ) {
-
+	$.fn.synchronous_request = function (options) {
 		// Default Settings.
-		var settings = $.extend(
+		const settings = $.extend(
 			{
 				// Required.
-				url: 			'', // AJAX url.
-				number_requests:0, // Total number of requests that will be sent.
-				offset: 		0, // The offset to start at.
-				action:         '', // The WordPress registered AJAX action name to use for each request.
-				nonce: 			'', // WordPress nonce, which your AJAX function should validate.
-				ids:            '', // Array of IDs or keys to iterate through, sending one with each request.
-				wait: 			5000, // Number of milliseconds to wait.
-				stop_on_error: 	0, // 1: stop, 0: continue and retry the same request, -1: continue but skip the failed request.
+				url: '', // AJAX url.
+				number_requests: 0, // Total number of requests that will be sent.
+				offset: 0, // The offset to start at.
+				action: '', // The WordPress registered AJAX action name to use for each request.
+				nonce: '', // WordPress nonce, which your AJAX function should validate.
+				ids: '', // Array of IDs or keys to iterate through, sending one with each request.
+				wait: 5000, // Number of milliseconds to wait.
+				stop_on_error: 0, // 1: stop, 0: continue and retry the same request, -1: continue but skip the failed request.
 
 				// Optional.
 				progress_count: '#progress-number', // DOM selector that contains successful request count.
-				log:  			'#log', // DOM selector for the log.
-				cancel_button:  '.cancel', // DOM selector for the cancel button.
-				type: 			'post', // AJAX request type.
-				cache: 			false, // Whether to cache requests.
-				dataType: 		'json', // Response data type.
+				log: '#log', // DOM selector for the log.
+				cancel_button: '.cancel', // DOM selector for the cancel button.
+				type: 'post', // AJAX request type.
+				cache: false, // Whether to cache requests.
+				dataType: 'json', // Response data type.
 
 				/**
 				 * Called when an AJAX request returns a successful response.
 				 *
 				 * @since   1.4.3
 				 *
-				 * @param   object  response        Response
-				 * @param   int     currentIndex    Current Index
+				 * @param {Object} response     Response
+				 * @param {number} currentIndex Current Index
 				 */
-				onRequestSuccess: function ( response, currentIndex ) {
-
+				onRequestSuccess(response, currentIndex) {
 					// Maybe reset log if it's more than 100 lines, for UI performance.
 					this.maybeResetLog();
 
-					if ( response.success ) {
+					if (response.success) {
 						// Output Log.
-						$( 'ul', $( this.log ) ).append( '<li class="success">' + ( currentIndex + 1 ) + '/' + this.number_requests + ': ' + response.data + '</li>' );
+						$('ul', $(this.log)).append(
+							'<li class="success">' +
+								(currentIndex + 1) +
+								'/' +
+								this.number_requests +
+								': ' +
+								response.data +
+								'</li>'
+						);
 					} else {
 						// Something went wrong.
 						// Define message.
-						var message = ( currentIndex + 1 ) + '/' + this.number_requests + ': Response Error: ' + response.data;
-						switch ( this.stop_on_error ) {
+						let message =
+							currentIndex +
+							1 +
+							'/' +
+							this.number_requests +
+							': Response Error: ' +
+							response.data;
+						switch (this.stop_on_error) {
 							// Stop sending any further requests.
 							case 1:
 								break;
 
 							// Continue, reattempting the failed request.
 							case 0:
-								message = message + '. Waiting ' + ( this.stop_on_error_pause / 1000 ) + ' seconds before reattempting this request.';
+								message =
+									message +
+									'. Waiting ' +
+									this.stop_on_error_pause / 1000 +
+									' seconds before reattempting this request.';
 								break;
 
 							// Continue, skipping the failed request.
 							case -1:
-								message = message + '. Waiting ' + ( this.stop_on_error_pause / 1000 ) + ' seconds before attempting next request.';
+								message =
+									message +
+									'. Waiting ' +
+									this.stop_on_error_pause / 1000 +
+									' seconds before attempting next request.';
 								break;
 						}
 
 						// Output Log.
-						$( 'ul', $( this.log ) ).append( '<li class="error">' + message + '</li>' );
+						$('ul', $(this.log)).append(
+							'<li class="error">' + message + '</li>'
+						);
 					}
 
 					// Run the next request, unless the user clicked the 'Stop Generation' button.
-					if ( this.cancelled == true ) {
+					if (this.cancelled === true) {
 						return false;
 					}
 
 					// Run the next request.
 					return true;
-
 				},
 
 				/**
 				 * Called when an AJAX request results in a HTTP or server error.
 				 *
 				 * @since   1.4.3
+				 *
+				 * @param {Object} xhr
+				 * @param {string} textStatus
+				 * @param {string} e
+				 * @param {number} currentIndex
 				 */
-				onRequestError: function ( xhr, textStatus, e, currentIndex ) {
-
+				onRequestError(xhr, textStatus, e, currentIndex) {
 					// If the log exceeds 100 items, reset it.
-					if ( $( '#log ul li' ).length >= 100 ) {
-						$( '#log ul' ).html( '' );
+					if ($('#log ul li').length >= 100) {
+						$('#log ul').html('');
 					}
 
 					// Output Log.
-					$( '#log ul' ).append( '<li class="error">' + ( currentIndex + 1 ) + '/' + ckwc_sync_past_orders.number_requests + ': Request Error: ' + xhr.status + ' ' + xhr.statusText + '</li>' );
+					$('#log ul').append(
+						'<li class="error">' +
+							(currentIndex + 1) +
+							'/' +
+							ckwc_sync_past_orders.number_requests +
+							': Request Error: ' +
+							xhr.status +
+							' ' +
+							xhr.statusText +
+							'</li>'
+					);
 
 					// Run the next request, unless the user clicked the cancel button.
-					if ( this.cancelled == true ) {
+					if (this.cancelled === true) {
 						return false;
 					}
 
 					// Try again.
 					return true;
-
 				},
 
 				/**
@@ -127,17 +158,19 @@
 				 *
 				 * @since   1.4.3
 				 */
-				onFinished: function () {
-
-					if ( this.cancelled ) {
-						$( 'ul', $( this.log ) ).append( '<li class="success">Process cancelled by user.</li>' );
+				onFinished() {
+					if (this.cancelled) {
+						$('ul', $(this.log)).append(
+							'<li class="success">Process cancelled by user.</li>'
+						);
 					} else {
-						$( 'ul', $( this.log ) ).append( '<li class="success">Finished.</li>' );
+						$('ul', $(this.log)).append(
+							'<li class="success">Finished.</li>'
+						);
 
 						// Disable the cancel button.
-						$( settings.cancel_button ).attr( 'disabled', 'disabled' );
+						$(settings.cancel_button).attr('disabled', 'disabled');
 					}
-
 				},
 
 				/**
@@ -146,163 +179,181 @@
 				 *
 				 * @since 	1.4.3
 				 */
-				maybeResetLog: function () {
-
+				maybeResetLog() {
 					// If the log exceeds 100 items, reset it.
-					if ( $( 'ul li', $( this.log ) ).length >= 100 ) {
-						$( 'ul', $( this.log ) ).html( '' );
+					if ($('ul li', $(this.log)).length >= 100) {
+						$('ul', $(this.log)).html('');
 					}
-
-				}
+				},
 			},
 			options
 		);
 
 		// Initialize Progress Bar.
-		progressbar = $( this ).progressbar(
-			{
-				value: 0
-			}
-		);
+		progressbar = $(this).progressbar({
+			value: 0,
+		});
 
 		// Bind a listener to the cancel button.
-		if ( settings.cancel_button ) {
+		if (settings.cancel_button) {
+			$(settings.cancel_button).on('click', function (e) {
+				e.preventDefault();
+				settings.cancelled = true;
 
-			$( settings.cancel_button ).on(
-				'click',
-				function ( e ) {
-
-					e.preventDefault();
-					settings.cancelled = true;
-
-					// Disable the cancel button.
-					$( settings.cancel_button ).attr( 'disabled', 'disabled' );
-
-				}
-			);
-
+				// Disable the cancel button.
+				$(settings.cancel_button).attr('disabled', 'disabled');
+			});
 		}
 
 		// Initialize first request.
-		synchronousAjaxRequest( settings, ( -1 + Number( settings.offset ) ), progressbar, settings.progress_count );
-
+		synchronousAjaxRequest(
+			settings,
+			-1 + Number(settings.offset),
+			progressbar,
+			settings.progress_count
+		);
 	};
 
 	/**
 	 * Main function to perform an AJAX request.
 	 *
 	 * @since 	1.4.3
+	 *
+	 * @param {Object} settings
+	 * @param {number} currentIndex
+	 * @param {Object} progressbar
+	 * @param {Object} progressCounter
 	 */
-	function synchronousAjaxRequest( settings, currentIndex, progressbar, progressCounter ) {
-
-		// Increment .
+	function synchronousAjaxRequest(
+		settings,
+		currentIndex,
+		progressbar,
+		progressCounter
+	) {
+		// Increment.
 		currentIndex++;
 
 		// If currentIndex exceeds or equals settings.number_requests, we have finished
 		// currentIndex is a zero based count.
-		if ( currentIndex > ( Number( settings.offset ) + Number( settings.number_requests ) - 1 ) ) {
+		if (
+			currentIndex >
+			Number(settings.offset) + Number(settings.number_requests) - 1
+		) {
 			// Call completion closure.
 			settings.onFinished();
 			return true;
 		}
 
 		// Send AJAX request.
-		$.ajax(
-			{
-				url:      	settings.url,
-				type:     	settings.type,
-				async:    	true,
-				cache:    	settings.cache,
-				dataType: 	settings.dataType,
-				data: 		{
-					action: 		settings.action,
-					nonce: 			settings.nonce,
-					id: 			settings.ids[ currentIndex ],
-					current_index: 	currentIndex
-				},
-				success: function ( response ) {
+		$.ajax({
+			url: settings.url,
+			type: settings.type,
+			async: true,
+			cache: settings.cache,
+			dataType: settings.dataType,
+			data: {
+				action: settings.action,
+				nonce: settings.nonce,
+				id: settings.ids[currentIndex],
+				current_index: currentIndex,
+			},
+			success(response) {
+				// Call onRequestSuccess closure.
+				const cancelled = settings.onRequestSuccess(
+					response,
+					currentIndex
+				);
 
-					// Call onRequestSuccess closure.
-					var cancelled = settings.onRequestSuccess( response, currentIndex );
-
-					// If the response indicates success, update the progress bar and count.
-					if ( response.success ) {
-						progressbar.progressbar( 'value', Number( ((currentIndex + 1) / settings.number_requests) * 100 ) );
-						$( progressCounter ).text( ( currentIndex + 1 ) );
-					} else {
-						// If Stop on Error is enabled, call onFinished closure and exit.
-						if ( settings.stop_on_error == 1 ) {
-							settings.onFinished();
-							return;
-						}
-
-						// If stop on Error is zero, decrement the currentIndex so the same request is attempted again.
-						if ( settings.stop_on_error == 0 ) {
-							currentIndex--;
-						}
-					}
-
-					// If false was returned from the closure, the calling script has requested we stop the loop
-					// Call onFinished closure and exit.
-					if ( ! cancelled ) {
-						settings.onFinished();
-						return;
-					}
-
-					// If the response indicates an error, wait the required period of time before sending the
-					// next request.
-					if ( ! response.success ) {
-						setTimeout(
-							function () {
-								// Start next request.
-								synchronousAjaxRequest( settings, currentIndex, progressbar, progressCounter );
-								return;
-							},
-							settings.wait
-						);
-					} else {
-						// Start next request.
-						synchronousAjaxRequest( settings, currentIndex, progressbar, progressCounter );
-						return;
-					}
-
-				},
-				error: function (xhr, textStatus, e) {
-
-					// Call closure.
-					var cancelled = settings.onRequestError( xhr, textStatus, e, currentIndex );
-
+				// If the response indicates success, update the progress bar and count.
+				if (response.success) {
+					progressbar.progressbar(
+						'value',
+						Number(
+							((currentIndex + 1) / settings.number_requests) *
+								100
+						)
+					);
+					$(progressCounter).text(currentIndex + 1);
+				} else {
 					// If Stop on Error is enabled, call onFinished closure and exit.
-					if ( settings.stop_on_error == 1 ) {
+					if (settings.stop_on_error === 1) {
 						settings.onFinished();
 						return;
 					}
 
 					// If stop on Error is zero, decrement the currentIndex so the same request is attempted again.
-					if ( settings.stop_on_error == 0 ) {
+					if (settings.stop_on_error === 0) {
 						currentIndex--;
 					}
-
-					// If false was returned from the closure, the calling script has requested we stop the loop.
-					// Call onFinished closure and exit.
-					if ( ! cancelled ) {
-						settings.onFinished();
-						return;
-					}
-
-					// Wait the required period of time before sending the next request.
-					setTimeout(
-						function () {
-							// Start next request.
-							synchronousAjaxRequest( settings, currentIndex, progressbar, progressCounter );
-							return;
-						},
-						settings.wait
-					);
-
 				}
-			}
-		);
-	}
 
-} )( jQuery );
+				// If false was returned from the closure, the calling script has requested we stop the loop
+				// Call onFinished closure and exit.
+				if (!cancelled) {
+					settings.onFinished();
+					return;
+				}
+
+				// If the response indicates an error, wait the required period of time before sending the
+				// next request.
+				if (!response.success) {
+					setTimeout(function () {
+						// Start next request.
+						synchronousAjaxRequest(
+							settings,
+							currentIndex,
+							progressbar,
+							progressCounter
+						);
+					}, settings.wait);
+				} else {
+					// Start next request.
+					synchronousAjaxRequest(
+						settings,
+						currentIndex,
+						progressbar,
+						progressCounter
+					);
+				}
+			},
+			error(xhr, textStatus, e) {
+				// Call closure.
+				const cancelled = settings.onRequestError(
+					xhr,
+					textStatus,
+					e,
+					currentIndex
+				);
+
+				// If Stop on Error is enabled, call onFinished closure and exit.
+				if (settings.stop_on_error === 1) {
+					settings.onFinished();
+					return;
+				}
+
+				// If stop on Error is zero, decrement the currentIndex so the same request is attempted again.
+				if (settings.stop_on_error === 0) {
+					currentIndex--;
+				}
+
+				// If false was returned from the closure, the calling script has requested we stop the loop.
+				// Call onFinished closure and exit.
+				if (!cancelled) {
+					settings.onFinished();
+					return;
+				}
+
+				// Wait the required period of time before sending the next request.
+				setTimeout(function () {
+					// Start next request.
+					synchronousAjaxRequest(
+						settings,
+						currentIndex,
+						progressbar,
+						progressCounter
+					);
+				}, settings.wait);
+			},
+		});
+	}
+})(jQuery);
