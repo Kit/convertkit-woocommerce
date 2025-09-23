@@ -27,6 +27,8 @@ DEPLOYMENT.md
 DEVELOPMENT.md
 LICENSE
 log.txt
+package-lock.json
+package.json
 phpcs.xml
 phpcs.tests.xml
 phpstan.neon
