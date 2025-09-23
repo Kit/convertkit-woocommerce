@@ -87,6 +87,9 @@ class CKWC_Admin_Post_Type {
 		// Enqueue Select2 CSS.
 		ckwc_select2_enqueue_styles();
 
+		// Enqueue Refresh Resources CSS.
+		wp_enqueue_style( 'ckwc-refresh-resources', CKWC_PLUGIN_URL . 'resources/backend/css/refresh-resources.css', array(), CKWC_PLUGIN_VERSION );
+
 	}
 
 	/**
