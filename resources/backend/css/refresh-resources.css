@@ -10,6 +10,6 @@
 		transform: rotate(360deg);
 	}
 }
-.ckwc-refresh-resources:disabled .dashicons {
+.ckwc-refresh-resources.is-refreshing .dashicons {
 	animation: kit-spin-refresh-resources-button 1s linear infinite;
 }
