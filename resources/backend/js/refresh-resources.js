@@ -25,7 +25,7 @@ jQuery( document ).ready(
 				field      = $( button ).data( 'field' );
 
 				// Disable button.
-				$( button ).prop( 'disabled', true );
+				$( button ).prop( 'disabled', true ).addClass( 'is-refreshing' );
 
 				// Perform AJAX request to refresh resource.
 				$.ajax(
@@ -51,7 +51,7 @@ jQuery( document ).ready(
 								ckwcRefreshResourcesOutputErrorNotice( response.data );
 
 								// Enable button.
-								$( button ).prop( 'disabled', false );
+								$( button ).prop( 'disabled', false ).removeClass( 'is-refreshing' );
 
 								return;
 							}
@@ -97,7 +97,7 @@ jQuery( document ).ready(
 							$( '.ckwc-select2' ).select2();
 
 							// Enable button.
-							$( button ).prop( 'disabled', false );
+							$( button ).prop( 'disabled', false ).removeClass( 'is-refreshing' );
 
 						}
 					}
@@ -114,7 +114,7 @@ jQuery( document ).ready(
 						ckwcRefreshResourcesOutputErrorNotice( 'Kit for WooCommerce: ' + response.status + ' ' + response.statusText );
 
 						// Enable button.
-						$( button ).prop( 'disabled', false );
+						$( button ).prop( 'disabled', false ).removeClass( 'is-refreshing' );
 					}
 				);
 
