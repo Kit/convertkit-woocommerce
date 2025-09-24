@@ -13,7 +13,7 @@
  * Your server-side script will be sent all data as a POST array, including POST['current_index'], telling your script what number this
  * request is.
  *
- * @param {jQuery} $
+ * @param {Object} $
  */
 (function ($) {
 	/**
@@ -259,6 +259,7 @@
 			},
 			success(response) {
 				// Call onRequestSuccess closure.
+				// eslint-disable-next-line @wordpress/no-unused-vars-before-return
 				const cancelled = settings.onRequestSuccess(
 					response,
 					currentIndex
@@ -318,6 +319,7 @@
 			},
 			error(xhr, textStatus, e) {
 				// Call closure.
+				// eslint-disable-next-line @wordpress/no-unused-vars-before-return
 				const cancelled = settings.onRequestError(
 					xhr,
 					textStatus,
