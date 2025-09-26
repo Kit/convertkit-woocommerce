@@ -128,7 +128,7 @@ jobs:
         if: ${{ matrix.php-versions == '8.1' || matrix.php-versions == '8.2' || matrix.php-versions == '8.3' || matrix.php-versions == '8.4' }}
         run: php vendor/bin/phpcs -q --standard=phpcs.tests.xml --report=checkstyle ./tests | cs2pr
 
-      # Run WordPress Coding Standards on Plugin.
+      # Run WordPress PHP Coding Standards on Plugin.
       - name: Run WordPress PHP Coding Standards
         working-directory: ${{ env.PLUGIN_DIR }}
         run: php vendor/bin/phpcs -q --standard=phpcs.xml --report=checkstyle ./ | cs2pr
@@ -137,6 +137,11 @@ jobs:
       - name: Run WordPress CSS Coding Standards
         working-directory: ${{ env.PLUGIN_DIR }}
         run: npm run lint:css
+
+      # Run JS Coding Standards on Plugin.
+      - name: Run WordPress JS Coding Standards
+        working-directory: ${{ env.PLUGIN_DIR }}
+        run: npm run lint:js
 
       # Run PHPStan for static analysis.
       - name: Run PHPStan Static Analysis

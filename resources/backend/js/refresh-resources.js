@@ -1,7 +1,6 @@
 /**
  * Refresh Resources
  *
- * @package CKWC
  * @author ConvertKit
  */
 
@@ -10,119 +9,112 @@
  *
  * @since 	1.4.8
  */
-jQuery( document ).ready(
-	function ( $ ) {
+jQuery(document).ready(function ($) {
+	$('button.ckwc-refresh-resources').on('click', function (e) {
+		e.preventDefault();
 
-		$( 'button.ckwc-refresh-resources' ).on(
-			'click',
-			function ( e ) {
+		// Fetch some DOM elements.
+		const button = this,
+			field = $(button).data('field');
 
-				e.preventDefault();
+		// Disable button.
+		$(button).prop('disabled', true);
 
-				// Fetch some DOM elements.
-				var button = this,
-				resource   = $( button ).data( 'resource' ),
-				field      = $( button ).data( 'field' );
+		// Perform AJAX request to refresh resource.
+		$.ajax({
+			type: 'POST',
+			data: {
+				action: 'ckwc_admin_refresh_resources',
+				nonce: ckwc_admin_refresh_resources.nonce,
+			},
+			url: ckwc_admin_refresh_resources.ajaxurl,
+			success(response) {
+				if (ckwc_admin_refresh_resources.debug) {
+					console.log(response);
+				}
 
-				// Disable button.
-				$( button ).prop( 'disabled', true );
+				// Remove any existing error notices that might be displayed.
+				ckwcRefreshResourcesRemoveNotices();
 
-				// Perform AJAX request to refresh resource.
-				$.ajax(
-					{
-						type: 'POST',
-						data: {
-							action: 'ckwc_admin_refresh_resources',
-							nonce: ckwc_admin_refresh_resources.nonce
-						},
-						url: ckwc_admin_refresh_resources.ajaxurl,
-						success: function ( response ) {
+				// Show an error if the request wasn't successful.
+				if (!response.success) {
+					// Show error notice.
+					ckwcRefreshResourcesOutputErrorNotice(response.data);
 
-							if ( ckwc_admin_refresh_resources.debug ) {
-								console.log( response );
-							}
+					// Enable button.
+					$(button).prop('disabled', false);
 
-							// Remove any existing error notices that might be displayed.
-							ckwcRefreshResourcesRemoveNotices();
+					return;
+				}
 
-							// Show an error if the request wasn't successful.
-							if ( ! response.success ) {
-								// Show error notice.
-								ckwcRefreshResourcesOutputErrorNotice( response.data );
+				// Get currently selected option.
+				const selectedOption = $(field).val();
 
-								// Enable button.
-								$( button ).prop( 'disabled', false );
-
-								return;
-							}
-
-							// Get currently selected option.
-							var selectedOption = $( field ).val();
-
-							// Remove existing select options.
-							$( 'option', $( field ) ).each(
-								function () {
-									// Skip if data-preserve-on-refresh is specified, as this means we want to keep this specific option.
-									// This will be present on the 'None' and 'Default' options.
-									if ( typeof $( this ).data( 'preserve-on-refresh' ) !== 'undefined' ) {
-										return;
-									}
-
-									// Remove this option.
-									$( this ).remove();
-								}
-							);
-
-							// Populate each resource type with select options from response data into
-							// the application option group.
-							for ( const[ resource, resources ] of Object.entries( response.data ) ) {
-								// resource = forms, sequences, tags.
-								// resoruces = array of resources.
-								resources.forEach(
-									function ( item ) {
-										var value = $( 'optgroup#ckwc-' + resource, $( field ) ).data( 'option-value-prefix' ) + item.id;
-										$( 'optgroup#ckwc-' + resource, $( field ) ).append(
-											new Option(
-												item.name,
-												value,
-												false,
-												( selectedOption == value ? true : false )
-											)
-										);
-									}
-								);
-							}
-
-							// Reload Select2 instances, so that they reflect the changes made.
-							$( '.ckwc-select2' ).select2();
-
-							// Enable button.
-							$( button ).prop( 'disabled', false );
-
-						}
+				// Remove existing select options.
+				$('option', $(field)).each(function () {
+					// Skip if data-preserve-on-refresh is specified, as this means we want to keep this specific option.
+					// This will be present on the 'None' and 'Default' options.
+					if (
+						typeof $(this).data('preserve-on-refresh') !==
+						'undefined'
+					) {
+						return;
 					}
-				).fail(
-					function ( response ) {
-						if ( ckwc_admin_refresh_resources.debug ) {
-							console.log( response );
-						}
 
-						// Remove any existing error notices that might be displayed.
-						ckwcRefreshResourcesRemoveNotices();
+					// Remove this option.
+					$(this).remove();
+				});
 
-						// Show error notice.
-						ckwcRefreshResourcesOutputErrorNotice( 'Kit for WooCommerce: ' + response.status + ' ' + response.statusText );
+				// Populate each resource type with select options from response data into
+				// the application option group.
+				for (const [resource, resources] of Object.entries(
+					response.data
+				)) {
+					// resource = forms, sequences, tags.
+					// resoruces = array of resources.
+					resources.forEach(function (item) {
+						const value =
+							$('optgroup#ckwc-' + resource, $(field)).data(
+								'option-value-prefix'
+							) + item.id;
+						$('optgroup#ckwc-' + resource, $(field)).append(
+							new Option(
+								item.name,
+								value,
+								false,
+								selectedOption === value ? true : false
+							)
+						);
+					});
+				}
 
-						// Enable button.
-						$( button ).prop( 'disabled', false );
-					}
-				);
+				// Reload Select2 instances, so that they reflect the changes made.
+				$('.ckwc-select2').select2();
 
+				// Enable button.
+				$(button).prop('disabled', false);
+			},
+		}).fail(function (response) {
+			if (ckwc_admin_refresh_resources.debug) {
+				console.log(response);
 			}
-		);
 
-	}
-);
+			// Remove any existing error notices that might be displayed.
+			ckwcRefreshResourcesRemoveNotices();
+
+			// Show error notice.
+			ckwcRefreshResourcesOutputErrorNotice(
+				'Kit for WooCommerce: ' +
+					response.status +
+					' ' +
+					response.statusText
+			);
+
+			// Enable button.
+			$(button).prop('disabled', false);
+		});
+	});
+});
 
 /**
  * Removes any existing ConvertKit WordPress style error notices.
@@ -130,13 +122,9 @@ jQuery( document ).ready(
  * @since 	1.4.9
  */
 function ckwcRefreshResourcesRemoveNotices() {
-
-	( function ( $ ) {
-
-		$( 'div.ckwc-error' ).remove();
-
-	} )( jQuery );
-
+	(function ($) {
+		$('div.ckwc-error').remove();
+	})(jQuery);
 }
 
 /**
@@ -145,20 +133,20 @@ function ckwcRefreshResourcesRemoveNotices() {
  *
  * @since 	1.4.9
  *
- * @param 	string 	message 	Error message to display.
+ * @param {string} message Error message to display.
  */
-function ckwcRefreshResourcesOutputErrorNotice( message ) {
-
-	( function ( $ ) {
-
+function ckwcRefreshResourcesOutputErrorNotice(message) {
+	(function ($) {
 		// Show a WordPress style error notice.
-		$( 'hr.wp-header-end' ).after( '<div id="message" class="error ckwc-error notice is-dismissible"><p>' + message + '</p></div>' );
+		$('hr.wp-header-end').after(
+			'<div id="message" class="error ckwc-error notice is-dismissible"><p>' +
+				message +
+				'</p></div>'
+		);
 
 		// Notify WordPress that a new dismissible notification exists, triggering WordPress' makeNoticesDismissible() function,
 		// which adds a dismiss button and binds necessary events to hide the notification.
 		// We can't directly call makeNoticesDismissible(), as its minified function name will be different.
-		$( document ).trigger( 'wp-updates-notice-added' );
-
-	} )( jQuery );
-
+		$(document).trigger('wp-updates-notice-added');
+	})(jQuery);
 }
