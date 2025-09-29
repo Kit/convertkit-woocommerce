@@ -42,7 +42,9 @@ jQuery(document).ready(function ($) {
 					ckwcRefreshResourcesOutputErrorNotice(response.data);
 
 					// Enable button.
-					$(button).prop('disabled', false).removeClass('is-refreshing');
+					$(button)
+						.prop('disabled', false)
+						.removeClass('is-refreshing');
 
 					return;
 				}
