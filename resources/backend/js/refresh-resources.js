@@ -18,7 +18,7 @@ jQuery(document).ready(function ($) {
 			field = $(button).data('field');
 
 		// Disable button.
-		$(button).prop('disabled', true);
+		$(button).prop('disabled', true).addClass('is-refreshing');
 
 		// Perform AJAX request to refresh resource.
 		$.ajax({
@@ -42,7 +42,9 @@ jQuery(document).ready(function ($) {
 					ckwcRefreshResourcesOutputErrorNotice(response.data);
 
 					// Enable button.
-					$(button).prop('disabled', false);
+					$(button)
+						.prop('disabled', false)
+						.removeClass('is-refreshing');
 
 					return;
 				}
@@ -92,7 +94,7 @@ jQuery(document).ready(function ($) {
 				$('.ckwc-select2').select2();
 
 				// Enable button.
-				$(button).prop('disabled', false);
+				$(button).prop('disabled', false).removeClass('is-refreshing');
 			},
 		}).fail(function (response) {
 			if (ckwc_admin_refresh_resources.debug) {
@@ -111,7 +113,7 @@ jQuery(document).ready(function ($) {
 			);
 
 			// Enable button.
-			$(button).prop('disabled', false);
+			$(button).prop('disabled', false).removeClass('is-refreshing');
 		});
 	});
 });
