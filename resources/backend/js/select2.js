@@ -3,7 +3,6 @@
  *
  * @since   1.4.3
  *
- * @package CKWC
  * @author ConvertKit
  */
 
@@ -13,19 +12,11 @@
  * @since 	1.4.3
  */
 function ckwcSelect2Init() {
-
-	( function ( $ ) {
-
-		$( '.ckwc-select2' ).select2();
-
-	} )( jQuery );
-
+	(function ($) {
+		$('.ckwc-select2').select2();
+	})(jQuery);
 }
 
-jQuery( document ).ready(
-	function ( $ ) {
-
-		ckwcSelect2Init();
-
-	}
-);
+jQuery(document).ready(function () {
+	ckwcSelect2Init();
+});
