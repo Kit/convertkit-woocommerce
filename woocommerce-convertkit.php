@@ -9,7 +9,7 @@
  * Plugin Name: Kit (formerly ConvertKit) for WooCommerce
  * Plugin URI:  https://www.kit.com
  * Description: Integrates WooCommerce with Kit, allowing customers to be automatically sent to your Kit account.
- * Version:     2.0.0
+ * Version:     2.0.1
  * Author:      Kit
  * Author URI:  https://www.kit.com
  * License:     GPLv3 or later
@@ -17,7 +17,7 @@
  * Text Domain: woocommerce-convertkit
  *
  * WC requires at least: 3.0
- * WC tested up to: 10.0.4
+ * WC tested up to: 10.2.1
  */
 
 // Bail if Plugin is already loaded.
@@ -30,7 +30,7 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '2.0.0' );
+define( 'CKWC_PLUGIN_VERSION', '2.0.1' );
 define( 'CKWC_OAUTH_CLIENT_ID', 'L0kyADsB3WP5zO5MvUpXQU64gIntQg9BBAIme17r_7A' );
 define( 'CKWC_OAUTH_CLIENT_REDIRECT_URI', 'https://app.kit.com/wordpress/redirect' );
 
