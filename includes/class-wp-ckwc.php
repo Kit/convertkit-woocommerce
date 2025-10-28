@@ -183,7 +183,7 @@ class WP_CKWC {
 		if ( ! defined( 'WP_CLI' ) ) {
 			return;
 		}
-		if ( ! WP_CLI ) {
+		if ( ! WP_CLI ) { // @phpstan-ignore-line
 			return;
 		}
 		if ( ! class_exists( 'WP_CLI' ) ) {
