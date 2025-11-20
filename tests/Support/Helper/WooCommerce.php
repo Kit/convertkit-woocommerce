@@ -752,8 +752,10 @@ class WooCommerce extends \Codeception\Module
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Add Product to Cart.
+		$I->waitForElementVisible('button[name=add-to-cart]', 10);
 		$I->waitForElementClickable('button[name=add-to-cart]', 10);
-		$I->click('button[name=add-to-cart]');
+		$I->wait(0.5);
+		$I->executeJS('document.querySelector("button[name=add-to-cart]").click()');
 		$I->wait(3);
 
 		// Load cart page.
