@@ -21,6 +21,9 @@ class WooCommerce extends \Codeception\Module
 		// Set Store in Live mode i.e. not in "Coming Soon" mode.
 		$I->haveOptionInDatabase( 'woocommerce_coming_soon', 'no' );
 
+		// Disable cart redirect after adding a product to the cart.
+		$I->haveOptionInDatabase( 'woocommerce_cart_redirect_after_add', 'no' );
+
 		// Setup Cash on Delivery as Payment Method.
 		$I->haveOptionInDatabase(
 			'woocommerce_cod_settings',
@@ -752,7 +755,7 @@ class WooCommerce extends \Codeception\Module
 		$I->click('button[name=add-to-cart]');
 
 		// View Cart.
-		$I->waitForText('has been added to your cart', 5);
+		$I->waitForElementVisible('a.wc-forward');
 		$I->click('a.wc-forward');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
