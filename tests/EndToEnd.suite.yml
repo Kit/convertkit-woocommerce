@@ -47,6 +47,7 @@ modules:
             port: '%CHROMEDRIVER_PORT%'
             path: '/wd/hub'
             window_size: 1920x1080
+            restart: true
             capabilities:
               "goog:chromeOptions":
                 args:
