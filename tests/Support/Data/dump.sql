@@ -244,7 +244,9 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (127, 'widget_wishlistwidget',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
 (128, 'WishListMemberOptions_MigrateLevelData', '1',  'yes'),
 (129, 'WishListMemberOptions_MigrateContentLevelData',  '1',  'yes'),
-(130, 'woocommerce_version',  '9.7.1',  'yes');
+(130, 'woocommerce_version',  '10.3.5',  'yes'),
+(131, 'woocommerce_coming_soon', 'no',  'yes'),
+(132, 'woocommerce_cart_redirect_after_add', 'yes',  'yes');
 
 DROP TABLE IF EXISTS `wp_postmeta`;
 CREATE TABLE `wp_postmeta` (
