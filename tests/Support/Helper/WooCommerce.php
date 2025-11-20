@@ -752,7 +752,7 @@ class WooCommerce extends \Codeception\Module
 		$I->click('button[name=add-to-cart]');
 
 		// View Cart.
-		$I->waitForElementVisible('a.wc-forward');
+		$I->waitForText('has been added to your cart', 5);
 		$I->click('a.wc-forward');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
