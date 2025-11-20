@@ -47,20 +47,22 @@ modules:
             port: '%CHROMEDRIVER_PORT%'
             path: '/wd/hub'
             window_size: 1920x1080
-            restart: true
             capabilities:
               "goog:chromeOptions":
                 args:
-                  - "--headless"
                   - "--disable-gpu"
                   - "--disable-dev-shm-usage"
-                  - "--disable-software-rasterizer"
                   - "--proxy-server='direct://'"
                   - "--proxy-bypass-list=*"
                   - "--no-sandbox"
                   - "--user-agent=%TEST_SITE_HTTP_USER_AGENT%"
                 prefs:
                   download.default_directory: '%WORDPRESS_ROOT_DIR%'
+            pageLoadStrategy: eager
+            timeouts:
+                implicit: 5000
+                pageLoad: 60000
+                script: 30000
         lucatume\WPBrowser\Module\WPDb:
             dbUrl: '%WORDPRESS_DB_URL%'
             dump: 'tests/Support/Data/dump.sql'
