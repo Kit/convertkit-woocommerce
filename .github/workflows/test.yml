@@ -30,8 +30,8 @@ jobs:
       DB_USER: root
       DB_PASS: root
       DB_HOST: localhost
-      INSTALL_PLUGINS: "custom-order-numbers-for-woocommerce woocommerce-gateway-stripe" # Don't include this repository's Plugin here.
-      INSTALL_PLUGINS_URLS: "http://cktestplugins.wpengine.com/wp-content/uploads/2024/11/disable-doing-it-wrong-notices.zip https://downloads.wordpress.org/plugin/woocommerce.10.2.1.zip" # URLs to specific third party Plugins
+      INSTALL_PLUGINS: "custom-order-numbers-for-woocommerce woocommerce woocommerce-gateway-stripe" # Don't include this repository's Plugin here.
+      INSTALL_PLUGINS_URLS: "http://cktestplugins.wpengine.com/wp-content/uploads/2024/11/disable-doing-it-wrong-notices.zip" # URLs to specific third party Plugins
       STRIPE_TEST_PUBLISHABLE_KEY: ${{ secrets.STRIPE_TEST_PUBLISHABLE_KEY }} # Stripe Test API Publishable Key, stored in the repository's Settings > Secrets
       STRIPE_TEST_SECRET_KEY: ${{ secrets.STRIPE_TEST_SECRET_KEY }} # Stripe Test API Secret Key, stored in the repository's Settings > Secrets
       CONVERTKIT_API_KEY: ${{ secrets.CONVERTKIT_API_KEY }} # ConvertKit API Key, stored in the repository's Settings > Secrets

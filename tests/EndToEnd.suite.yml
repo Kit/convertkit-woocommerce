@@ -47,6 +47,11 @@ modules:
             port: '%CHROMEDRIVER_PORT%'
             path: '/wd/hub'
             window_size: 1920x1080
+            restart: true
+            timeouts:
+              implicit: 5000
+              pageLoad: 60000
+              script: 30000
             capabilities:
               "goog:chromeOptions":
                 args:

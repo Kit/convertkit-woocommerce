@@ -752,11 +752,25 @@ class WooCommerce extends \Codeception\Module
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Add Product to Cart.
-		$I->waitForElementVisible('button[name=add-to-cart]', 10);
-		$I->waitForElementClickable('button[name=add-to-cart]', 10);
-		$I->wait(0.5);
-		$I->executeJS('document.querySelector("button[name=add-to-cart]").click()');
-		$I->wait(3);
+		$tries = 0;
+		while ($tries++ < 3) {
+			try {
+				// JS click on add-to-cart.
+				$I->waitForElementVisible('button[name=add-to-cart]', 10);
+				$I->waitForElementClickable('button[name=add-to-cart]', 10);
+				$I->wait(0.5);
+				$I->executeJS('document.querySelector("button[name=add-to-cart]").click()');
+
+				// Break if successful.
+				break;
+			} catch (\Facebook\WebDriver\Exception\TimeoutException $e) {
+				if ($tries >= 3) {
+					throw $e;
+				}
+				$I->reloadPage();
+				$I->wait(1);
+			}
+		}
 
 		// Load cart page.
 		$I->amOnPage('/cart');
