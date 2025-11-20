@@ -70,25 +70,31 @@ class WooCommerce extends \Codeception\Module
 				'is_short_statement_descriptor_enabled' => 'no',
 				'upe_checkout_experience_accepted_payments' => [
 					'card',
-					'link',
 				],
 				'short_statement_descriptor'            => 'CK',
 				'stripe_upe_payment_method_order'       => [
 					'card',
-					'alipay',
-					'klarna',
-					'afterpay_clearpay',
-					'eps',
-					'bancontact',
-					'boleto',
-					'ideal',
-					'oxxo',
-					'sepa_debit',
-					'p24',
-					'multibanco',
-					'link',
-					'wechat_pay',
 				],
+				'pmc_enabled'                           => 'yes',
+				'sepa_tokens_for_ideal'                 => 'no',
+				'sepa_tokens_for_bancontact'            => 'no',
+				'express_checkout_button_type'          => 'default',
+				'express_checkout_button_size'          => 'default',
+				'express_checkout_button_theme'         => 'dark',
+				'express_checkout_button_locations'     =>
+				array(
+					0 => 'product',
+					1 => 'cart',
+					2 => 'checkout',
+				),
+				'amazon_pay_button_size'                => 'default',
+				'amazon_pay_button_locations'           =>
+				array(
+					0 => 'product',
+					1 => 'cart',
+				),
+				'optimized_checkout_element'            => 'no',
+				'optimized_checkout_layout'             => 'accordion',
 			]
 		);
 	}
@@ -747,30 +753,14 @@ class WooCommerce extends \Codeception\Module
 
 		// Load the Product on the frontend site.
 		$I->amOnPage('/?p=' . $productID);
+		$I->wait(3);
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Add Product to Cart.
-		$tries = 0;
-		while ($tries++ < 3) {
-			try {
-				// JS click on add-to-cart.
-				$I->waitForElementVisible('button[name=add-to-cart]', 10);
-				$I->waitForElementClickable('button[name=add-to-cart]', 10);
-				$I->wait(0.5);
-				$I->executeJS('document.querySelector("button[name=add-to-cart]").click()');
-
-				// Break if successful.
-				break;
-			} catch (\Facebook\WebDriver\Exception\TimeoutException $e) {
-				if ($tries >= 3) {
-					throw $e;
-				}
-				$I->reloadPage();
-				$I->wait(1);
-			}
-		}
+		$I->click('button.single_add_to_cart_button');
+		$I->wait(3);
 
 		// Load cart page.
 		$I->amOnPage('/cart');
