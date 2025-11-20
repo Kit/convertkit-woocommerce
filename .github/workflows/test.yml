@@ -58,8 +58,12 @@ jobs:
           'EndToEnd/integrations',
           'EndToEnd/purchase-data',
           'EndToEnd/settings',
-          'EndToEnd/subscribe',
-          'EndToEnd/sync-past-orders'
+          'EndToEnd/subscribe/checkout-block',
+          'EndToEnd/subscribe/order-completed',
+          'EndToEnd/subscribe/order-pending-payment',
+          'EndToEnd/subscribe/order-processing',
+          'EndToEnd/sync-past-orders',
+          'Integration'
         ]
 
     # Steps to install, configure and run tests
@@ -292,14 +296,7 @@ jobs:
         working-directory: ${{ env.PLUGIN_DIR }}
         run: php vendor/bin/codecept build
 
-      # Run Codeception Integration Tests on the PHP 8.1 instance before the EndToEnd/general tests.
-      # We run these once to avoid hitting API rate limits.
-      - name: Run tests/Integration
-        if: ${{ matrix.php-versions == '8.1' && matrix.test-groups == 'EndToEnd/general' }}
-        working-directory: ${{ env.PLUGIN_DIR }}
-        run: php vendor/bin/codecept run tests/Integration --fail-fast
-
-      # Run Codeception End to End Tests.
+      # Run Codeception Tests.
       - name: Run tests/${{ matrix.test-groups }}
         working-directory: ${{ env.PLUGIN_DIR }}
         run: php vendor/bin/codecept run tests/${{ matrix.test-groups }} --fail-fast

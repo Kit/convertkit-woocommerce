@@ -21,6 +21,9 @@ class WooCommerce extends \Codeception\Module
 		// Set Store in Live mode i.e. not in "Coming Soon" mode.
 		$I->haveOptionInDatabase( 'woocommerce_coming_soon', 'no' );
 
+		// Disable cart redirect after adding a product to the cart.
+		$I->haveOptionInDatabase( 'woocommerce_cart_redirect_after_add', 'no' );
+
 		// Setup Cash on Delivery as Payment Method.
 		$I->haveOptionInDatabase(
 			'woocommerce_cod_settings',
@@ -67,25 +70,31 @@ class WooCommerce extends \Codeception\Module
 				'is_short_statement_descriptor_enabled' => 'no',
 				'upe_checkout_experience_accepted_payments' => [
 					'card',
-					'link',
 				],
 				'short_statement_descriptor'            => 'CK',
 				'stripe_upe_payment_method_order'       => [
 					'card',
-					'alipay',
-					'klarna',
-					'afterpay_clearpay',
-					'eps',
-					'bancontact',
-					'boleto',
-					'ideal',
-					'oxxo',
-					'sepa_debit',
-					'p24',
-					'multibanco',
-					'link',
-					'wechat_pay',
 				],
+				'pmc_enabled'                           => 'yes',
+				'sepa_tokens_for_ideal'                 => 'no',
+				'sepa_tokens_for_bancontact'            => 'no',
+				'express_checkout_button_type'          => 'default',
+				'express_checkout_button_size'          => 'default',
+				'express_checkout_button_theme'         => 'dark',
+				'express_checkout_button_locations'     =>
+				array(
+					0 => 'product',
+					1 => 'cart',
+					2 => 'checkout',
+				),
+				'amazon_pay_button_size'                => 'default',
+				'amazon_pay_button_locations'           =>
+				array(
+					0 => 'product',
+					1 => 'cart',
+				),
+				'optimized_checkout_element'            => 'no',
+				'optimized_checkout_layout'             => 'accordion',
 			]
 		);
 	}
@@ -744,6 +753,7 @@ class WooCommerce extends \Codeception\Module
 
 		// Load the Product on the frontend site.
 		$I->amOnPage('/?p=' . $productID);
+		$I->wait(3);
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
@@ -754,6 +764,9 @@ class WooCommerce extends \Codeception\Module
 		// View Cart.
 		$I->waitForElementVisible('a.wc-forward');
 		$I->click('a.wc-forward');
+
+		// Wait for the Cart to load.
+		$I->waitForElementVisible('body.woocommerce-cart', 5);
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
