@@ -748,6 +748,9 @@ class WooCommerce extends \Codeception\Module
 		// Add Product to Cart.
 		$I->click('button[name=add-to-cart]');
 
+		// Wait for the Cart to load.
+		$I->waitForElementVisible('body.woocommerce-cart');
+
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
