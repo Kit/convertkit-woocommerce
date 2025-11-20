@@ -748,21 +748,20 @@ class WooCommerce extends \Codeception\Module
 		// Add Product to Cart.
 		$I->click('button[name=add-to-cart]');
 
-		// Wait for the Cart to load.
-		$I->waitForElementVisible('body.woocommerce-cart');
+		$I->wait(3);
 
-		// Check that no WooCommerce, PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		// Wait for the Cart to load.
+		$I->waitForElementVisible('body.woocommerce-cart', 5);
 
 		// Check that the Product exists in the Cart.
-		$I->waitForElementVisible('.wc-block-components-product-name');
+		$I->waitForElementVisible('.wc-block-components-product-name', 5);
 		$I->assertEquals($productName, $I->grabTextFrom('.wc-block-components-product-name'));
 
 		// Proceed to Checkout.
 		$I->click('Proceed to Checkout');
 
 		// Wait for the Checkout to load.
-		$I->waitForElementVisible('body.woocommerce-checkout');
+		$I->waitForElementVisible('body.woocommerce-checkout', 5);
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);

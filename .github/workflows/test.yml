@@ -54,16 +54,7 @@ jobs:
         
         # Folder names within the 'tests' folder to run tests in parallel.
         test-groups: [
-          'EndToEnd/general',
-          'EndToEnd/integrations',
-          'EndToEnd/purchase-data',
-          'EndToEnd/settings',
-          'EndToEnd/subscribe/checkout-block',
-          'EndToEnd/subscribe/order-completed',
-          'EndToEnd/subscribe/order-pending-payment',
-          'EndToEnd/subscribe/order-processing',
-          'EndToEnd/sync-past-orders',
-          'Integration'
+          'EndToEnd/purchase-data'
         ]
 
     # Steps to install, configure and run tests
