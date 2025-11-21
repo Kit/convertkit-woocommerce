@@ -17,11 +17,12 @@ class Email extends \Codeception\Module
 	 * isn't used for two tests across parallel testing runs.
 	 *
 	 * @since   1.9.6.7
+	 *
+	 * @param   string $domain     Domain (default: kit.com).
 	 */
-	public function generateEmailAddress()
+	public function generateEmailAddress($domain = 'kit.com')
 	{
-		// Include uniqid() as there's a possibility that tests run in parallel on the same PHP version
-		// could request an email address on the same second.
-		return 'wordpress-' . uniqid() . '-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '@kit.com';
+		$date = \DateTime::createFromFormat('U.u', number_format(microtime(true), 6, '.', ''));
+		return 'wordpress-' . $date->format('Y-m-d-H-i-s-u') . '-php-' . PHP_VERSION_ID . '@' . $domain;
 	}
 }

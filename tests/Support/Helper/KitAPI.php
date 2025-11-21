@@ -49,6 +49,9 @@ class KitAPI extends \Codeception\Module
 	 */
 	public function apiCheckSubscriberExists($I, $emailAddress, $firstName = false)
 	{
+		// Wait a second to ensure the subscriber has been created.
+		$I->wait(1);
+
 		// Run request.
 		$results = $this->apiRequest(
 			'subscribers',
