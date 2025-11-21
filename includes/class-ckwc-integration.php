@@ -90,6 +90,10 @@ class CKWC_Integration extends WC_Integration {
 		add_action( 'convertkit_api_get_access_token', array( $this, 'update_credentials' ), 10, 2 );
 		add_action( 'convertkit_api_refresh_token', array( $this, 'update_credentials' ), 10, 2 );
 
+		// Delete credentials if the API class uses a invalid access token.
+		// This prevents the Plugin making repetitive API requests that will 401.
+		add_action( 'convertkit_api_access_token_invalid', array( $this, 'maybe_delete_credentials' ), 10, 2 );
+
 		// Load Admin screens, save settings.
 		if ( is_admin() ) {
 			// Perform OAuth and export configuration options, if required.
@@ -142,6 +146,52 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
+	 * Deletes the stored access token, refresh token and its expiry from the Plugin settings,
+	 * and clears any existing scheduled WordPress Cron event to refresh the token on expiry,
+	 * when either:
+	 * - The access token is invalid
+	 * - The access token expired, and refreshing failed
+	 *
+	 * @since   2.0.2
+	 *
+	 * @param   WP_Error $result      Error result.
+	 * @param   string   $client_id   OAuth Client ID used for the Access and Refresh Tokens.
+	 */
+	public function maybe_delete_credentials( $result, $client_id ) {
+
+		// Don't save these credentials if they're not for this Client ID.
+		// They're for another Kit Plugin that uses OAuth.
+		if ( $client_id !== CKWC_OAUTH_CLIENT_ID ) {
+			return;
+		}
+
+		// Persist an error notice in the WordPress Administration until the user fixes the problem.
+		// @TODO.
+		// WP_ConvertKit()->get_class( 'admin_notices' )->add( 'authorization_failed' );
+
+		// Delete the credentials from the Plugin settings.
+		$this->delete_credentials();
+
+	}
+
+	/**
+	 * Deletes any existing access token, refresh token and its expiry from the Plugin settings,
+	 * and clears any existing scheduled WordPress Cron event to refresh the token on expiry.
+	 *
+	 * @since   2.0.2
+	 */
+	public function delete_credentials() {
+
+		$this->update_option( 'access_token', '' );
+		$this->update_option( 'refresh_token', '' );
+		$this->update_option( 'token_expires', '' );
+
+		// Clear any existing scheduled WordPress Cron event.
+		wp_clear_scheduled_hook( 'ckwc_refresh_token' );
+
+	}
+
+	/**
 	 * Deletes the OAuth Access Token, Refresh Token and Expiry from the Plugin's settings, if the user
 	 * clicked the Disconnect button.
 	 *
@@ -165,10 +215,8 @@ class CKWC_Integration extends WC_Integration {
 		// Delete resources.
 		$this->resources_delete();
 
-		// Remove Access Token from settings.
-		$this->update_option( 'access_token', '' );
-		$this->update_option( 'refresh_token', '' );
-		$this->update_option( 'token_expires', '' );
+		// Remove tokens from settings.
+		$this->delete_credentials();
 
 		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
 		// is now authenticated.

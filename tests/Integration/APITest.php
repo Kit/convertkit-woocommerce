@@ -89,6 +89,45 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
+	 * Test that the Access Token, Refresh Token and Token Expiry are deleted from the Plugin's settings
+	 * when the Access Token used is invalid.
+	 *
+	 * @since   2.0.2
+	 */
+	public function testAccessTokenDeletedWhenInvalid()
+	{
+		// Save an invalid access token and refresh token in the Plugin's settings.
+		WP_CKWC_Integration()->update_option( 'access_token', 'invalidAccessToken' );
+		WP_CKWC_Integration()->update_option( 'refresh_token', $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] );
+		WP_CKWC_Integration()->update_option( 'token_expires', time() + 10000 );
+
+		// Confirm the tokens saved.
+		$this->assertEquals( WP_CKWC_Integration()->get_access_token(), 'invalidAccessToken' );
+		$this->assertEquals( WP_CKWC_Integration()->get_refresh_token(), $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] );
+
+		// Initialize the API using the invalid access token.
+		$api = new \CKWC_API(
+			$_ENV['CONVERTKIT_OAUTH_CLIENT_ID'],
+			$_ENV['KIT_OAUTH_REDIRECT_URI'],
+			WP_CKWC_Integration()->get_access_token(),
+			WP_CKWC_Integration()->get_refresh_token()
+		);
+
+		// Run request.
+		$result = $api->get_account();
+
+		// Confirm a WP_Error is returned.
+		$this->assertInstanceOf( 'WP_Error', $result );
+		$this->assertEquals( $result->get_error_code(), 'convertkit_api_error' );
+		$this->assertEquals( $result->get_error_message(), 'The access token is invalid' );
+
+		// Confirm tokens removed from the Plugin's settings, which confirms the `convertkit_api_access_token_invalid` hook was called when the tokens were deleted.
+		$this->assertEmpty( WP_CKWC_Integration()->get_access_token() );
+		$this->assertEmpty( WP_CKWC_Integration()->get_refresh_token() );
+		$this->assertEmpty( WP_CKWC_Integration()->get_token_expires() );
+	}
+
+	/**
 	 * Test that a WordPress Cron event is created when an access token is obtained.
 	 *
 	 * @since   1.9.8
