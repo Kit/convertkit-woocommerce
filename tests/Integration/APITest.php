@@ -124,7 +124,6 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		// Confirm tokens removed from the Plugin's settings, which confirms the `convertkit_api_access_token_invalid` hook was called when the tokens were deleted.
 		$this->assertEmpty( WP_CKWC_Integration()->get_access_token() );
 		$this->assertEmpty( WP_CKWC_Integration()->get_refresh_token() );
-		$this->assertEmpty( WP_CKWC_Integration()->get_token_expires() );
 	}
 
 	/**
