@@ -132,6 +132,9 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
+		// Remove any existing persistent notice.
+		WP_CKWC()->get_class( 'admin_notices' )->delete( 'authorization_failed' );
+
 		// Update settings.
 		$this->update_option( 'access_token', $result['access_token'] );
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
@@ -166,8 +169,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Persist an error notice in the WordPress Administration until the user fixes the problem.
-		// @TODO.
-		// WP_ConvertKit()->get_class( 'admin_notices' )->add( 'authorization_failed' );
+		WP_CKWC()->get_class( 'admin_notices' )->add( 'authorization_failed' );
 
 		// Delete the credentials from the Plugin settings.
 		$this->delete_credentials();
