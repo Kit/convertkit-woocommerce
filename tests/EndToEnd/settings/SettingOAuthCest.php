@@ -92,6 +92,12 @@ class SettingOAuthCest
 		$I->see('Connect');
 		$I->dontSee('Disconnect');
 		$I->dontSeeElementInDOM('button.woocommerce-save-button');
+
+		// Navigate to the WordPress Admin.
+		$I->amOnAdminPage('index.php');
+
+		// Check that a notice is displayed that the API credentials are invalid.
+		$I->seeErrorNotice($I, 'Kit for WooCommerce: Authorization failed. Please connect your Kit account.');
 	}
 
 	/**

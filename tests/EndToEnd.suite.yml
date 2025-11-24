@@ -31,6 +31,7 @@ modules:
         - \Tests\Support\Helper\WPBulkEdit
         - \Tests\Support\Helper\WPGutenberg
         - \Tests\Support\Helper\WPMetabox
+        - \Tests\Support\Helper\WPNotices
         - \Tests\Support\Helper\WPQuickEdit
         - \Tests\Support\Helper\Xdebug
     config:
