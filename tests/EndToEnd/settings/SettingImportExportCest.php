@@ -83,12 +83,21 @@ class SettingImportExportCest
 		// Confirm success message displays.
 		$I->seeInSource('Configuration imported successfully.');
 
-		// Confirm that the options table contains the fake Access Token and Refresh Token.
+		// Confirm that the options table contains the expected settings.
+		// We don't check the access and refresh tokens, as they're invalid in the export JSON
+		// and therefore are automatically removed when used on the settings screen.
 		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
-		$I->assertArrayHasKey('access_token', $settings);
-		$I->assertArrayHasKey('refresh_token', $settings);
-		$I->assertEquals($settings['access_token'], 'fakeAccessToken');
-		$I->assertEquals($settings['refresh_token'], 'fakeRefreshToken');
+		$I->assertEquals($settings['enabled'], 'yes');
+		$I->assertEquals($settings['event'], 'completed');
+		$I->assertEquals($settings['display_opt_in'], 'yes');
+		$I->assertEquals($settings['opt_in_label'], 'Opt In to Newsletter');
+		$I->assertEquals($settings['opt_in_status'], 'checked');
+		$I->assertEquals($settings['opt_in_location'], 'billing');
+		$I->assertEquals($settings['name_format'], 'first');
+		$I->assertEquals($settings['send_purchases'], 'yes');
+		$I->assertEquals($settings['debug'], 'yes');
+		$I->assertEquals($settings['subscribe'], 'yes');
+		$I->assertEquals($settings['send_purchases_event'], 'completed');
 	}
 
 	/**

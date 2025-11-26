@@ -248,6 +248,7 @@ class WP_CKWC {
 	 */
 	private function initialize_global() {
 
+		$this->classes['admin_notices']    = new CKWC_Admin_Notices();
 		$this->classes['checkout']         = new CKWC_Checkout();
 		$this->classes['order']            = new CKWC_Order();
 		$this->classes['review_request']   = new ConvertKit_Review_Request( 'Kit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
