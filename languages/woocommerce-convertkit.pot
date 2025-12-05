@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 2.0.2\n"
+"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 2.0.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-03T01:33:06+00:00\n"
+"POT-Creation-Date: 2025-12-05T02:22:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woocommerce-convertkit\n"
@@ -233,312 +233,312 @@ msgstr ""
 msgid "Enter your Kit settings below to control how WooCommerce integrates with your Kit account."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:363
+#: includes/class-ckwc-integration.php:320
 msgid "The uploaded configuration file isn't valid."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:372
+#: includes/class-ckwc-integration.php:329
 msgid "The uploaded configuration file contains no settings."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:389
+#: includes/class-ckwc-integration.php:346
 msgid "Configuration imported successfully."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:504
+#: includes/class-ckwc-integration.php:461
 msgid "Account Name"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:506
+#: includes/class-ckwc-integration.php:463
 msgid "Disconnect"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:523
+#: includes/class-ckwc-integration.php:480
 msgid "Enable/Disable"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:525
+#: includes/class-ckwc-integration.php:482
 msgid "Enable Kit integration"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:531
+#: includes/class-ckwc-integration.php:488
 msgid "Subscribe Event"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:537
+#: includes/class-ckwc-integration.php:494
 msgid "When should customers be subscribed?"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:541
+#: includes/class-ckwc-integration.php:498
 msgid "Pending payment:"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:542
+#: includes/class-ckwc-integration.php:499
 msgid "WooCommerce order created, payment not received."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:547
-#: includes/class-ckwc-integration.php:759
+#: includes/class-ckwc-integration.php:504
+#: includes/class-ckwc-integration.php:716
 msgid "Processing:"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:548
-#: includes/class-ckwc-integration.php:760
+#: includes/class-ckwc-integration.php:505
+#: includes/class-ckwc-integration.php:717
 msgid "WooCommerce order created, payment received, order awaiting fulfilment."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:553
-#: includes/class-ckwc-integration.php:765
+#: includes/class-ckwc-integration.php:510
+#: includes/class-ckwc-integration.php:722
 msgid "Completed:"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:554
-#: includes/class-ckwc-integration.php:766
+#: includes/class-ckwc-integration.php:511
+#: includes/class-ckwc-integration.php:723
 msgid "WooCommerce order created, payment received, order fulfiled."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:560
+#: includes/class-ckwc-integration.php:517
 msgid "Order Pending payment"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:561
-#: includes/class-ckwc-integration.php:772
+#: includes/class-ckwc-integration.php:518
+#: includes/class-ckwc-integration.php:729
 msgid "Order Processing"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:562
-#: includes/class-ckwc-integration.php:773
+#: includes/class-ckwc-integration.php:519
+#: includes/class-ckwc-integration.php:730
 msgid "Order Completed"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:569
+#: includes/class-ckwc-integration.php:526
 msgid "Subscription"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:572
+#: includes/class-ckwc-integration.php:529
 msgid "The Kit form, tag or sequence to subscribe customers to."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:578
+#: includes/class-ckwc-integration.php:535
 msgid "Name Format"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:581
+#: includes/class-ckwc-integration.php:538
 msgid "How should the customer name be sent to Kit?"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:584
+#: includes/class-ckwc-integration.php:541
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:585
+#: includes/class-ckwc-integration.php:542
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:586
+#: includes/class-ckwc-integration.php:543
 msgid "Billing First Name + Billing Last Name"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:595
+#: includes/class-ckwc-integration.php:552
 msgid "Send Last Name"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:598
+#: includes/class-ckwc-integration.php:555
 msgid "The Kit custom field to store the order's last name."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:604
+#: includes/class-ckwc-integration.php:561
 msgid "Send Phone Number"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:607
+#: includes/class-ckwc-integration.php:564
 msgid "The Kit custom field to store the order's phone number."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:613
+#: includes/class-ckwc-integration.php:570
 msgid "Send Billing Address"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:616
+#: includes/class-ckwc-integration.php:573
 msgid "The Kit custom field to store the order's billing address."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:622
+#: includes/class-ckwc-integration.php:579
 msgid "Send Shipping Address"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:625
+#: includes/class-ckwc-integration.php:582
 msgid "The Kit custom field to store the order's shipping address."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:631
+#: includes/class-ckwc-integration.php:588
 msgid "Address Format"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:642
+#: includes/class-ckwc-integration.php:599
 msgid "The format of the billing and shipping addresses to store in Kit."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:645
+#: includes/class-ckwc-integration.php:602
 msgid "Name"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:646
+#: includes/class-ckwc-integration.php:603
 msgid "Company Name"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:647
+#: includes/class-ckwc-integration.php:604
 msgid "Address 1"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:648
+#: includes/class-ckwc-integration.php:605
 msgid "Address 2"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:649
+#: includes/class-ckwc-integration.php:606
 msgid "City"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:650
+#: includes/class-ckwc-integration.php:607
 msgid "State"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:651
+#: includes/class-ckwc-integration.php:608
 msgid "Postcode"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:652
+#: includes/class-ckwc-integration.php:609
 msgid "Country"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:659
+#: includes/class-ckwc-integration.php:616
 msgid "Send Payment Method"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:662
+#: includes/class-ckwc-integration.php:619
 msgid "The Kit custom field to store the order's payment method."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:668
+#: includes/class-ckwc-integration.php:625
 msgid "Send Customer Note"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:671
+#: includes/class-ckwc-integration.php:628
 msgid "The Kit custom field to store the order's customer note."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:679
+#: includes/class-ckwc-integration.php:636
 msgid "Opt-In Checkbox"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:680
+#: includes/class-ckwc-integration.php:637
 msgid "Display an opt-in checkbox on checkout"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:683
+#: includes/class-ckwc-integration.php:640
 msgid ""
 "If enabled, customers will <strong>only</strong> be subscribed to the chosen forms, tags and sequences if they check the opt-in checkbox at checkout.<br />\n"
 "\t\t\t\t\t\t\t\t\t  If disabled, customers will <strong>always</strong> be subscribed to the chosen forms, tags and sequences at checkout."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:694
+#: includes/class-ckwc-integration.php:651
 msgid "Opt-In Checkbox: Label"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:696
+#: includes/class-ckwc-integration.php:653
 msgid "I want to subscribe to the newsletter"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:697
+#: includes/class-ckwc-integration.php:654
 msgid "Customize the label next to the opt-in checkbox."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:704
+#: includes/class-ckwc-integration.php:661
 msgid "Opt-In Checkbox: Default Status"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:707
+#: includes/class-ckwc-integration.php:664
 msgid "The default state of the opt-in checkbox."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:710
+#: includes/class-ckwc-integration.php:667
 msgid "Checked"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:711
+#: includes/class-ckwc-integration.php:668
 msgid "Unchecked"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:718
+#: includes/class-ckwc-integration.php:675
 msgid "Opt-In Checkbox: Display Location"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:721
+#: includes/class-ckwc-integration.php:678
 msgid "Where to display the opt-in checkbox on the checkout page (under \"Billing details\" or \"Additional information\")."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:724
+#: includes/class-ckwc-integration.php:681
 msgid "Billing"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:725
+#: includes/class-ckwc-integration.php:682
 msgid "Order"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:734
+#: includes/class-ckwc-integration.php:691
 msgid "Purchase Data"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:735
+#: includes/class-ckwc-integration.php:692
 msgid "Send purchase data to Kit."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:738
+#: includes/class-ckwc-integration.php:695
 msgid ""
 "If enabled, the customer's order data will be sent to Kit. Their email address will always be subscribed to Kit, <strong>regardless of the Customer's opt in status.</strong><br />\n"
 "\t\t\t\t\t\t\t\t\t  If disabled, no order data will be sent to Kit."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:749
+#: includes/class-ckwc-integration.php:706
 msgid "Purchase Data Event"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:755
+#: includes/class-ckwc-integration.php:712
 msgid "When should purchase data be sent?"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:780
+#: includes/class-ckwc-integration.php:737
 msgid "Sync Past Orders"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:781
+#: includes/class-ckwc-integration.php:738
 msgid "Send old purchase data to Kit i.e. Orders that were created in WooCommerce prior to this Plugin being installed."
 msgstr ""
 
-#: includes/class-ckwc-integration.php:797
+#: includes/class-ckwc-integration.php:754
 msgid "Debug"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:799
+#: includes/class-ckwc-integration.php:756
 msgid "Write data to a log file"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:804
+#: includes/class-ckwc-integration.php:761
 msgid "View log file"
 msgstr ""
 
-#: includes/class-ckwc-integration.php:874
+#: includes/class-ckwc-integration.php:831
 msgid "Do you want to send past WooCommerce Orders to Kit?"
 msgstr ""
 
 #. translators: Number of WooCommerce Orders
-#: includes/class-ckwc-integration.php:1054
+#: includes/class-ckwc-integration.php:1011
 #, php-format
 msgid "%s not been sent to Kit based on the Purchase Data Event setting above. This is either because sending purchase data is/was disabled, and/or orders were created prior to installing this integration.<br />Use the sync button to send data for these orders to Kit."
 msgstr ""
 
 #. translators: number of Orders not sent to ConvertKit
-#: includes/class-ckwc-integration.php:1057
+#: includes/class-ckwc-integration.php:1014
 #, php-format
 msgid "%s WooCommerce order has"
 msgid_plural "%s WooCommerce orders have"
