@@ -32,8 +32,34 @@ class CKWC_Resource extends ConvertKit_Resource_V4 {
 			);
 		}
 
-		// Call parent initialization function.
-		parent::init();
+		// Get last query time and existing resources.
+		$this->last_queried = get_option( $this->settings_name . '_last_queried' );
+		$this->resources    = get_option( $this->settings_name );
+
+	}
+
+	/**
+	 * Fetches resources (custom fields, forms, sequences or tags) from the API, storing them in the options table
+	 * with a last queried timestamp.
+	 *
+	 * If the refresh results in a 401, removes the access and refresh tokens from the settings.
+	 *
+	 * @since   2.0.3
+	 *
+	 * @return  WP_Error|array
+	 */
+	public function refresh() {
+
+		// Call parent refresh method.
+		$result = parent::refresh();
+
+		// If an error occured, maybe delete credentials from the Plugin's settings
+		// if the error is a 401 unauthorized.
+		if ( is_wp_error( $result ) ) {
+			ckwc_maybe_delete_credentials( $result, CKWC_OAUTH_CLIENT_ID );
+		}
+
+		return $result;
 
 	}
 
