@@ -767,8 +767,8 @@ class CKWC_Integration extends WC_Integration {
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
 				'class'       => 'enabled',
 			),
-			'abandoned_cart_timeout'        => array(
-				'title'       => __( 'Abandoned Cart: Timeout', 'woocommerce-convertkit' ),
+			'abandoned_cart_threshold'      => array(
+				'title'       => __( 'Abandoned Cart: Threshold', 'woocommerce-convertkit' ),
 				'type'        => 'number',
 				'default'     => 5,
 				'description' => __( 'The number of minutes to wait before considering a cart abandoned.', 'woocommerce-convertkit' ),
