@@ -523,13 +523,16 @@ class CKWC_Integration extends WC_Integration {
 				'class'       => 'enabled subscribe',
 			),
 			'subscription'                  => array(
-				'title'       => __( 'Subscription', 'woocommerce-convertkit' ),
-				'type'        => 'subscription',
-				'default'     => '',
-				'description' => __( 'The Kit form, tag or sequence to subscribe customers to.', 'woocommerce-convertkit' ),
+				'title'             => __( 'Subscription', 'woocommerce-convertkit' ),
+				'type'              => 'subscription',
+				'default'           => '',
+				'description'       => __( 'The Kit form, tag or sequence to subscribe customers to.', 'woocommerce-convertkit' ),
+				'include_forms'     => true,
+				'include_tags'      => true,
+				'include_sequences' => true,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'             => 'enabled subscribe',
 			),
 			'name_format'                   => array(
 				'title'       => __( 'Name Format', 'woocommerce-convertkit' ),
@@ -775,13 +778,16 @@ class CKWC_Integration extends WC_Integration {
 				'class'       => 'enabled abandoned_cart',
 			),
 			'abandoned_cart_subscription'   => array(
-				'title'       => __( 'Abandoned Cart: Subscription', 'woocommerce-convertkit' ),
-				'type'        => 'subscription',
-				'default'     => '',
-				'description' => __( 'The Kit tag or sequence to subscribe visitors to when they abandon their cart. This can be used in a Sequence or Automation to send abandoned cart emails to the subscriber.', 'woocommerce-convertkit' ),
+				'title'             => __( 'Abandoned Cart: Tag', 'woocommerce-convertkit' ),
+				'type'              => 'subscription',
+				'default'           => '',
+				'description'       => __( 'The Kit tag to subscribe visitors to when they abandon their cart. This can be used in a Sequence or Automation to send abandoned cart emails to the subscriber. This tag is removed when the customer completes the checkout process.', 'woocommerce-convertkit' ),
+				'include_forms'     => false,
+				'include_tags'      => true,
+				'include_sequences' => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled abandoned_cart',
+				'class'             => 'enabled abandoned_cart',
 			),
 
 			// Debugging.
@@ -926,6 +932,9 @@ class CKWC_Integration extends WC_Integration {
 			'description'       => '',
 			'custom_attributes' => array(),
 			'options'           => array(),
+			'include_forms'     => false,
+			'include_tags'      => false,
+			'include_sequences' => false,
 		);
 
 		$data = wp_parse_args( $data, $defaults );
@@ -947,14 +956,22 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
-			'id'        => $field,
-			'class'     => 'select ckwc-select2 ' . $data['class'],
-			'name'      => $field,
-			'value'     => $this->get_option( $key ),
-			'forms'     => $this->forms,
-			'tags'      => $this->tags,
-			'sequences' => $this->sequences,
+			'id'    => $field,
+			'class' => 'select ckwc-select2 ' . $data['class'],
+			'name'  => $field,
+			'value' => $this->get_option( $key ),
 		);
+
+		// Include Forms, Tags and Sequences in the subscription dropdown field.
+		if ( $data['include_forms'] ) {
+			$subscription['forms'] = $this->forms;
+		}
+		if ( $data['include_tags'] ) {
+			$subscription['tags'] = $this->tags;
+		}
+		if ( $data['include_sequences'] ) {
+			$subscription['sequences'] = $this->sequences;
+		}
 
 		ob_start();
 		require CKWC_PLUGIN_PATH . '/views/backend/settings/subscription.php';

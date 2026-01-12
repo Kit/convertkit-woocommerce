@@ -144,8 +144,40 @@ class CKWC_Abandoned_Cart {
 	 */
 	public function clear_abandoned_cart() {
 
+		// Get email from session.
+		$email = WC()->session->get( 'ckwc_abandoned_cart_email' );
+
+		// Clear the abandoned cart data.
 		WC()->session->__unset( 'ckwc_abandoned_cart_email' );
 		WC()->session->__unset( 'ckwc_abandoned_cart_timestamp' );
+
+		// If no email address exists, nothing to unsubscribe.
+		if ( empty( $email ) ) {
+			return;
+		}
+
+		// Setup the API.
+		$this->api = new CKWC_API(
+			CKWC_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->integration->get_option( 'access_token' ),
+			$this->integration->get_option( 'refresh_token' ),
+			$this->integration->get_option_bool( 'debug' )
+		);
+
+		// Get tag ID from the integration's setting.
+		$subscription = $this->integration->get_option( 'abandoned_cart_subscription' );
+
+		// Bail if no subscription is configured.
+		if ( empty( $subscription ) ) {
+			return;
+		}
+
+		// Get the resource type and ID.
+		list( $resource_type, $tag_id ) = explode( ':', $subscription );
+
+		// Remove tag from subscriber.
+		$this->api->remove_tag_from_subscriber_by_email( absint( $tag_id ), $email );
 
 	}
 
