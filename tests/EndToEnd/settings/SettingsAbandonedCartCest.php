@@ -44,7 +44,7 @@ class SettingsAbandonedCartCest
 		$I->checkOption('#woocommerce_ckwc_abandoned_cart');
 
 		// Confirm the Abandoned Cart options are displayed.
-		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_timeout');
+		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_threshold');
 		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_subscription');
 
 		// Save.
@@ -55,7 +55,7 @@ class SettingsAbandonedCartCest
 
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
-		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_timeout');
+		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_threshold');
 		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_subscription');
 	}
 
@@ -76,7 +76,7 @@ class SettingsAbandonedCartCest
 		$I->uncheckOption('#woocommerce_ckwc_abandoned_cart');
 
 		// Confirm the Abandoned Cart options are not displayed.
-		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_timeout');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_threshold');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_subscription');
 
 		// Save.
@@ -87,25 +87,25 @@ class SettingsAbandonedCartCest
 
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
-		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_timeout');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_threshold');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_subscription');
 	}
 
 	/**
-	 * Test that the Abandoned Cart Timeout option is saved when set to 10 minutes at
+	 * Test that the Abandoned Cart Threshold option is saved when set to 10 minutes at
 	 * WooCommerce > Settings > Integration > ConvertKit.
 	 *
 	 * @since   2.0.5
 	 *
 	 * @param   EndToEndTester $I  Tester.
 	 */
-	public function testAbandonedCartTimeoutSetting(EndToEndTester $I)
+	public function testAbandonedCartThresholdSetting(EndToEndTester $I)
 	{
 		// Check "Abandoned Cart" checkbox.
 		$I->checkOption('#woocommerce_ckwc_abandoned_cart');
 
 		// Set Abandoned Cart Timeout = 10 minutes.
-		$I->fillField('#woocommerce_ckwc_abandoned_cart_timeout', '10');
+		$I->fillField('#woocommerce_ckwc_abandoned_cart_threshold', '10');
 
 		// Save.
 		$I->click('Save changes');
@@ -115,7 +115,7 @@ class SettingsAbandonedCartCest
 
 		// Confirm the settings saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
-		$I->seeInField('#woocommerce_ckwc_abandoned_cart_timeout', '10');
+		$I->seeInField('#woocommerce_ckwc_abandoned_cart_threshold', '10');
 	}
 
 	/**
