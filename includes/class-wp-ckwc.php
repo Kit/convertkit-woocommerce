@@ -248,6 +248,7 @@ class WP_CKWC {
 	 */
 	private function initialize_global() {
 
+		$this->classes['abandoned_cart']   = new CKWC_Abandoned_Cart();
 		$this->classes['admin_notices']    = new CKWC_Admin_Notices();
 		$this->classes['checkout']         = new CKWC_Checkout();
 		$this->classes['order']            = new CKWC_Order();
