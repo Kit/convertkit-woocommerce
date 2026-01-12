@@ -749,6 +749,41 @@ class CKWC_Integration extends WC_Integration {
 				'class'    => 'enabled subscribe',
 			),
 
+			// Abandoned Cart.
+			'abandoned_cart'                => array(
+				'title'       => __( 'Abandoned Cart', 'woocommerce-convertkit' ),
+				'label'       => __( 'Send abandoned cart data to Kit.', 'woocommerce-convertkit' ),
+				'type'        => 'checkbox',
+				'default'     => 'no',
+				'description' => __(
+					'If enabled, the visitor will be subscribed to a sequence or tag in Kit, if they leave items in their cart without completing the checkout process.',
+					'woocommerce-convertkit'
+				),
+				'desc_tip'    => false,
+
+				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'       => 'enabled',
+			),
+			'abandoned_cart_timeout'        => array(
+				'title'       => __( 'Abandoned Cart: Timeout', 'woocommerce-convertkit' ),
+				'type'        => 'number',
+				'default'     => 5,
+				'description' => __( 'The number of minutes to wait before considering a cart abandoned.', 'woocommerce-convertkit' ),
+				'desc_tip'    => false,
+
+				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'       => 'enabled abandoned_cart',
+			),
+			'abandoned_cart_subscription'   => array(
+				'title'       => __( 'Abandoned Cart: Subscription', 'woocommerce-convertkit' ),
+				'type'        => 'subscription',
+				'default'     => '',
+				'description' => __( 'The Kit tag or sequence to subscribe visitors to when they abandon their cart. This can be used in a Sequence or Automation to send abandoned cart emails to the subscriber.', 'woocommerce-convertkit' ),
+
+				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
+				'class'       => 'enabled abandoned_cart',
+			),
+
 			// Debugging.
 			'debug'                         => array(
 				'title'       => __( 'Debug', 'woocommerce-convertkit' ),
@@ -912,7 +947,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
-			'id'        => 'woocommerce_ckwc_subscription',
+			'id'        => $field,
 			'class'     => 'select ckwc-select2 ' . $data['class'],
 			'name'      => $field,
 			'value'     => $this->get_option( $key ),
