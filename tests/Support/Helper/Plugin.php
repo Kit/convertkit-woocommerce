@@ -50,11 +50,11 @@ class Plugin extends \Codeception\Module
 		// Activate Disable _load_textdomain notice.
 		$I->activateThirdPartyPlugin($I, 'disable-_load_textdomain_just_in_time-doing_it_wrong-notice');
 
-		// Activate ConvertKit Plugin.
-		$I->activateConvertKitPlugin($I);
-
 		// Activate WooCommerce Plugin.
 		$I->activateThirdPartyPlugin($I, 'woocommerce');
+
+		// Activate ConvertKit Plugin.
+		$I->activateConvertKitPlugin($I);
 
 		// Activate WooCommerce Stripe Gateway Plugin.
 		$I->activateThirdPartyPlugin($I, 'woocommerce-gateway-stripe');
@@ -90,16 +90,18 @@ class Plugin extends \Codeception\Module
 	 *
 	 * @since   1.6.0
 	 *
-	 * @param   EndToEndTester $I                      Acceptance Tester.
-	 * @param   bool|string    $accessToken            Access Token (if specified, used instead of CONVERTKIT_OAUTH_ACCESS_TOKEN).
-	 * @param   bool|string    $refreshToken           Refresh Token (if specified, used instead of CONVERTKIT_OAUTH_REFRESH_TOKEN).
-	 * @param   string         $subscriptionEvent      Subscribe Event.
-	 * @param   bool|string    $subscription           Form, Tag or Sequence to subscribe customer to.
-	 * @param   string         $nameFormat             Name Format.
-	 * @param   bool           $mapCustomFields        Map Order data to Custom Fields.
-	 * @param   bool           $displayOptIn           Display Opt-In Checkbox.
-	 * @param   bool           $sendPurchaseDataEvent  Send Purchase Data to ConvertKit on Order Event.
-	 * @param   bool|array     $addressFields          Address fields to include in the custom field data (false = all address fields).
+	 * @param   EndToEndTester $I                           Acceptance Tester.
+	 * @param   bool|string    $accessToken                 Access Token (if specified, used instead of CONVERTKIT_OAUTH_ACCESS_TOKEN).
+	 * @param   bool|string    $refreshToken                Refresh Token (if specified, used instead of CONVERTKIT_OAUTH_REFRESH_TOKEN).
+	 * @param   string         $subscriptionEvent           Subscribe Event.
+	 * @param   bool|string    $subscription                Form, Tag or Sequence to subscribe customer to.
+	 * @param   string         $nameFormat                  Name Format.
+	 * @param   bool           $mapCustomFields             Map Order data to Custom Fields.
+	 * @param   bool           $displayOptIn                Display Opt-In Checkbox.
+	 * @param   bool           $sendPurchaseDataEvent       Send Purchase Data to ConvertKit on Order Event.
+	 * @param   bool|array     $addressFields               Address fields to include in the custom field data (false = all address fields).
+	 * @param   bool           $abandonedCart               Abandoned Cart enabled.
+	 * @param   bool|string    $abandonedCartSubscription   Tag to subscribe abandoned cart emails to.
 	 */
 	public function setupConvertKitPlugin(
 		$I,
@@ -111,7 +113,9 @@ class Plugin extends \Codeception\Module
 		$mapCustomFields = false,
 		$displayOptIn = false,
 		$sendPurchaseDataEvent = false,
-		$addressFields = false
+		$addressFields = false,
+		$abandonedCart = false,
+		$abandonedCartSubscription = false,
 	) {
 		// Define Plugin's settings.
 		$I->haveOptionInDatabase(
@@ -142,6 +146,10 @@ class Plugin extends \Codeception\Module
 				// Purchase Data.
 				'send_purchases'                => ( $sendPurchaseDataEvent ? 'yes' : 'no' ),
 				'send_purchases_event'          => ( $sendPurchaseDataEvent ? $sendPurchaseDataEvent : '' ),
+
+				// Abandoned Cart.
+				'abandoned_cart'                => ( $abandonedCart ? 'yes' : 'no' ),
+				'abandoned_cart_subscription'   => ( $abandonedCartSubscription ? $abandonedCartSubscription : '' ),
 
 				// Debug.
 				'debug'                         => 'yes',
