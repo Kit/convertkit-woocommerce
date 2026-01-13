@@ -101,6 +101,7 @@ class Plugin extends \Codeception\Module
 	 * @param   bool           $sendPurchaseDataEvent       Send Purchase Data to ConvertKit on Order Event.
 	 * @param   bool|array     $addressFields               Address fields to include in the custom field data (false = all address fields).
 	 * @param   bool           $abandonedCart               Abandoned Cart enabled.
+	 * @param   int            $abandonedCartThreshold      Number of minutes to wait before considering a cart abandoned.
 	 * @param   bool|string    $abandonedCartSubscription   Tag to subscribe abandoned cart emails to.
 	 */
 	public function setupConvertKitPlugin(
@@ -115,7 +116,7 @@ class Plugin extends \Codeception\Module
 		$sendPurchaseDataEvent = false,
 		$addressFields = false,
 		$abandonedCart = false,
-		$abandonedCartThreshold = 1,
+		$abandonedCartThreshold = 15,
 		$abandonedCartSubscription = false,
 	) {
 		// Define Plugin's settings.
