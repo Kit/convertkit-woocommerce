@@ -6,14 +6,13 @@
  * @author ConvertKit
  */
 
-
 /**
  * Subscribe abandoned cart emails to the abandoned cart tag
  * by checking the WooCommerce sessions table.
  *
  * @since   2.0.5
  */
-function ckwc_subscribe_abandoned_cart() {
+function ckwc_abandoned_cart() {
 
 	// Bail if the integration is unavailable.
 	if ( ! function_exists( 'WP_CKWC_Integration' ) ) {
@@ -51,10 +50,11 @@ function ckwc_subscribe_abandoned_cart() {
 		WP_CKWC_Integration()->get_option_bool( 'debug' )
 	);
 
-	// Get sessions.
+	// Get WooCommerce sessions.
+	// WooCommerce does not provide a public native function to fetch all sessions.
+	// We must continue to use a direct query to the woocommerce_sessions table.
 	global $wpdb;
-	$table   = $wpdb->prefix . 'woocommerce_sessions';
-	$results = $wpdb->get_results( "SELECT session_key, session_value FROM $table" );
+	$results = $wpdb->get_results( "SELECT session_key, session_value FROM {$wpdb->prefix}woocommerce_sessions" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
 	foreach ( $results as $row ) {
 		// Get the session data.
@@ -77,7 +77,7 @@ function ckwc_subscribe_abandoned_cart() {
 			// Remove session data so we don't trigger this email again.
 			unset( $session_data['ckwc_abandoned_cart_email'] );
 			unset( $session_data['ckwc_abandoned_cart_timestamp'] );
-			$wpdb->update(
+			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$table,
 				array( 'session_value' => maybe_serialize( $session_data ) ),
 				array( 'session_key' => $row->session_key ),
@@ -88,9 +88,7 @@ function ckwc_subscribe_abandoned_cart() {
 	}
 
 }
-
-// @TODO Schedule the cron event on plugin activation and update; unschedule in deactivation.
-add_action( 'ckwc_subscribe_abandoned_cart', 'ckwc_subscribe_abandoned_cart' );
+add_action( 'ckwc_abandoned_cart', 'ckwc_abandoned_cart' );
 
 /**
  * Refresh the OAuth access token, triggered by WordPress' Cron.
