@@ -759,7 +759,7 @@ class CKWC_Integration extends WC_Integration {
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => __(
-					'If enabled, the visitor will be subscribed to a sequence or tag in Kit, if they leave items in their cart without completing the checkout process.',
+					'If enabled, the visitor will be subscribed to a tag in Kit, if they leave items in their cart without completing the checkout process after the below number of minutes. The tag is removed when they complete checkout.',
 					'woocommerce-convertkit'
 				),
 				'desc_tip'    => false,
@@ -768,14 +768,21 @@ class CKWC_Integration extends WC_Integration {
 				'class'       => 'enabled',
 			),
 			'abandoned_cart_threshold'      => array(
-				'title'       => __( 'Abandoned Cart: Threshold', 'woocommerce-convertkit' ),
-				'type'        => 'number',
-				'default'     => 5,
-				'description' => __( 'The number of minutes to wait before considering a cart abandoned.', 'woocommerce-convertkit' ),
-				'desc_tip'    => false,
+				'title'             => __( 'Abandoned Cart: Threshold', 'woocommerce-convertkit' ),
+				'type'              => 'number',
+				'default'           => 15,
+				'description'       => __( 'The number of minutes to wait before considering a cart abandoned.', 'woocommerce-convertkit' ),
+				'desc_tip'          => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled abandoned_cart',
+				'class'             => 'enabled abandoned_cart',
+
+				// Custom attributes for the number input.
+				'custom_attributes' => array(
+					'min'  => 1,
+					'max'  => 99999,
+					'step' => 1,
+				),
 			),
 			'abandoned_cart_subscription'   => array(
 				'title'             => __( 'Abandoned Cart: Tag', 'woocommerce-convertkit' ),
