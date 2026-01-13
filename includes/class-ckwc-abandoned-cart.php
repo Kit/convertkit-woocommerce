@@ -24,15 +24,6 @@ class CKWC_Abandoned_Cart {
 	private $integration;
 
 	/**
-	 * Holds the ConvertKit API.
-	 *
-	 * @since   2.0.5
-	 *
-	 * @var     CKWC_API
-	 */
-	private $api;
-
-	/**
 	 * Constructor
 	 *
 	 * @since   2.0.5
@@ -68,7 +59,7 @@ class CKWC_Abandoned_Cart {
 		add_action( 'wp_ajax_nopriv_ckwc_abandoned_cart_email', array( $this, 'store_abandoned_cart_email' ) );
 
 		// Clear the abandoned cart when the checkout is completed.
-		add_action( 'woocommerce_checkout_order_processed', array( $this, 'clear_abandoned_cart' ) );
+		add_action( 'woocommerce_checkout_order_processed', array( $this, 'clear_abandoned_cart' ), 10, 3 );
 
 		// Enqueue the abandoned cart script.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -138,32 +129,20 @@ class CKWC_Abandoned_Cart {
 	}
 
 	/**
-	 * Clear the abandoned cart.
+	 * Clear the abandoned cart session data, and removes the abandoned cart tag from the subscriber
+	 * in Kit.
 	 *
 	 * @since   2.0.5
+	 *
+	 * @param   int      $order_id     WooCommerce Order ID.
+	 * @param   array    $posted_data  Posted data.
+	 * @param   WC_Order $order        WooCommerce Order object.
 	 */
-	public function clear_abandoned_cart() {
-
-		// Get email from session.
-		$email = WC()->session->get( 'ckwc_abandoned_cart_email' );
+	public function clear_abandoned_cart( $order_id, $posted_data, $order ) {
 
 		// Clear the abandoned cart data.
 		WC()->session->__unset( 'ckwc_abandoned_cart_email' );
 		WC()->session->__unset( 'ckwc_abandoned_cart_timestamp' );
-
-		// If no email address exists, nothing to unsubscribe.
-		if ( empty( $email ) ) {
-			return;
-		}
-
-		// Setup the API.
-		$this->api = new CKWC_API(
-			CKWC_OAUTH_CLIENT_ID,
-			CKWC_OAUTH_CLIENT_REDIRECT_URI,
-			$this->integration->get_option( 'access_token' ),
-			$this->integration->get_option( 'refresh_token' ),
-			$this->integration->get_option_bool( 'debug' )
-		);
 
 		// Get tag ID from the integration's setting.
 		$subscription = $this->integration->get_option( 'abandoned_cart_subscription' );
@@ -173,11 +152,25 @@ class CKWC_Abandoned_Cart {
 			return;
 		}
 
+		// Get email address from order.
+		// We don't use the session data here, as the Action Scheduler may have triggered the abandoned cart
+		// function, which itself clears session data to ensure subscribers aren't repetitively tagged.
+		$email = $order->get_billing_email();
+
+		// Setup the API.
+		$api = new CKWC_API(
+			CKWC_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->integration->get_option( 'access_token' ),
+			$this->integration->get_option( 'refresh_token' ),
+			$this->integration->get_option_bool( 'debug' )
+		);
+
 		// Get the resource type and ID.
 		list( $resource_type, $tag_id ) = explode( ':', $subscription );
 
 		// Remove tag from subscriber.
-		$this->api->remove_tag_from_subscriber_by_email( absint( $tag_id ), $email );
+		$api->remove_tag_from_subscriber_by_email( absint( $tag_id ), $email );
 
 	}
 

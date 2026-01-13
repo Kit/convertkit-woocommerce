@@ -78,7 +78,7 @@ function ckwc_abandoned_cart() {
 			unset( $session_data['ckwc_abandoned_cart_email'] );
 			unset( $session_data['ckwc_abandoned_cart_timestamp'] );
 			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-				$table,
+				$wpdb->prefix . 'woocommerce_sessions',
 				array( 'session_value' => maybe_serialize( $session_data ) ),
 				array( 'session_key' => $row->session_key ),
 				array( '%s' ),
