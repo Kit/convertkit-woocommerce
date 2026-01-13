@@ -72,7 +72,7 @@ function ckwc_abandoned_cart() {
 		if ( $timestamp < $threshold ) {
 			// Create subscriber and tag.
 			$api->create_subscriber( $email );
-			$api->tag_subscriber_by_email( $tag_id, $email );
+			$api->tag_subscriber_by_email( absint( $tag_id ), $email );
 
 			// Remove session data so we don't trigger this email again.
 			unset( $session_data['ckwc_abandoned_cart_email'] );
