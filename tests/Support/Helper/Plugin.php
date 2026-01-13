@@ -115,6 +115,7 @@ class Plugin extends \Codeception\Module
 		$sendPurchaseDataEvent = false,
 		$addressFields = false,
 		$abandonedCart = false,
+		$abandonedCartThreshold = 1,
 		$abandonedCartSubscription = false,
 	) {
 		// Define Plugin's settings.
@@ -149,6 +150,7 @@ class Plugin extends \Codeception\Module
 
 				// Abandoned Cart.
 				'abandoned_cart'                => ( $abandonedCart ? 'yes' : 'no' ),
+				'abandoned_cart_threshold'      => ( $abandonedCartThreshold ? $abandonedCartThreshold : '' ),
 				'abandoned_cart_subscription'   => ( $abandonedCartSubscription ? $abandonedCartSubscription : '' ),
 
 				// Debug.

@@ -41,6 +41,9 @@ class AbandonedCartCest
 		$I->setupConvertKitPlugin(
 			$I,
 			abandonedCart: true,
+			// By default, this would be 10 minutes i.e. the cart is deemed abandoned after 10 minutes of inactivity.
+			// We set it to zero so that running the Abandoned Cart action immediately tags the subscriber.
+			abandonedCartThreshold: 0,
 			abandonedCartSubscription: 'tag:' . $_ENV['CONVERTKIT_API_TAG_ID']
 		);
 
@@ -62,8 +65,8 @@ class AbandonedCartCest
 			emailAddress: $emailAddress
 		);
 
-        // Wait a second to permit the Abandoned Cart to be tracked.
-        $I->wait(2);
+		// Wait a second to permit the Abandoned Cart to be tracked.
+		$I->wait(2);
 
 		// Login and navigate to the Action Scheduler page, to manually run the Abandoned Cart action.
 		$I->doLoginAsAdmin($I);
@@ -78,7 +81,7 @@ class AbandonedCartCest
 		// Click the export action.
 		$I->click('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
 
-        // Wait for the action to complete.
+		// Wait for the action to complete.
 		$I->waitForElementVisible('.updated');
 
 		// Confirm that the email address was added to Kit.
@@ -137,5 +140,63 @@ class AbandonedCartCest
 			$I,
 			abandonedCart: false
 		);
+
+		// Create Product.
+		$productName = 'Simple Product';
+		$productID   = $I->wooCommerceCreateSimpleProduct($I, false);
+
+		// Define Email Address for this Test.
+		$emailAddress = $I->generateEmailAddress();
+
+		// Logout as the WordPress Administrator.
+		$I->logOut();
+
+		// Add Product to Cart and load Checkout, completing fields.
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: $productName,
+			emailAddress: $emailAddress
+		);
+
+		// Login and navigate to the Action Scheduler page, to manually run the Abandoned Cart action.
+		$I->doLoginAsAdmin($I);
+		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
+
+		// Hover mouse over Action Scheduler's table row.
+		$I->moveMouseOver('tbody[data-wp-lists="list:action-scheduler"] tr:first-child');
+
+		// Wait for export link to be visible.
+		$I->waitForElementVisible('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
+
+		// Click the export action.
+		$I->click('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
+
+		// Wait for the action to complete.
+		$I->waitForElementVisible('.updated');
+
+		// Confirm that the email address was not added to Kit.
+		$I->apiCheckSubscriberDoesNotExist(
+			$I,
+			emailAddress: $emailAddress
+		);
+
+		// Logout as the WordPress Administrator.
+		$I->logOut();
+	}
+
+	/**
+	 * Deactivate and reset Plugin(s) after each test, if the test passes.
+	 * We don't use _after, as this would provide a screenshot of the Plugin
+	 * deactivation and not the true test error.
+	 *
+	 * @since   2.0.5
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function _passed(EndToEndTester $I)
+	{
+		$I->deactivateWooCommerceAndConvertKitPlugins($I);
+		$I->resetConvertKitPlugin($I);
 	}
 }
