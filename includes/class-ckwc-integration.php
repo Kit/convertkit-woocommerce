@@ -532,7 +532,7 @@ class CKWC_Integration extends WC_Integration {
 				'include_sequences' => true,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled',
+				'class'             => 'enabled',
 			),
 			'name_format'                   => array(
 				'title'       => __( 'Name Format', 'woocommerce-convertkit' ),
