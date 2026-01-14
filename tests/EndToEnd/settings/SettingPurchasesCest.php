@@ -40,8 +40,11 @@ class SettingPurchasesCest
 	 */
 	public function testSendPurchaseDataEnabled(EndToEndTester $I)
 	{
-		// Check "Send purchase data to ConvertKit" checkbox.
+		// Check "Send purchase data to Kit" checkbox.
 		$I->checkOption('#woocommerce_ckwc_send_purchases');
+
+		// Confirm that the Purchase Data Event option is displayed.
+		$I->waitForElementVisible('#woocommerce_ckwc_send_purchases_event');
 
 		// Save.
 		$I->click('Save changes');
@@ -51,6 +54,7 @@ class SettingPurchasesCest
 
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
+		$I->waitForElementVisible('#woocommerce_ckwc_send_purchases_event');
 	}
 
 	/**
@@ -63,8 +67,11 @@ class SettingPurchasesCest
 	 */
 	public function testSendPurchaseDataDisabled(EndToEndTester $I)
 	{
-		// Uncheck "Send purchase data to ConvertKit" checkbox.
+		// Uncheck "Send purchase data to Kit" checkbox.
 		$I->uncheckOption('#woocommerce_ckwc_send_purchases');
+
+		// Confirm that the Purchase Data Event option is not displayed.
+		$I->waitForElementNotVisible('#woocommerce_ckwc_send_purchases_event');
 
 		// Save.
 		$I->click('Save changes');
@@ -74,6 +81,7 @@ class SettingPurchasesCest
 
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_send_purchases_event');
 	}
 
 	/**
@@ -86,6 +94,9 @@ class SettingPurchasesCest
 	 */
 	public function testSendPurchaseDataEventOrderProcessing(EndToEndTester $I)
 	{
+		// Check "Send purchase data to Kit" checkbox.
+		$I->checkOption('#woocommerce_ckwc_send_purchases');
+
 		// Set Event = Order Processing.
 		$I->selectOption('#woocommerce_ckwc_send_purchases_event', 'Order Processing');
 
@@ -96,6 +107,7 @@ class SettingPurchasesCest
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Confirm the setting saved.
+		$I->seeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_send_purchases_event', 'Order Processing');
 	}
 
@@ -109,6 +121,9 @@ class SettingPurchasesCest
 	 */
 	public function testSendPurchaseDataEventOrderCompleted(EndToEndTester $I)
 	{
+		// Check "Send purchase data to Kit" checkbox.
+		$I->checkOption('#woocommerce_ckwc_send_purchases');
+
 		// Set Event = Order Completed.
 		$I->selectOption('#woocommerce_ckwc_send_purchases_event', 'Order Completed');
 
@@ -119,6 +134,7 @@ class SettingPurchasesCest
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
 		// Confirm the setting saved.
+		$I->seeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
 		$I->seeOptionIsSelected('#woocommerce_ckwc_send_purchases_event', 'Order Completed');
 	}
 

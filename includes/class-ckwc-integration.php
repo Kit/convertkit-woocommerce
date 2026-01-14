@@ -520,7 +520,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'subscription'                  => array(
 				'title'             => __( 'Subscription', 'woocommerce-convertkit' ),
@@ -532,7 +532,7 @@ class CKWC_Integration extends WC_Integration {
 				'include_sequences' => true,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'             => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'name_format'                   => array(
 				'title'       => __( 'Name Format', 'woocommerce-convertkit' ),
@@ -547,7 +547,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 
 			// Custom Field Mappings.
@@ -558,7 +558,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => __( 'The Kit custom field to store the order\'s last name.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'custom_field_phone'            => array(
 				'title'       => __( 'Send Phone Number', 'woocommerce-convertkit' ),
@@ -567,7 +567,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => __( 'The Kit custom field to store the order\'s phone number.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'custom_field_billing_address'  => array(
 				'title'       => __( 'Send Billing Address', 'woocommerce-convertkit' ),
@@ -576,7 +576,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => __( 'The Kit custom field to store the order\'s billing address.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'custom_field_shipping_address' => array(
 				'title'       => __( 'Send Shipping Address', 'woocommerce-convertkit' ),
@@ -585,7 +585,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => __( 'The Kit custom field to store the order\'s shipping address.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'custom_field_address_format'   => array(
 				'title'       => __( 'Address Format', 'woocommerce-convertkit' ),
@@ -622,7 +622,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => __( 'The Kit custom field to store the order\'s payment method.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'custom_field_customer_note'    => array(
 				'title'       => __( 'Send Customer Note', 'woocommerce-convertkit' ),
@@ -631,7 +631,7 @@ class CKWC_Integration extends WC_Integration {
 				'description' => __( 'The Kit custom field to store the order\'s customer note.', 'woocommerce-convertkit' ),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 
 			// Subscribe: Display Opt In Checkbox Settings.
@@ -648,7 +648,7 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'opt_in_label'                  => array(
 				'title'       => __( 'Opt-In Checkbox: Label', 'woocommerce-convertkit' ),
@@ -658,7 +658,7 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe display_opt_in',
+				'class'       => 'enabled display_opt_in',
 			),
 			'opt_in_status'                 => array(
 				'title'       => __( 'Opt-In Checkbox: Default Status', 'woocommerce-convertkit' ),
@@ -672,7 +672,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe display_opt_in',
+				'class'       => 'enabled display_opt_in',
 			),
 			'opt_in_location'               => array(
 				'title'       => __( 'Opt-In Checkbox: Display Location', 'woocommerce-convertkit' ),
@@ -686,7 +686,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe display_opt_in',
+				'class'       => 'enabled display_opt_in',
 			),
 
 			// Purchase Data.
@@ -703,7 +703,7 @@ class CKWC_Integration extends WC_Integration {
 				'desc_tip'    => false,
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe',
+				'class'       => 'enabled',
 			),
 			'send_purchases_event'          => array(
 				'title'       => __( 'Purchase Data Event', 'woocommerce-convertkit' ),
@@ -734,7 +734,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'       => 'enabled subscribe send_purchases',
+				'class'       => 'enabled send_purchases',
 			),
 			'sync_past_orders'              => array(
 				'title'    => __( 'Sync Past Orders', 'woocommerce-convertkit' ),
@@ -749,7 +749,7 @@ class CKWC_Integration extends WC_Integration {
 				),
 
 				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'    => 'enabled subscribe',
+				'class'    => 'enabled send_purchases',
 			),
 
 			// Abandoned Cart.
