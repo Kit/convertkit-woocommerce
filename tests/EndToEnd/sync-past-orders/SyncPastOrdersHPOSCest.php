@@ -88,12 +88,6 @@ class SyncPastOrdersHPOSCest
 			$I->doLoginAsAdmin($I);
 		}
 
-		// Enable Send Purchase Data, so the Sync Past Orders button is displayed.
-		$I->setupConvertKitPlugin(
-			$I,
-			sendPurchaseDataEvent: 'processing'
-		);
-
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
