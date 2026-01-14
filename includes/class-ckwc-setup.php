@@ -33,7 +33,8 @@ class CKWC_Setup {
 		 * 2.0.5: Register Action Scheduler actions.
 		 */
 		if ( ! $current_version || version_compare( $current_version, '2.0.5', '<' ) ) {
-			ckwc_schedule_actions();
+			// Schedule actions on WooCommerce loaded event, to ensure WooCommerce's Action Scheduler data store is initialized.
+			add_action( 'woocommerce_loaded', 'ckwc_schedule_actions' );
 		}
 
 		/**

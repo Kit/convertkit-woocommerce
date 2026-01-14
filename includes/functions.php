@@ -18,7 +18,8 @@ function ckwc_plugin_activate( $network_wide ) {
 	// Check if we are on a multisite install, activating network wide, or a single install.
 	if ( ! is_multisite() || ! $network_wide ) {
 		// Single Site activation.
-		ckwc_schedule_actions();
+		// Schedule actions on WooCommerce loaded event, to ensure WooCommerce's Action Scheduler data store is initialized.
+		add_action( 'woocommerce_loaded', 'ckwc_schedule_actions' );
 	} else {
 		// Multisite network wide activation.
 		$sites = get_sites(
@@ -28,7 +29,8 @@ function ckwc_plugin_activate( $network_wide ) {
 		);
 		foreach ( $sites as $site ) {
 			switch_to_blog( (int) $site->blog_id );
-			ckwc_schedule_actions();
+			// Schedule actions on WooCommerce loaded event, to ensure WooCommerce's Action Scheduler data store is initialized.
+			add_action( 'woocommerce_loaded', 'ckwc_schedule_actions' );
 			restore_current_blog();
 		}
 	}
@@ -52,7 +54,8 @@ function ckwc_plugin_activate_new_site( $site_or_blog_id ) {
 
 	// Run installation routine.
 	switch_to_blog( $site_or_blog_id );
-	ckwc_schedule_actions();
+	// Schedule actions on WooCommerce loaded event, to ensure WooCommerce's Action Scheduler data store is initialized.
+	add_action( 'woocommerce_loaded', 'ckwc_schedule_actions' );
 	restore_current_blog();
 
 }
@@ -69,7 +72,8 @@ function ckwc_plugin_deactivate( $network_wide ) {
 	// Check if we are on a multisite install, activating network wide, or a single install.
 	if ( ! is_multisite() || ! $network_wide ) {
 		// Single Site activation.
-		ckwc_unschedule_actions();
+		// Unschedule actions on WooCommerce loaded event, to ensure WooCommerce's Action Scheduler data store is initialized.
+		add_action( 'woocommerce_loaded', 'ckwc_unschedule_actions' );
 	} else {
 		// Multisite network wide activation.
 		$sites = get_sites(
@@ -79,7 +83,8 @@ function ckwc_plugin_deactivate( $network_wide ) {
 		);
 		foreach ( $sites as $site ) {
 			switch_to_blog( (int) $site->blog_id );
-			ckwc_unschedule_actions();
+			// Unschedule actions on WooCommerce loaded event, to ensure WooCommerce's Action Scheduler data store is initialized.
+			add_action( 'woocommerce_loaded', 'ckwc_unschedule_actions' );
 			restore_current_blog();
 		}
 	}
