@@ -88,6 +88,12 @@ class SyncPastOrdersHPOSCest
 			$I->doLoginAsAdmin($I);
 		}
 
+		// Enable Send Purchase Data, so the Sync Past Orders button is displayed.
+		$I->setupConvertKitPlugin(
+			$I,
+			sendPurchaseDataEvent: 'processing'
+		);
+
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
@@ -109,8 +115,11 @@ class SyncPastOrdersHPOSCest
 		// Delete all existing WooCommerce Orders from the database.
 		$I->wooCommerceDeleteAllOrders($I);
 
-		// Enable Integration and define its Access and Refresh Tokens.
-		$I->setupConvertKitPlugin($I);
+		// Enable Send Purchase Data, so the Sync Past Orders button is displayed.
+		$I->setupConvertKitPlugin(
+			$I,
+			sendPurchaseDataEvent: 'processing'
+		);
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -174,6 +183,12 @@ class SyncPastOrdersHPOSCest
 		// Refund the Order.
 		$I->wooCommerceRefundOrder($I, $result['order_id'], 10);
 
+		// Enable Send Purchase Data, so the Sync Past Orders button is displayed.
+		$I->setupConvertKitPlugin(
+			$I,
+			sendPurchaseDataEvent: 'processing'
+		);
+
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
@@ -211,6 +226,12 @@ class SyncPastOrdersHPOSCest
 		if ( ! $I->amLoggedInAsAdmin($I) ) {
 			$I->doLoginAsAdmin($I);
 		}
+
+		// Enable Send Purchase Data, so the Sync Past Orders button is displayed.
+		$I->setupConvertKitPlugin(
+			$I,
+			sendPurchaseDataEvent: 'processing'
+		);
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
@@ -253,6 +274,12 @@ class SyncPastOrdersHPOSCest
 		if ( ! $I->amLoggedInAsAdmin($I) ) {
 			$I->doLoginAsAdmin($I);
 		}
+
+		// Enable Send Purchase Data, so the Sync Past Orders button is displayed.
+		$I->setupConvertKitPlugin(
+			$I,
+			sendPurchaseDataEvent: 'processing'
+		);
 
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);

@@ -94,9 +94,6 @@ function ckwcRefreshUI() {
 						$(this).hide();
 					}
 				});
-
-				// Don't do anything else.
-				break;
 			}
 		}
 	})(jQuery);

@@ -47,6 +47,11 @@ class SettingOptInCheckboxCest
 		// Disable the Opt-In Checkbox option.
 		$I->uncheckOption('#woocommerce_ckwc_display_opt_in');
 
+		// Confirm other opt in fields are not displayed.
+		$I->waitForElementNotVisible('#woocommerce_ckwc_opt_in_label');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_opt_in_status');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_opt_in_location');
+
 		// Save.
 		$I->click('Save changes');
 
@@ -55,6 +60,11 @@ class SettingOptInCheckboxCest
 
 		// Check the fields honor the changes.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
+
+		// Confirm other opt in fields are still not displayed.
+		$I->waitForElementNotVisible('#woocommerce_ckwc_opt_in_label');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_opt_in_status');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_opt_in_location');
 
 		// Create Simple Product.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
@@ -79,6 +89,11 @@ class SettingOptInCheckboxCest
 		// Enable the Opt-In Checkbox option.
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
+		// Confirm other opt in fields are displayed.
+		$I->waitForElementVisible('#woocommerce_ckwc_opt_in_label');
+		$I->waitForElementVisible('#woocommerce_ckwc_opt_in_status');
+		$I->waitForElementVisible('#woocommerce_ckwc_opt_in_location');
+
 		// Save.
 		$I->click('Save changes');
 
@@ -87,6 +102,11 @@ class SettingOptInCheckboxCest
 
 		// Check the fields remain ticked.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
+
+		// Confirm other opt in fields are still displayed.
+		$I->waitForElementVisible('#woocommerce_ckwc_opt_in_label');
+		$I->waitForElementVisible('#woocommerce_ckwc_opt_in_status');
+		$I->waitForElementVisible('#woocommerce_ckwc_opt_in_location');
 
 		// Create Simple Product.
 		$productID = $I->wooCommerceCreateSimpleProduct($I);
