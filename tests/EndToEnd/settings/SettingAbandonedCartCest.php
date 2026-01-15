@@ -105,6 +105,7 @@ class SettingsAbandonedCartCest
 		$I->checkOption('#woocommerce_ckwc_abandoned_cart');
 
 		// Set Abandoned Cart Timeout = 10 minutes.
+		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_threshold');
 		$I->fillField('#woocommerce_ckwc_abandoned_cart_threshold', '10');
 
 		// Save.
@@ -131,8 +132,9 @@ class SettingsAbandonedCartCest
 		// Check "Abandoned Cart" checkbox.
 		$I->checkOption('#woocommerce_ckwc_abandoned_cart');
 
-		// Set Abandoned Cart Subscription to a Sequence.
-		$I->selectOption('#woocommerce_ckwc_abandoned_cart_subscription', $_ENV['CONVERTKIT_API_SEQUENCE_NAME']);
+		// Set Abandoned Cart Subscription to a Tag.
+		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_subscription');
+		$I->selectOption('#woocommerce_ckwc_abandoned_cart_subscription', $_ENV['CONVERTKIT_API_TAG_NAME']);
 
 		// Save.
 		$I->click('Save changes');
@@ -142,7 +144,7 @@ class SettingsAbandonedCartCest
 
 		// Confirm the settings saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
-		$I->seeOptionIsSelected('#woocommerce_ckwc_abandoned_cart_subscription', $_ENV['CONVERTKIT_API_SEQUENCE_NAME']);
+		$I->seeOptionIsSelected('#woocommerce_ckwc_abandoned_cart_subscription', $_ENV['CONVERTKIT_API_TAG_NAME']);
 	}
 
 	/**
