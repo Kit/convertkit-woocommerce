@@ -86,6 +86,21 @@ class SettingEnabledDisabledCest
 		// Check "Enabled" checkbox.
 		$I->checkOption('#woocommerce_ckwc_enabled');
 
+		// Confirm other fields are displayed.
+		$I->waitForElementVisible('#woocommerce_ckwc_event');
+		$I->waitForElementVisible('#woocommerce_ckwc_subscription');
+		$I->waitForElementVisible('#woocommerce_ckwc_name_format');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_last_name');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_phone');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_billing_address');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_shipping_address');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_address_format');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_payment_method');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_customer_note');
+		$I->waitForElementVisible('#woocommerce_ckwc_display_opt_in');
+		$I->waitForElementVisible('#woocommerce_ckwc_send_purchases');
+		$I->waitForElementVisible('#woocommerce_ckwc_debug');
+
 		// Save.
 		$I->click('Save changes');
 
@@ -94,6 +109,21 @@ class SettingEnabledDisabledCest
 
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_enabled');
+
+		// Confirm other fields are still displayed.
+		$I->waitForElementVisible('#woocommerce_ckwc_event');
+		$I->waitForElementVisible('#woocommerce_ckwc_subscription');
+		$I->waitForElementVisible('#woocommerce_ckwc_name_format');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_last_name');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_phone');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_billing_address');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_shipping_address');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_address_format');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_payment_method');
+		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_customer_note');
+		$I->waitForElementVisible('#woocommerce_ckwc_display_opt_in');
+		$I->waitForElementVisible('#woocommerce_ckwc_send_purchases');
+		$I->waitForElementVisible('#woocommerce_ckwc_debug');
 	}
 
 	/**
@@ -122,6 +152,21 @@ class SettingEnabledDisabledCest
 		// Uncheck "Enabled" checkbox.
 		$I->uncheckOption('#woocommerce_ckwc_enabled');
 
+		// Confirm other fields are not displayed.
+		$I->waitForElementNotVisible('#woocommerce_ckwc_event');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_subscription');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_name_format');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_last_name');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_phone');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_billing_address');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_shipping_address');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_address_format');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_payment_method');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_customer_note');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_display_opt_in');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_send_purchases');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_debug');
+
 		// Save.
 		$I->click('Save changes');
 
@@ -130,6 +175,21 @@ class SettingEnabledDisabledCest
 
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_enabled');
+
+		// Confirm other fields are still not displayed.
+		$I->waitForElementNotVisible('#woocommerce_ckwc_event');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_subscription');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_name_format');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_last_name');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_phone');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_billing_address');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_shipping_address');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_address_format');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_payment_method');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_customer_note');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_display_opt_in');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_send_purchases');
+		$I->waitForElementNotVisible('#woocommerce_ckwc_debug');
 	}
 
 	/**
