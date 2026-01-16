@@ -30,6 +30,13 @@ class CKWC_Setup {
 		}
 
 		/**
+		 * 2.0.5: Register Action Scheduler actions.
+		 */
+		if ( ! $current_version || version_compare( $current_version, '2.0.5', '<' ) ) {
+			add_action( 'shutdown', 'ckwc_schedule_actions' );
+		}
+
+		/**
 		 * 1.9.5: Migrate `Exclude Name and Address` setting to `Address Format` setting.
 		 */
 		if ( ! $current_version || version_compare( $current_version, '1.9.5', '<' ) ) {

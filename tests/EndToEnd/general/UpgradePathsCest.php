@@ -107,6 +107,47 @@ class UpgradePathsCest
 	}
 
 	/**
+	 * Test that the Abandoned Cart action is scheduled when upgrading to 2.0.5 or later.
+	 *
+	 * @since   2.0.5
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testAbandonedCartActionScheduled(EndToEndTester $I)
+	{
+		// Activate the Plugin.
+		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Setup Plugin's settings.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'access_token'  => $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+				'refresh_token' => $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
+				'enabled'       => 'yes',
+			]
+		);
+
+		// Define an installation version older than 2.0.5.
+		$I->haveOptionInDatabase('ckwc_version', '2.0.4');
+
+		// Remove the Action Scheduler action, as it will have been added on activation of 2.0.5 or higher.
+		$I->dontHaveInDatabase(
+			'actionscheduler_actions',
+			[
+				'hook' => 'ckwc_abandoned_cart',
+			]
+		);
+
+		// Navigate to the Plugins screen, as if the Plugin just upgraded to 2.0.5 or higher.
+		$I->amOnPluginsPage();
+
+		// Confirm the Action Scheduler action is scheduled.
+		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
+		$I->assertEquals('ckwc_abandoned_cart', $I->grabTextFrom('tbody[data-wp-lists="list:action-scheduler"] tr:first-child td.column-hook'));
+	}
+
+	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.

@@ -7,6 +7,131 @@
  */
 
 /**
+ * Runs the activation and update routines when the plugin is activated.
+ *
+ * @since   2.0.5
+ *
+ * @param   bool $network_wide   Is network wide activation.
+ */
+function ckwc_plugin_activate( $network_wide ) {
+
+	// Check if we are on a multisite install, activating network wide, or a single install.
+	if ( ! is_multisite() || ! $network_wide ) {
+		// Single Site activation.
+		add_action( 'shutdown', 'ckwc_schedule_actions' );
+	} else {
+		// Multisite network wide activation.
+		$sites = get_sites(
+			array(
+				'number' => 0,
+			)
+		);
+		foreach ( $sites as $site ) {
+			switch_to_blog( (int) $site->blog_id );
+			add_action( 'shutdown', 'ckwc_schedule_actions' );
+			restore_current_blog();
+		}
+	}
+
+}
+
+/**
+ * Runs the activation and update routines when the plugin is activated
+ * on a WordPress multisite setup.
+ *
+ * @since   2.0.5
+ *
+ * @param   WP_Site|int $site_or_blog_id    WP_Site or Blog ID.
+ */
+function ckwc_plugin_activate_new_site( $site_or_blog_id ) {
+
+	// Check if $site_or_blog_id is a WP_Site or a blog ID.
+	if ( is_a( $site_or_blog_id, 'WP_Site' ) ) {
+		$site_or_blog_id = $site_or_blog_id->blog_id;
+	}
+
+	// Run installation routine.
+	switch_to_blog( $site_or_blog_id );
+	add_action( 'shutdown', 'ckwc_schedule_actions' );
+	restore_current_blog();
+
+}
+
+/**
+ * Runs the deactivation routine when the plugin is deactivated.
+ *
+ * @since   2.0.5
+ *
+ * @param   bool $network_wide   Is network wide deactivation.
+ */
+function ckwc_plugin_deactivate( $network_wide ) {
+
+	// Check if we are on a multisite install, activating network wide, or a single install.
+	if ( ! is_multisite() || ! $network_wide ) {
+		// Single Site activation.
+		ckwc_unschedule_actions();
+	} else {
+		// Multisite network wide activation.
+		$sites = get_sites(
+			array(
+				'number' => 0,
+			)
+		);
+		foreach ( $sites as $site ) {
+			switch_to_blog( (int) $site->blog_id );
+			ckwc_unschedule_actions();
+			restore_current_blog();
+		}
+	}
+
+}
+
+/**
+ * Schedules the WordPress Cron events.
+ *
+ * @since   2.0.5
+ */
+function ckwc_schedule_actions() {
+
+	// Bail if the action scheduler is unavailable.
+	if ( ! function_exists( 'as_schedule_recurring_action' ) ) {
+		return;
+	}
+
+	// Bail if the scheduled action already exists.
+	if ( as_next_scheduled_action( 'ckwc_abandoned_cart' ) ) {
+		return;
+	}
+
+	// Schedule action.
+	as_schedule_recurring_action(
+		time(),
+		15 * MINUTE_IN_SECONDS,
+		'ckwc_abandoned_cart',
+		array(),
+		'ckwc'
+	);
+
+}
+
+/**
+ * Unschedules the WordPress Cron events.
+ *
+ * @since   2.0.5
+ */
+function ckwc_unschedule_actions() {
+
+	// Bail if the action scheduler is unavailable.
+	if ( ! function_exists( 'as_unschedule_all_actions' ) ) {
+		return;
+	}
+
+	// Unschedule action.
+	as_unschedule_all_actions( 'ckwc_abandoned_cart' );
+
+}
+
+/**
  * Helper method to return the Plugin Settings Link
  *
  * @since   1.4.2

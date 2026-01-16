@@ -10,6 +10,7 @@ let ckwcSettings = {
 	enabled: false,
 	display_opt_in: false,
 	send_purchases: false,
+	abandoned_cart: false,
 };
 
 /**
@@ -32,6 +33,9 @@ jQuery(document).ready(function ($) {
 			'checked'
 		),
 		send_purchases: $('input[name="woocommerce_ckwc_send_purchases"]').prop(
+			'checked'
+		),
+		abandoned_cart: $('input[name="woocommerce_ckwc_abandoned_cart"]').prop(
 			'checked'
 		),
 	};

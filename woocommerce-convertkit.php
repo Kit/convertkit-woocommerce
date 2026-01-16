@@ -9,7 +9,7 @@
  * Plugin Name: Kit (formerly ConvertKit) for WooCommerce
  * Plugin URI:  https://www.kit.com
  * Description: Integrates WooCommerce with Kit, allowing customers to be automatically sent to your Kit account.
- * Version:     2.0.4
+ * Version:     2.0.5
  * Author:      Kit
  * Author URI:  https://www.kit.com
  * License:     GPLv3 or later
@@ -30,7 +30,7 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '2.0.4' );
+define( 'CKWC_PLUGIN_VERSION', '2.0.5' );
 define( 'CKWC_OAUTH_CLIENT_ID', 'L0kyADsB3WP5zO5MvUpXQU64gIntQg9BBAIme17r_7A' );
 define( 'CKWC_OAUTH_CLIENT_REDIRECT_URI', 'https://app.kit.com/wordpress/redirect' );
 
@@ -52,6 +52,7 @@ if ( ! class_exists( 'ConvertKit_Review_Request' ) ) {
 require_once CKWC_PLUGIN_PATH . '/includes/cron-functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/functions.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-wp-ckwc.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-abandoned-cart.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-admin-notices.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-checkout.php';
@@ -74,6 +75,12 @@ require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-refresh-resources.php';
+
+// Register Plugin activation and deactivation functions.
+register_activation_hook( __FILE__, 'ckwc_plugin_activate' );
+add_action( 'wp_insert_site', 'ckwc_plugin_activate_new_site' );
+add_action( 'activate_blog', 'ckwc_plugin_activate_new_site' );
+register_deactivation_hook( __FILE__, 'ckwc_plugin_deactivate' );
 
 /**
  * Main function to return Plugin instance.
