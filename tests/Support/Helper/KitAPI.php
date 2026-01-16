@@ -141,6 +141,43 @@ class KitAPI extends \Codeception\Module
 	}
 
 	/**
+	 * Check the given subscriber ID has been assigned to the given tag ID.
+	 *
+	 * @param   EndToEndTester $I             EndToEndTester.
+	 * @param   int            $subscriberID  Subscriber ID.
+	 * @param   int            $tagID         Tag ID.
+	 */
+	public function apiCheckSubscriberHasTag($I, $subscriberID, $tagID)
+	{
+		// Run request.
+		$results = $this->apiRequest(
+			'subscribers/' . $subscriberID . '/tags',
+			'GET'
+		);
+
+		// Confirm the tag has been assigned to the subscriber.
+		$I->assertEquals($tagID, $results['tags'][0]['id']);
+	}
+
+	/**
+	 * Check the given subscriber ID has no tags assigned.
+	 *
+	 * @param   EndToEndTester $I             EndToEndTester.
+	 * @param   int            $subscriberID  Subscriber ID.
+	 */
+	public function apiCheckSubscriberHasNoTags($I, $subscriberID)
+	{
+		// Run request.
+		$results = $this->apiRequest(
+			'subscribers/' . $subscriberID . '/tags',
+			'GET'
+		);
+
+		// Confirm no tags have been assigned to the subscriber.
+		$I->assertCount(0, $results['tags']);
+	}
+
+	/**
 	 * Check the given order ID exists as a purchase on ConvertKit.
 	 *
 	 * @param   EndToEndTester $I             EndToEndTester.
