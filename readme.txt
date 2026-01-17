@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.1
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,9 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 2.0.5 2026-01-19
+* Added: Abandoned Cart Functionality
 
 ### 2.0.4 2025-12-18
 * Updated: Use WordPress Libraries 2.1.3
