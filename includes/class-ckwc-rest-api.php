@@ -92,7 +92,7 @@ class CKWC_REST_API {
 								/* translators: %1$s: WooCommerce Order ID, %2$s: Kit API Purchase ID */
 								__( 'WooCommerce Order ID #%1$s added to Kit Purchase Data successfully. Kit Purchase ID: #%2$s', 'woocommerce-convertkit' ),
 								$id,
-								$result['purchase']['id']
+								get_post_meta( $id, 'ckwc_purchase_data_id', true )
 							),
 						)
 					);

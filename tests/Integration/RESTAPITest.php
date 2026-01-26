@@ -78,13 +78,13 @@ class RESTAPITest extends WPRestApiTestCase
 		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/order/send/123' );
 		$response = rest_get_server()->dispatch( $request );
 
-		// Assert response is an error.
-		$this->assertSame( 500, $response->get_status() );
+		// Assert response is successful.
+		$this->assertSame( 200, $response->get_status() );
 
 		// Assert response data has the expected keys and data.
 		$data = $response->get_data();
-		$this->assertEquals( 'convertkit_for_woocommerce_error_order_missing', $data['code'] );
-		$this->assertEquals( 'Order ID #123 could not be found in WooCommerce.', $data['message'] );
+		$this->assertEquals( false, $data['success'] );
+		$this->assertEquals( 'Order ID #123 could not be found in WooCommerce.', $data['data'] );
 	}
 
 	/**
@@ -113,7 +113,9 @@ class RESTAPITest extends WPRestApiTestCase
 		$this->assertSame( 200, $response->get_status() );
 
 		// Assert response data contains the expected message.
-		$this->assertStringContainsString( 'WooCommerce Order ID #' . $orderID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . get_post_meta( $orderID, 'ckwc_purchase_data_id', true ), $response->get_data() );
+		$data = $response->get_data();
+		$this->assertEquals( true, $data['success'] );
+		$this->assertStringContainsString( 'WooCommerce Order ID #' . $orderID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . get_post_meta( $orderID, 'ckwc_purchase_data_id', true ), $data['data'] );
 	}
 
 	/**
