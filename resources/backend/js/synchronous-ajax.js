@@ -259,8 +259,6 @@
 				xhr.setRequestHeader('X-WP-Nonce', settings.nonce);
 			},
 			success(response) {
-				console.log(response);
-				
 				// Call onRequestSuccess closure.
 				// eslint-disable-next-line @wordpress/no-unused-vars-before-return
 				const cancelled = settings.onRequestSuccess(
