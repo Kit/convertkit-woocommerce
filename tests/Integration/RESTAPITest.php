@@ -48,6 +48,7 @@ class RESTAPITest extends WPRestApiTestCase
 		WP_CKWC_Integration()->update_option( 'enabled', 'no' );
 		WP_CKWC_Integration()->update_option( 'access_token', '' );
 		WP_CKWC_Integration()->update_option( 'refresh_token', '' );
+
 		parent::tearDown();
 	}
 
@@ -106,6 +107,7 @@ class RESTAPITest extends WPRestApiTestCase
 		);
 
 		// Send request.
+		var_dump($orderID);
 		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/order/send/' . $orderID );
 		$response = rest_get_server()->dispatch( $request );
 
@@ -114,6 +116,7 @@ class RESTAPITest extends WPRestApiTestCase
 
 		// Assert response data contains the expected message.
 		$data = $response->get_data();
+		var_dump($data);
 		$this->assertEquals( true, $data['success'] );
 		$this->assertStringContainsString( 'WooCommerce Order ID #' . $orderID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . get_post_meta( $orderID, 'ckwc_purchase_data_id', true ), $data['data'] );
 	}
