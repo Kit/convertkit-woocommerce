@@ -98,16 +98,27 @@ class RESTAPITest extends WPRestApiTestCase
 		// Create and become administrator.
 		$this->actAsAdministrator();
 
+		// Create a WooCommerce Product.
+		$product = new \WC_Product_Simple();
+		$product->set_name( 'Test Product' );
+		$product->set_regular_price( '29.99' );
+		$product->set_price( '29.99' );
+		$product->set_sku( 'test-product-' . wp_generate_uuid4() );
+		$product->set_catalog_visibility( 'visible' );
+		$product->set_status( 'publish' );
+		$product->save();
+
 		// Create a WooCommerce Order.
-		$orderID = static::factory()->post->create(
-			[
-				'post_type'   => 'shop_order',
-				'post_status' => 'processing',
-			]
-		);
+		$order = wc_create_order([
+			'status' => 'processing',
+		]);
+		$order->add_product( $product, 1 );
+		$order->set_billing_email( $_ENV['CONVERTKIT_API_SUBSCRIBER_EMAIL'] );
+		$order->calculate_totals();
+		$order->save();
 
 		// Send request.
-		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/order/send/' . $orderID );
+		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/order/send/' . $order->get_id() );
 		$response = rest_get_server()->dispatch( $request );
 
 		// Assert response is successful.
@@ -115,11 +126,11 @@ class RESTAPITest extends WPRestApiTestCase
 
 		// Assert response data contains the expected message.
 		$data = $response->get_data();
-		var_dump($orderID);
+		var_dump( $order->get_id() );
 		var_dump($data);
 		die();
 		$this->assertEquals( true, $data['success'] );
-		$this->assertStringContainsString( 'WooCommerce Order ID #' . $orderID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . get_post_meta( $orderID, 'ckwc_purchase_data_id', true ), $data['data'] );
+		$this->assertStringContainsString( 'WooCommerce Order ID #' . $order->get_id() . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . get_post_meta( $order->get_id(), 'ckwc_purchase_data_id', true ), $data['data'] );
 	}
 
 	/**
