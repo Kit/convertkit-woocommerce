@@ -59,6 +59,7 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-checkout.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-cli-sync-past-orders.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-order.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-rest-api.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-refresh-resources.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-custom-fields.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-forms.php';
@@ -74,7 +75,6 @@ require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-coupon.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';
-require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-refresh-resources.php';
 
 // Register Plugin activation and deactivation functions.
 register_activation_hook( __FILE__, 'ckwc_plugin_activate' );

@@ -133,6 +133,44 @@ class RESTAPITest extends WPRestApiTestCase
 	}
 
 	/**
+	 * Test that the /wp-json/kit/v1/woocommerce/resources/refresh REST API route returns a 401 when the user is not authorized.
+	 *
+	 * @since   2.0.6
+	 */
+	public function testRefreshResourcesWhenUnauthorized()
+	{
+		// Make request.
+		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/resources/refresh' );
+		$response = rest_get_server()->dispatch( $request );
+
+		// Assert response is unsuccessful.
+		$this->assertSame( 401, $response->get_status() );
+	}
+
+	/**
+	 * Test that the /wp-json/kit/v1/woocommerce/resources/refresh REST API route refreshes and returns resources when the user is authorized.
+	 *
+	 * @since   2.0.6
+	 */
+	public function testRefreshResources()
+	{
+		// Create and become editor.
+		$this->actAsEditor();
+
+		// Send request.
+		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/resources/refresh' );
+		$response = rest_get_server()->dispatch( $request );
+
+		// Assert response is successful.
+		$this->assertSame( 200, $response->get_status() );
+
+		// Assert response data has the expected keys.
+		$data = $response->get_data();
+		$this->assertIsArray( $data );
+		$this->assertArrayHasKeys( $data, [ 'forms', 'sequences', 'tags' ] );
+	}
+
+	/**
 	 * Act as an administrator.
 	 *
 	 * @since   2.0.6
@@ -141,5 +179,32 @@ class RESTAPITest extends WPRestApiTestCase
 	{
 		$administrator_id = static::factory()->user->create( [ 'role' => 'administrator' ] );
 		wp_set_current_user( $administrator_id );
+	}
+
+	/**
+	 * Act as an editor.
+	 *
+	 * @since   2.0.6
+	 */
+	private function actAsEditor()
+	{
+		$editor_id = static::factory()->user->create( [ 'role' => 'editor' ] );
+		wp_set_current_user( $editor_id );
+	}
+
+	/**
+	 * Assert that an array has the expected keys.
+	 *
+	 * @since   2.0.6
+	 *
+	 * @param   array $arr   The array to assert.
+	 * @param   array $keys  The keys to assert.
+	 * @return  void
+	 */
+	private function assertArrayHasKeys( $arr, $keys )
+	{
+		foreach ( $keys as $key ) {
+			$this->assertArrayHasKey( $key, $arr );
+		}
 	}
 }
