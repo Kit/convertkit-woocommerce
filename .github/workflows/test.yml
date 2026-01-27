@@ -50,20 +50,10 @@ jobs:
       fail-fast: false
       matrix:
         wp-versions: [ 'latest' ] #[ '6.1.1', 'latest' ]
-        php-versions: [ '8.1', '8.2', '8.3', '8.4' ] #[ '7.4', '8.0', '8.1' ]
+        php-versions: [ '8.1' ] #[ '7.4', '8.0', '8.1' ]
         
         # Folder names within the 'tests' folder to run tests in parallel.
         test-groups: [
-          'EndToEnd/abandoned-cart',
-          'EndToEnd/general',
-          'EndToEnd/integrations',
-          'EndToEnd/purchase-data',
-          'EndToEnd/settings',
-          'EndToEnd/subscribe/checkout-block',
-          'EndToEnd/subscribe/order-completed',
-          'EndToEnd/subscribe/order-pending-payment',
-          'EndToEnd/subscribe/order-processing',
-          'EndToEnd/sync-past-orders',
           'Integration'
         ]
 

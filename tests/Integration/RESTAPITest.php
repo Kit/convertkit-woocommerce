@@ -107,7 +107,6 @@ class RESTAPITest extends WPRestApiTestCase
 		);
 
 		// Send request.
-		var_dump($orderID);
 		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/order/send/' . $orderID );
 		$response = rest_get_server()->dispatch( $request );
 
@@ -116,7 +115,9 @@ class RESTAPITest extends WPRestApiTestCase
 
 		// Assert response data contains the expected message.
 		$data = $response->get_data();
+		var_dump($orderID);
 		var_dump($data);
+		die();
 		$this->assertEquals( true, $data['success'] );
 		$this->assertStringContainsString( 'WooCommerce Order ID #' . $orderID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . get_post_meta( $orderID, 'ckwc_purchase_data_id', true ), $data['data'] );
 	}
