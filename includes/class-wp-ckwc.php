@@ -155,12 +155,11 @@ class WP_CKWC {
 			return;
 		}
 
-		$this->classes['admin_bulk_edit']         = new CKWC_Admin_Bulk_Edit();
-		$this->classes['admin_coupon']            = new CKWC_Admin_Coupon();
-		$this->classes['admin_plugin']            = new CKWC_Admin_Plugin();
-		$this->classes['admin_product']           = new CKWC_Admin_Product();
-		$this->classes['admin_quick_edit']        = new CKWC_Admin_Quick_Edit();
-		$this->classes['admin_refresh_resources'] = new CKWC_Admin_Refresh_Resources();
+		$this->classes['admin_bulk_edit']  = new CKWC_Admin_Bulk_Edit();
+		$this->classes['admin_coupon']     = new CKWC_Admin_Coupon();
+		$this->classes['admin_plugin']     = new CKWC_Admin_Plugin();
+		$this->classes['admin_product']    = new CKWC_Admin_Product();
+		$this->classes['admin_quick_edit'] = new CKWC_Admin_Quick_Edit();
 
 		/**
 		 * Initialize integration classes for the WordPress Administration interface.
@@ -247,14 +246,15 @@ class WP_CKWC {
 	 */
 	private function initialize_global() {
 
-		$this->classes['abandoned_cart']   = new CKWC_Abandoned_Cart();
-		$this->classes['admin_notices']    = new CKWC_Admin_Notices();
-		$this->classes['checkout']         = new CKWC_Checkout();
-		$this->classes['order']            = new CKWC_Order();
-		$this->classes['rest_api']         = new CKWC_REST_API();
-		$this->classes['review_request']   = new ConvertKit_Review_Request( 'Kit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
-		$this->classes['setup']            = new CKWC_Setup();
-		$this->classes['wc_subscriptions'] = new CKWC_WC_Subscriptions();
+		$this->classes['abandoned_cart']    = new CKWC_Abandoned_Cart();
+		$this->classes['admin_notices']     = new CKWC_Admin_Notices();
+		$this->classes['checkout']          = new CKWC_Checkout();
+		$this->classes['order']             = new CKWC_Order();
+		$this->classes['rest_api']          = new CKWC_REST_API();
+		$this->classes['refresh_resources'] = new CKWC_Refresh_Resources();
+		$this->classes['review_request']    = new ConvertKit_Review_Request( 'Kit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
+		$this->classes['setup']             = new CKWC_Setup();
+		$this->classes['wc_subscriptions']  = new CKWC_WC_Subscriptions();
 
 		/**
 		 * Initialize integration classes for the frontend web site.
