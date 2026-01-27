@@ -155,7 +155,6 @@ class WP_CKWC {
 			return;
 		}
 
-		$this->classes['admin_ajax']              = new CKWC_Admin_AJAX();
 		$this->classes['admin_bulk_edit']         = new CKWC_Admin_Bulk_Edit();
 		$this->classes['admin_coupon']            = new CKWC_Admin_Coupon();
 		$this->classes['admin_plugin']            = new CKWC_Admin_Plugin();
@@ -252,6 +251,7 @@ class WP_CKWC {
 		$this->classes['admin_notices']    = new CKWC_Admin_Notices();
 		$this->classes['checkout']         = new CKWC_Checkout();
 		$this->classes['order']            = new CKWC_Order();
+		$this->classes['rest_api']         = new CKWC_REST_API();
 		$this->classes['review_request']   = new ConvertKit_Review_Request( 'Kit for WooCommerce', 'convertkit-for-woocommerce', CKWC_PLUGIN_PATH );
 		$this->classes['setup']            = new CKWC_Setup();
 		$this->classes['wc_subscriptions'] = new CKWC_WC_Subscriptions();

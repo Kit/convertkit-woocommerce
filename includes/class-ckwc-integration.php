@@ -855,8 +855,8 @@ class CKWC_Integration extends WC_Integration {
 					'ckwc-sync-past-orders',
 					'ckwc_sync_past_orders',
 					array(
-						'action'              => 'ckwc_sync_past_orders',
-						'nonce'               => wp_create_nonce( 'ckwc_sync_past_orders' ),
+						'url'                 => rest_url( 'kit/v1/woocommerce/order/send' ),
+						'nonce'               => wp_create_nonce( 'wp_rest' ),
 						'ids'                 => $this->unsynced_order_ids,
 						'number_of_requests'  => count( $this->unsynced_order_ids ),
 						'resume_index'        => 0,

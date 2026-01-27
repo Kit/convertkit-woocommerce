@@ -58,6 +58,7 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-api.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-checkout.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-cli-sync-past-orders.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-order.php';
+require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-rest-api.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-custom-fields.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-forms.php';
@@ -68,7 +69,6 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-wc-subscriptions.php';
 
 // Load files that are only used in the WordPress Administration interface.
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-post-type.php';
-require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-ajax.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-bulk-edit.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-coupon.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
