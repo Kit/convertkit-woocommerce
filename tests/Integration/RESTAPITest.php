@@ -109,9 +109,11 @@ class RESTAPITest extends WPRestApiTestCase
 		$product->save();
 
 		// Create a WooCommerce Order.
-		$order = wc_create_order([
-			'status' => 'processing',
-		]);
+		$order = wc_create_order(
+			[
+				'status' => 'processing',
+			]
+		);
 		$order->add_product( $product, 1 );
 		$order->set_billing_email( $_ENV['CONVERTKIT_API_SUBSCRIBER_EMAIL'] );
 		$order->calculate_totals();
@@ -126,9 +128,6 @@ class RESTAPITest extends WPRestApiTestCase
 
 		// Assert response data contains the expected message.
 		$data = $response->get_data();
-		var_dump( $order->get_id() );
-		var_dump($data);
-		die();
 		$this->assertEquals( true, $data['success'] );
 		$this->assertStringContainsString( 'WooCommerce Order ID #' . $order->get_id() . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . get_post_meta( $order->get_id(), 'ckwc_purchase_data_id', true ), $data['data'] );
 	}
