@@ -29,7 +29,6 @@
 				url: '', // AJAX url.
 				number_requests: 0, // Total number of requests that will be sent.
 				offset: 0, // The offset to start at.
-				action: '', // The WordPress registered AJAX action name to use for each request.
 				nonce: '', // WordPress nonce, which your AJAX function should validate.
 				ids: '', // Array of IDs or keys to iterate through, sending one with each request.
 				wait: 5000, // Number of milliseconds to wait.
@@ -245,17 +244,19 @@
 		}
 
 		// Send AJAX request.
+		console.log(settings);
+
 		$.ajax({
-			url: settings.url,
+			url: settings.url + '/' + settings.ids[currentIndex],
 			type: settings.type,
 			async: true,
 			cache: settings.cache,
 			dataType: settings.dataType,
 			data: {
-				action: settings.action,
-				nonce: settings.nonce,
-				id: settings.ids[currentIndex],
 				current_index: currentIndex,
+			},
+			beforeSend(xhr) {
+				xhr.setRequestHeader('X-WP-Nonce', settings.nonce);
 			},
 			success(response) {
 				// Call onRequestSuccess closure.
