@@ -43,11 +43,6 @@ class CKWC_Abandoned_Cart {
 			return;
 		}
 
-		// If we're in the WordPress Admin, don't load any other actions or filters.
-		if ( is_admin() ) {
-			return;
-		}
-
 		// Track the abandoned cart when products are added, edited or removed from the cart.
 		add_action( 'woocommerce_add_to_cart', array( $this, 'track_abandoned_cart' ) );
 		add_action( 'woocommerce_after_cart_item_quantity_update', array( $this, 'track_abandoned_cart' ) );
