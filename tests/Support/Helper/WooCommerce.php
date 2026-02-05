@@ -823,7 +823,7 @@ class WooCommerce extends \Codeception\Module
 				// Complete Credit Card Details.
 				$I->switchToIFrame('iframe[title="Secure payment input frame"]'); // Switch to CC Stripe iFrame.
 				$I->fillField('number', '4242424242424242');
-				$I->fillfield('expiry', '01/26');
+				$I->fillfield('expiry', '01/28');
 				$I->fillField('cvc', '123');
 				$I->switchToIFrame(); // Switch back to main window.
 				break;
