@@ -23,11 +23,13 @@ jQuery(document).ready(function ($) {
 		// Perform AJAX request to refresh resource.
 		$.ajax({
 			type: 'POST',
-			data: {
-				action: 'ckwc_admin_refresh_resources',
-				nonce: ckwc_admin_refresh_resources.nonce,
-			},
 			url: ckwc_admin_refresh_resources.ajaxurl,
+			beforeSend(xhr) {
+				xhr.setRequestHeader(
+					'X-WP-Nonce',
+					ckwc_admin_refresh_resources.nonce
+				);
+			},
 			success(response) {
 				if (ckwc_admin_refresh_resources.debug) {
 					console.log(response);
@@ -35,19 +37,6 @@ jQuery(document).ready(function ($) {
 
 				// Remove any existing error notices that might be displayed.
 				ckwcRefreshResourcesRemoveNotices();
-
-				// Show an error if the request wasn't successful.
-				if (!response.success) {
-					// Show error notice.
-					ckwcRefreshResourcesOutputErrorNotice(response.data);
-
-					// Enable button.
-					$(button)
-						.prop('disabled', false)
-						.removeClass('is-refreshing');
-
-					return;
-				}
 
 				// Get currently selected option.
 				const selectedOption = $(field).val();
@@ -69,9 +58,7 @@ jQuery(document).ready(function ($) {
 
 				// Populate each resource type with select options from response data into
 				// the application option group.
-				for (const [resource, resources] of Object.entries(
-					response.data
-				)) {
+				for (const [resource, resources] of Object.entries(response)) {
 					// resource = forms, sequences, tags.
 					// resoruces = array of resources.
 					resources.forEach(function (item) {
@@ -108,8 +95,11 @@ jQuery(document).ready(function ($) {
 			ckwcRefreshResourcesOutputErrorNotice(
 				'Kit for WooCommerce: ' +
 					response.status +
-					' ' +
-					response.statusText
+					': ' +
+					(typeof response.responseJSON !== 'undefined' &&
+					response.responseJSON.message
+						? response.responseJSON.message
+						: response.statusText)
 			);
 
 			// Enable button.

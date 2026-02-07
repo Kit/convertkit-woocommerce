@@ -32,6 +32,10 @@ class ActivateDeactivatePluginCest
 		// Deactivate the Plugin.
 		$I->deactivateConvertKitPlugin($I);
 
+		// Confirm the Plugin is deactivated.
+		$I->amOnPluginsPage();
+		$I->seePluginDeactivated('convertkit-for-woocommerce');
+
 		// Confirm the Action Scheduler action is unscheduled.
 		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
 		$I->waitForElementVisible('tbody[data-wp-lists="list:action-scheduler"] tr.no-items');

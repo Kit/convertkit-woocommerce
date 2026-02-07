@@ -13,7 +13,7 @@
  * @package CKWC
  * @author ConvertKit
  */
-class CKWC_Admin_Refresh_Resources {
+class CKWC_Refresh_Resources {
 
 	/**
 	 * Registers action and filter hooks.
@@ -22,7 +22,6 @@ class CKWC_Admin_Refresh_Resources {
 	 */
 	public function __construct() {
 
-		add_action( 'wp_ajax_ckwc_admin_refresh_resources', array( $this, 'refresh_resources' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 	}
@@ -34,9 +33,6 @@ class CKWC_Admin_Refresh_Resources {
 	 */
 	public function refresh_resources() {
 
-		// Check nonce.
-		check_ajax_referer( 'ckwc_admin_refresh_resources', 'nonce' );
-
 		// Define an array to store resources in.
 		$resources = array();
 
@@ -46,7 +42,7 @@ class CKWC_Admin_Refresh_Resources {
 
 		// Bail if an error occured.
 		if ( is_wp_error( $resources['forms'] ) ) {
-			wp_send_json_error( $resources['forms']->get_error_message() );
+			return $resources['forms'];
 		}
 
 		// Fetch sequences.
@@ -55,7 +51,7 @@ class CKWC_Admin_Refresh_Resources {
 
 		// Bail if an error occured.
 		if ( is_wp_error( $resources['sequences'] ) ) {
-			wp_send_json_error( $resources['sequences']->get_error_message() );
+			return $resources['sequences'];
 		}
 
 		// Fetch tags.
@@ -64,7 +60,7 @@ class CKWC_Admin_Refresh_Resources {
 
 		// Bail if an error occured.
 		if ( is_wp_error( $resources['tags'] ) ) {
-			wp_send_json_error( $resources['tags']->get_error_message() );
+			return $resources['tags'];
 		}
 
 		// Return resources as a zero based sequential array, so that JS retains the order of resources.
@@ -72,7 +68,7 @@ class CKWC_Admin_Refresh_Resources {
 		$resources['sequences'] = array_values( $resources['sequences'] );
 		$resources['tags']      = array_values( $resources['tags'] );
 
-		wp_send_json_success( $resources );
+		return $resources;
 
 	}
 
@@ -104,10 +100,9 @@ class CKWC_Admin_Refresh_Resources {
 			'ckwc-admin-refresh-resources',
 			'ckwc_admin_refresh_resources',
 			array(
-				'action'  => 'ckwc_admin_refresh_resources',
-				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'ajaxurl' => rest_url( 'kit/v1/woocommerce/resources/refresh' ),
 				'debug'   => $integration->get_option_bool( 'debug' ),
-				'nonce'   => wp_create_nonce( 'ckwc_admin_refresh_resources' ),
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
 			)
 		);
 
