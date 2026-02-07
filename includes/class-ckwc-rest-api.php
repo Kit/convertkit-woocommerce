@@ -42,6 +42,27 @@ class CKWC_REST_API {
 	 */
 	public function register_routes() {
 
+		// Register route to refresh resources.
+		register_rest_route(
+			'kit/v1',
+			'/woocommerce/resources/refresh',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => function () {
+
+					return rest_ensure_response( WP_CKWC()->get_class( 'refresh_resources' )->refresh_resources() );
+
+				},
+
+				// Only refresh resources for users who can edit posts.
+				'permission_callback' => function () {
+
+					return current_user_can( 'edit_posts' );
+
+				},
+			)
+		);
+
 		// Register route to send a WooCommerce Order to Kit.
 		register_rest_route(
 			'kit/v1',
