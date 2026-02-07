@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 2.0.5\n"
+"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 2.0.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-16T03:18:38+00:00\n"
+"POT-Creation-Date: 2026-02-07T03:18:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woocommerce-convertkit\n"
@@ -34,17 +34,6 @@ msgstr ""
 #: woocommerce-convertkit.php
 #: includes/class-ckwc-integration.php:82
 msgid "Kit"
-msgstr ""
-
-#: admin/class-ckwc-admin-ajax.php:50
-msgid "The 'id' parameter is missing from the request."
-msgstr ""
-
-#. translators: %1$s: WooCommerce Order ID, %2$s: ConvertKit API Purchase ID
-#: admin/class-ckwc-admin-ajax.php:77
-#: includes/class-ckwc-cli-sync-past-orders.php:97
-#, php-format
-msgid "WooCommerce Order ID #%1$s added to Kit Purchase Data successfully. Kit Purchase ID: #%2$s"
 msgstr ""
 
 #. translators: Post Type name
@@ -73,11 +62,11 @@ msgstr ""
 msgid "Configure Opt In"
 msgstr ""
 
-#: includes/class-ckwc-abandoned-cart.php:105
+#: includes/class-ckwc-abandoned-cart.php:110
 msgid "Email is required."
 msgstr ""
 
-#: includes/class-ckwc-abandoned-cart.php:112
+#: includes/class-ckwc-abandoned-cart.php:117
 msgid "Invalid email."
 msgstr ""
 
@@ -235,6 +224,14 @@ msgstr ""
 #: includes/class-ckwc-cli-sync-past-orders.php:85
 #, php-format
 msgid "WooCommerce Order ID #%1$s: %2$s"
+msgstr ""
+
+#. translators: %1$s: WooCommerce Order ID, %2$s: ConvertKit API Purchase ID
+#. translators: %1$s: WooCommerce Order ID, %2$s: Kit API Purchase ID
+#: includes/class-ckwc-cli-sync-past-orders.php:97
+#: includes/class-ckwc-rest-api.php:114
+#, php-format
+msgid "WooCommerce Order ID #%1$s added to Kit Purchase Data successfully. Kit Purchase ID: #%2$s"
 msgstr ""
 
 #: includes/class-ckwc-integration.php:83
@@ -663,7 +660,7 @@ msgstr ""
 msgid "[Kit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]"
 msgstr ""
 
-#: includes/class-wp-ckwc.php:200
+#: includes/class-wp-ckwc.php:198
 msgid "Sync past orders with Kit Purchase Data."
 msgstr ""
 
