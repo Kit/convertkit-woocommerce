@@ -76,6 +76,11 @@ class CKWC_Abandoned_Cart {
 		// Get cart.
 		$cart = WC()->cart;
 
+		// Bail if the cart is not initialized.
+		if ( ! $cart ) { // @phpstan-ignore-line
+			return;
+		}
+
 		// If the cart is empty, remove the abandoned cart flag.
 		if ( $cart->is_empty() ) {
 			WC()->session->__unset( 'ckwc_abandoned_cart_timestamp' );
