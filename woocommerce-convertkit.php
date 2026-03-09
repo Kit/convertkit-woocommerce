@@ -72,6 +72,7 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-wc-subscriptions.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-post-type.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-bulk-edit.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-coupon.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-order.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';
