@@ -27,6 +27,15 @@ class CKWC_Admin_Post_Type {
 	public $post_type = '';
 
 	/**
+	 * The Meta Key to store the settings for the Post Type.
+	 *
+	 * @since   2.1.0
+	 *
+	 * @var     string
+	 */
+	public $meta_key = '';
+
+	/**
 	 * Holds the WooCommerce Integration instance for this Plugin.
 	 *
 	 * @since   1.5.9
@@ -128,17 +137,17 @@ class CKWC_Admin_Post_Type {
 
 		// Get current subscription setting and other settings to render the subscription dropdown field.
 		$subscription = array(
-			'id'        => 'ckwc_subscription',
+			'id'        => $this->meta_key,
 			'class'     => 'ckwc-select2 widefat',
-			'name'      => 'ckwc_subscription',
-			'value'     => get_post_meta( $post->ID, 'ckwc_subscription', true ),
+			'name'      => $this->meta_key,
+			'value'     => get_post_meta( $post->ID, $this->meta_key, true ),
 			'forms'     => $forms,
 			'tags'      => $tags,
 			'sequences' => $sequences,
 		);
 
 		// Load meta box view.
-		require_once CKWC_PLUGIN_PATH . '/views/backend/post-type/meta-box.php';
+		require_once CKWC_PLUGIN_PATH . '/views/backend/post-type/' . str_replace( '_', '-', $post->post_type ) . '-meta-box.php';
 
 	}
 
@@ -178,12 +187,12 @@ class CKWC_Admin_Post_Type {
 		}
 
 		// Bail if no Form / Tag option exists in POST data.
-		if ( ! isset( $_POST['ckwc_subscription'] ) ) {
+		if ( ! isset( $_POST[ $this->meta_key ] ) ) {
 			return;
 		}
 
 		// Save Post's settings.
-		update_post_meta( $post_id, 'ckwc_subscription', sanitize_text_field( wp_unslash( $_POST['ckwc_subscription'] ) ) );
+		update_post_meta( $post_id, $this->meta_key, sanitize_text_field( wp_unslash( $_POST[ $this->meta_key ] ) ) );
 
 	}
 
