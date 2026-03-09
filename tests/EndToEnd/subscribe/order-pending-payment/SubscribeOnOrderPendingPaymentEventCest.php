@@ -408,6 +408,60 @@ class SubscribeOnOrderPendingPaymentEventCest
 	}
 
 	/**
+	 * Test that the Customer is subscribed to Kit with the Form defined in the Plugin settings
+	 * and the Sequence defined in the Product when a manual order is created, its status is set to pending payment,
+	 * and the opt in setting is enabled.
+	 *
+	 * @since   2.1.0
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testOptInWithManualOrder(EndToEndTester $I)
+	{
+		// Enable Integration and define its Access and Refresh Tokens.
+		$I->setupConvertKitPlugin(
+			$I,
+			subscriptionEvent: 'pending',
+			subscription: 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+		);
+
+		// Create Product.
+		$productID = $I->wooCommerceCreateSimpleProduct($I, 'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID']);
+
+		// Create Manual Order.
+		$result = $I->wooCommerceCreateManualOrder(
+			$I,
+			productID: $productID,
+			productName: 'Simple Product',
+			orderStatus: 'wc-pending',
+			optIn: true,
+		);
+
+		// Confirm that the email address was now added to Kit.
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+		);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($subscriber['id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Sequence.
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']'
+		);
+	}
+
+	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.
