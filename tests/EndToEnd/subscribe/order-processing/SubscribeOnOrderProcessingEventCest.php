@@ -777,6 +777,57 @@ class SubscribeOnOrderProcessingEventCest
 	}
 
 	/**
+	 * Test that the Customer is subscribed to Kit when a manual order is created and the opt in setting is enabled.
+	 *
+	 * @since   2.1.0
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testOptInWithManualOrder(EndToEndTester $I)
+	{
+		// Enable Integration and define its Access and Refresh Tokens.
+		$I->setupConvertKitPlugin(
+			$I,
+			subscription: 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+		);
+
+		// Create Product.
+		$productID = $I->wooCommerceCreateSimpleProduct($I, 'course:' . $_ENV['CONVERTKIT_API_SEQUENCE_ID']);
+
+		// Create Manual Order.
+		$result = $I->wooCommerceCreateManualOrder(
+			$I,
+			productID: $productID,
+			productName: 'Simple Product',
+			orderStatus: 'wc-processing',
+			optIn: true,
+		);
+
+		// Confirm that the email address was now added to Kit.
+		$subscriber = $I->apiCheckSubscriberExists(
+			$I,
+			emailAddress: $result['email_address'],
+		);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($subscriber['id']);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Form: ' . $_ENV['CONVERTKIT_API_FORM_NAME'] . ' [' . $_ENV['CONVERTKIT_API_FORM_ID'] . ']'
+		);
+
+		// Check that the Order's Notes include a note from the Plugin confirming the Customer was subscribed to the Sequence.
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: 'Customer subscribed to the Sequence: ' . $_ENV['CONVERTKIT_API_SEQUENCE_NAME'] . ' [' . $_ENV['CONVERTKIT_API_SEQUENCE_ID'] . ']'
+		);
+	}
+
+	/**
 	 * Test that the Customer is not resubscribed ConvertKit when:
 	 * - The opt in checkbox is enabled in the integration Settings, and
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
