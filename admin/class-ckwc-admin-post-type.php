@@ -119,7 +119,7 @@ class CKWC_Admin_Post_Type {
 	 *
 	 * @since   1.0.0
 	 *
-	 * @param   WP_Post $post   Post Type (e.g. Product, Coupon).
+	 * @param   WC_Order|WP_Post $post   Post Type (e.g. Product, Coupon).
 	 */
 	public function display_meta_box( $post ) {
 

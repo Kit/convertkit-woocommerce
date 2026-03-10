@@ -72,6 +72,7 @@ class CKWC_Order {
 		}
 
 		// Subscribe customer's email address to a form, tag or sequence.
+		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'maybe_subscribe_customer' ), 99999, 1 );
 		add_action( 'woocommerce_checkout_update_order_meta', array( $this, 'maybe_subscribe_customer' ), 99999, 1 );
 		add_action( 'woocommerce_order_status_changed', array( $this, 'maybe_subscribe_customer' ), 99999, 3 );
 

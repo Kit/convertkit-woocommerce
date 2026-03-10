@@ -848,9 +848,10 @@ class WooCommerce extends \Codeception\Module
 	 * @param   string         $productName    Product Name.
 	 * @param   string         $orderStatus    Order Status.
 	 * @param   string         $paymentMethod  Payment Method.
+	 * @param   bool           $optIn          Set "Opt In Customer" = Yes.
 	 * @return  int                                 Order ID
 	 */
-	public function wooCommerceCreateManualOrder($I, $productID, $productName, $orderStatus, $paymentMethod = '')
+	public function wooCommerceCreateManualOrder($I, $productID, $productName, $orderStatus, $paymentMethod = '', $optIn = false)
 	{
 		// Login as Administrator.
 		// Login as the Administrator, if we're not already logged in.
@@ -891,6 +892,13 @@ class WooCommerce extends \Codeception\Module
 		$I->click('button.add-order-item');
 		$I->fillSelect2Field($I, '.wc-backbone-modal-content .select2-selection__rendered', $productName, 'aria-owns');
 		$I->click('#btn-ok');
+
+		// Opt in Customer.
+		if ($optIn) {
+			$I->selectOption('#ckwc_opt_in', 'Yes');
+		} else {
+			$I->selectOption('#ckwc_opt_in', 'No');
+		}
 
 		// Create Order.
 		$I->executeJS('window.scrollTo(0,0);');

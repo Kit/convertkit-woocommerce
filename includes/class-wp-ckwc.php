@@ -157,6 +157,7 @@ class WP_CKWC {
 
 		$this->classes['admin_bulk_edit']  = new CKWC_Admin_Bulk_Edit();
 		$this->classes['admin_coupon']     = new CKWC_Admin_Coupon();
+		$this->classes['admin_order']      = new CKWC_Admin_Order();
 		$this->classes['admin_plugin']     = new CKWC_Admin_Plugin();
 		$this->classes['admin_product']    = new CKWC_Admin_Product();
 		$this->classes['admin_quick_edit'] = new CKWC_Admin_Quick_Edit();
