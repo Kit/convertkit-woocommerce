@@ -9,7 +9,7 @@
  * Plugin Name: Kit (formerly ConvertKit) for WooCommerce
  * Plugin URI:  https://www.kit.com
  * Description: Integrates WooCommerce with Kit, allowing customers to be automatically sent to your Kit account.
- * Version:     2.0.6
+ * Version:     2.1.0
  * Author:      Kit
  * Author URI:  https://www.kit.com
  * License:     GPLv3 or later
@@ -17,7 +17,7 @@
  * Text Domain: woocommerce-convertkit
  *
  * WC requires at least: 3.0
- * WC tested up to: 10.4.2
+ * WC tested up to: 10.5.3
  */
 
 // Bail if Plugin is already loaded.
@@ -30,7 +30,7 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '2.0.6' );
+define( 'CKWC_PLUGIN_VERSION', '2.1.0' );
 define( 'CKWC_OAUTH_CLIENT_ID', 'L0kyADsB3WP5zO5MvUpXQU64gIntQg9BBAIme17r_7A' );
 define( 'CKWC_OAUTH_CLIENT_REDIRECT_URI', 'https://app.kit.com/wordpress/redirect' );
 
@@ -72,6 +72,7 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-wc-subscriptions.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-post-type.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-bulk-edit.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-coupon.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-order.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
 require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';

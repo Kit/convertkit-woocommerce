@@ -24,4 +24,13 @@ class CKWC_Admin_Product extends CKWC_Admin_Post_Type {
 	 */
 	public $post_type = 'product';
 
+	/**
+	 * The Meta Key to store the settings for the Post Type.
+	 *
+	 * @since   2.1.0
+	 *
+	 * @var     string
+	 */
+	public $meta_key = 'ckwc_subscription';
+
 }

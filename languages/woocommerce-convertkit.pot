@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 2.0.6\n"
+"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 2.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-07T03:18:41+00:00\n"
+"POT-Creation-Date: 2026-03-10T03:24:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woocommerce-convertkit\n"
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: admin/class-ckwc-admin-post-type.php:103
+#: admin/class-ckwc-admin-post-type.php:112
 msgid "Kit Integration"
 msgstr ""
 
@@ -579,98 +579,98 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: Resource Type
-#: includes/class-ckwc-order.php:288
+#: includes/class-ckwc-order.php:289
 #, php-format
 msgid "Resource type %s is not supported in CKWC_Order::subscribe_customer()"
 msgstr ""
 
 #. translators: %1$s: Form Name, %2$s: Form ID
-#: includes/class-ckwc-order.php:321
+#: includes/class-ckwc-order.php:322
 #, php-format
 msgid "[Kit] Customer subscribed to the Form: %1$s [%2$s]"
 msgstr ""
 
 #. translators: %1$s: Tag Name, %2$s: Tag ID
-#: includes/class-ckwc-order.php:338
+#: includes/class-ckwc-order.php:339
 #, php-format
 msgid "[Kit] Customer subscribed to the Tag: %1$s [%2$s]"
 msgstr ""
 
 #. translators: %1$s: Sequence Name, %2$s: Sequence ID
-#: includes/class-ckwc-order.php:356
+#: includes/class-ckwc-order.php:357
 #, php-format
 msgid "[Kit] Customer subscribed to the Sequence: %1$s [%2$s]"
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:416
+#: includes/class-ckwc-order.php:417
 #, php-format
 msgid "Order ID #%s could not be found in WooCommerce."
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:428
+#: includes/class-ckwc-order.php:429
 #, php-format
 msgid "Order ID #%s is a refund. Skipping..."
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:442
+#: includes/class-ckwc-order.php:443
 #, php-format
 msgid "Order ID #%s has already been sent to Kit."
 msgstr ""
 
-#: includes/class-ckwc-order.php:473
+#: includes/class-ckwc-order.php:474
 msgid "[Kit] Purchase Data skipped, as this Order has no Products"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:544
+#: includes/class-ckwc-order.php:545
 #, php-format
 msgid "[Kit] Send Purchase Data Error: %1$s %2$s"
 msgstr ""
 
 #. translators: ConvertKit Purchase ID
-#: includes/class-ckwc-order.php:560
+#: includes/class-ckwc-order.php:561
 #, php-format
 msgid "[Kit] Purchase Data sent successfully: ID [%s]"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:585
+#: includes/class-ckwc-order.php:586
 #, php-format
 msgid "[Kit] Purchase Data: Custom Fields: Get Subscriber Error: %1$s %2$s"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:599
+#: includes/class-ckwc-order.php:600
 #, php-format
 msgid "[Kit] Purchase Data: Custom Fields: No subscriber found for email address %s"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:620
+#: includes/class-ckwc-order.php:621
 #, php-format
 msgid "[Kit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s"
 msgstr ""
 
 #. translators: ConvertKit Subscriber ID
-#: includes/class-ckwc-order.php:631
+#: includes/class-ckwc-order.php:632
 #, php-format
 msgid "[Kit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]"
 msgstr ""
 
-#: includes/class-wp-ckwc.php:198
+#: includes/class-wp-ckwc.php:199
 msgid "Sync past orders with Kit Purchase Data."
 msgstr ""
 
 #. translators: %1$s: PHP class name
-#: includes/class-wp-ckwc.php:299
+#: includes/class-wp-ckwc.php:300
 #, php-format
 msgid "Kit for WooCommerce Error: Could not load Plugin class <strong>%1$s</strong>"
 msgstr ""
 
-#: includes/class-wp-ckwc.php:309
+#: includes/class-wp-ckwc.php:310
 msgid "Kit for WooCommerce Error"
 msgstr ""
 
@@ -688,6 +688,18 @@ msgstr ""
 msgid "Refresh sequences, forms and tags from ConvertKit account"
 msgstr ""
 
+#: views/backend/post-type/ckwc-subscription-meta-box-field.php:16
+msgid "Refresh sequences, forms and tags from Kit account"
+msgstr ""
+
+#: views/backend/post-type/ckwc-subscription-meta-box-field.php:25
+msgid "The Kit form, tag or sequence to subscribe customers to who purchase this product."
+msgstr ""
+
+#: views/backend/post-type/ckwc-subscription-meta-box-field.php:28
+msgid "The Kit form, tag or sequence to subscribe customers to who use this coupon."
+msgstr ""
+
 #. translators: %1$s: Post Type Singular Name, %2$s: Link to Integration Settings
 #: views/backend/post-type/disabled.php:15
 #, php-format
@@ -698,16 +710,24 @@ msgstr ""
 msgid "enable the Kit WooCommerce integration"
 msgstr ""
 
-#: views/backend/post-type/meta-box.php:16
-msgid "Refresh sequences, forms and tags from Kit account"
+#: views/backend/post-type/order-meta-box.php:13
+msgid "Opt In Customer"
 msgstr ""
 
-#: views/backend/post-type/meta-box.php:25
-msgid "The Kit form, tag or sequence to subscribe customers to who purchase this product."
+#: views/backend/post-type/order-meta-box.php:20
+msgid "Opted In"
 msgstr ""
 
-#: views/backend/post-type/meta-box.php:28
-msgid "The Kit form, tag or sequence to subscribe customers to who use this coupon."
+#: views/backend/post-type/order-meta-box.php:26
+msgid "Yes"
+msgstr ""
+
+#: views/backend/post-type/order-meta-box.php:27
+msgid "No"
+msgstr ""
+
+#: views/backend/post-type/order-meta-box.php:38
+msgid "If enabled, the customer will be subscribed to forms, tags and sequences defined in the Plugin, Product and Coupons when the order is saved and the order status matches that defined in the Plugin settings."
 msgstr ""
 
 #: views/backend/settings/oauth.php:12
