@@ -77,4 +77,5 @@ modules:
             wpRootFolder: '%WORDPRESS_ROOT_DIR%'
             dbUrl: '%WORDPRESS_DB_URL%'
             domain: '%WORDPRESS_DOMAIN%'
- 
+step_decorators:
+    - \Codeception\Step\TryTo
