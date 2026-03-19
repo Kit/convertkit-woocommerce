@@ -820,6 +820,13 @@ class WooCommerce extends \Codeception\Module
 			 * Card
 			 */
 			case 'stripe':
+				// Select Stripe Payment Method, if a radio button exists, depending on the checkout type.
+				if ($I->tryToSeeElement('#payment_method_stripe')) {
+					$I->click('#payment_method_stripe');
+				} elseif ($I->tryToSeeElement('#radio-control-wc-payment-method-options-stripe')) {
+					$I->click('#radio-control-wc-payment-method-options-stripe');
+				}
+
 				// Complete Credit Card Details.
 				$I->switchToIFrame('iframe[title="Secure payment input frame"]'); // Switch to CC Stripe iFrame.
 				$I->fillField('number', '4242424242424242');
@@ -832,7 +839,12 @@ class WooCommerce extends \Codeception\Module
 			 * COD
 			 */
 			default:
-				// COD is selected by default, so no need to click anything.
+				// Select COD Payment Method, if a radio button exists, depending on the checkout type.
+				if ($I->tryToSeeElement('#payment_method_cod')) {
+					$I->click('#payment_method_cod');
+				} elseif ($I->tryToSeeElement('#radio-control-wc-payment-method-options-cod')) {
+					$I->click('#radio-control-wc-payment-method-options-cod');
+				}
 				break;
 		}
 	}
