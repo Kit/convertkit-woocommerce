@@ -30,7 +30,7 @@ jobs:
       # if e.g. composer install fails.
       - name: Check ConvertKit Library Exists
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v3
         with:
           files: "vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api-traits.php, vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api-v4.php, vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-log.php, vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource-v4.php, vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-review-request.php"
 
