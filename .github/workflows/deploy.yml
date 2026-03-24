@@ -17,7 +17,7 @@ jobs:
     steps:
       # Checkout (copy) this repository's Plugin to this VM.
       - name: Checkout Plugin
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Installs required packages that must be included in the Plugin
       # as specified in composer.json's "require" section.
@@ -30,7 +30,7 @@ jobs:
       # if e.g. composer install fails.
       - name: Check ConvertKit Library Exists
         id: check_files
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v3
         with:
           files: "vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api-traits.php, vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api-v4.php, vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-log.php, vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource-v4.php, vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-review-request.php"
 
