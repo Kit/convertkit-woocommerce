@@ -290,8 +290,8 @@ class SyncPastOrdersHPOSCest
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/settings.css', 'ckwc-settings-css' );
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/sync-past-orders.css', 'ckwc-sync-past-orders-css' );
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/synchronous-ajax.js' );
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/sync-past-orders.js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/synchronous-ajax.js', 'ckwc-synchronous-ajax-js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/sync-past-orders.js', 'ckwc-sync-past-orders-js' );
 
 		// Wait a few seconds for the API call to be made.
 		$I->wait(5);
