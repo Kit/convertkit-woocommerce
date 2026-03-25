@@ -217,7 +217,7 @@ class ProductCest
 
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/bulk-quick-edit.css', 'ckwc-bulk-quick-edit-css' );
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/quick-edit.js', 'ckwc-quick-edit-js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/quick-edit.js', 'ckwc-admin-quick-edit-js' );
 
 		$I->wait(1);
 
