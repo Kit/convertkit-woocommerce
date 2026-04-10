@@ -144,6 +144,8 @@ class CKWC_Integration extends WC_Integration {
 		$this->update_option( 'access_token', '' );
 		$this->update_option( 'refresh_token', '' );
 		$this->update_option( 'token_expires', '' );
+		$this->update_option( 'api_key', '' );
+		$this->update_option( 'api_secret', '' );
 
 		// Clear any existing scheduled WordPress Cron event.
 		wp_clear_scheduled_hook( 'ckwc_refresh_token' );
@@ -171,11 +173,46 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
-		// Delete resources.
-		$this->resources_delete();
+		// Setup API.
+		$api = new CKWC_API(
+			CKWC_OAUTH_CLIENT_ID,
+			CKWC_OAUTH_CLIENT_REDIRECT_URI,
+			$this->get_access_token(),
+			$this->get_refresh_token(),
+			$this->get_option_bool( 'debug' )
+		);
 
-		// Remove tokens from settings.
-		$this->delete_credentials();
+		// Check that we're using the Kit WordPress Libraries 2.1.4 or higher.
+		// If another Kit Plugin is active and out of date, its libraries might
+		// be loaded that don't have this method.
+		if ( ! method_exists( $api, 'revoke_tokens' ) ) { // @phpstan-ignore-line Older WordPress Libraries won't have this function.
+			wp_safe_redirect(
+				ckwc_get_settings_link(
+					array(
+						'error' => __( 'The Kit WordPress Libraries is missing the `revoke_tokens` method. Please update all Kit WordPress Plugins to their latest versions, and click Disconnect again.', 'woocommerce-convertkit' ),
+					)
+				)
+			);
+			exit();
+		}
+
+		// Revoke Access and Refresh Tokens.
+		// See ckwc_delete_credentials() method in functions.php, which is called
+		// by the `convertkit_api_revoke_tokens` action and deletes credentials from the Plugin's settings.
+		$result = $api->revoke_tokens();
+		if ( is_wp_error( $result ) ) {
+			wp_safe_redirect(
+				ckwc_get_settings_link(
+					array(
+						'error' => $result->get_error_message(),
+					)
+				)
+			);
+			exit();
+		}
+
+		// Delete cached resources.
+		$this->resources_delete();
 
 		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
 		// is now authenticated.
