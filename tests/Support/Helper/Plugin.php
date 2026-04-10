@@ -36,6 +36,19 @@ class Plugin extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to delete the Kit Plugin, checking
+	 * it deleted and no errors were output.
+	 *
+	 * @since   2.1.3
+	 *
+	 * @param   EndToEndTester $I     EndToEndTester.
+	 */
+	public function deleteKitPlugin($I)
+	{
+		$I->deleteThirdPartyPlugin($I, 'convertkit-for-woocommerce');
+	}
+
+	/**
 	 * Helper method to activate the following Plugins:
 	 * - WooCommerce
 	 * - WooCommerce Stripe Gateway
