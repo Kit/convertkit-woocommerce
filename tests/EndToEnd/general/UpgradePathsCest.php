@@ -148,6 +148,39 @@ class UpgradePathsCest
 	}
 
 	/**
+	 * Tests that the v3 API Key and Secret are removed from settings when upgrading to 2.1.3 or later.
+	 *
+	 * @since   2.1.3
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testV3APIKeyAndSecretRemovedFromSettings(EndToEndTester $I)
+	{
+		// Setup Plugin with v3 API Key and Secret.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'access_token'  => $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+				'refresh_token' => $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
+				'api_key'       => $_ENV['CONVERTKIT_API_KEY'],
+				'api_secret'    => $_ENV['CONVERTKIT_API_SECRET'],
+				'enabled'       => 'yes',
+			]
+		);
+
+		// Define an installation version older than 2.1.3.
+		$I->haveOptionInDatabase('ckwc_version', '2.0.4');
+
+		// Activate the WooCommerce and Kit Plugins.
+		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Confirm the settings no longer have a value for the v3 API Key and Secret.
+		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
+		$I->assertEmpty($settings['api_key']);
+		$I->assertEmpty($settings['api_secret']);
+	}
+
+	/**
 	 * Deactivate and reset Plugin(s) after each test, if the test passes.
 	 * We don't use _after, as this would provide a screenshot of the Plugin
 	 * deactivation and not the true test error.

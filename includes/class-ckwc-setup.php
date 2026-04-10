@@ -50,8 +50,36 @@ class CKWC_Setup {
 			$this->maybe_get_access_token_by_api_key_and_secret();
 		}
 
+		// Actions that should run regardless of the version number
+		// whenever the Plugin is updated.
+		$this->remove_v3_api_key_and_secret_from_settings();
+
 		// Update the installed version number in the options table.
 		update_option( 'ckwc_version', CKWC_PLUGIN_VERSION );
+
+	}
+
+	/**
+	 * Remove v3 API key and Secret from settings.
+	 *
+	 * @since   2.1.4
+	 */
+	private function remove_v3_api_key_and_secret_from_settings() {
+
+		// Get settings.
+		$settings = get_option( 'woocommerce_ckwc_settings' );
+
+		// Bail if no settings exist.
+		if ( ! $settings ) {
+			return;
+		}
+
+		// Remove v3 API Secret from settings.
+		$settings['api_key']    = '';
+		$settings['api_secret'] = '';
+
+		// Save settings.
+		update_option( 'woocommerce_ckwc_settings', $settings );
 
 	}
 
