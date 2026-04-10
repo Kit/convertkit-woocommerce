@@ -242,9 +242,39 @@ function ckwc_maybe_delete_credentials( $result, $client_id ) {
 
 }
 
+/**
+ * Deletes the stored access token, refresh token and its expiry from the Plugin settings,
+ * and clears any existing scheduled WordPress Cron event to refresh the token on expiry,
+ * when the user revokes the access token.
+ *
+ * @since   2.1.3
+ *
+ * @param   string $client_id   OAuth Client ID used for the Access and Refresh Tokens.
+ */
+function ckwc_delete_credentials( $client_id ) {
+
+	// Don't delete these credentials if they're not for this Client ID.
+	// They're for another Kit Plugin that uses OAuth.
+	if ( $client_id !== CKWC_OAUTH_CLIENT_ID ) {
+		return;
+	}
+
+	// Bail if the integration is unavailable.
+	if ( ! function_exists( 'WP_CKWC_Integration' ) ) {
+		return;
+	}
+
+	// Delete Access and Refresh Tokens.
+	WP_CKWC_Integration()->delete_credentials();
+
+}
+
 // Update Access Token when refreshed by the API class.
 add_action( 'convertkit_api_get_access_token', 'ckwc_maybe_update_credentials', 10, 2 );
 add_action( 'convertkit_api_refresh_token', 'ckwc_maybe_update_credentials', 10, 2 );
+
+// Delete credentials when the user revokes the access and refresh tokens.
+add_action( 'convertkit_api_revoke_tokens', 'ckwc_delete_credentials', 10, 1 );
 
 // Delete credentials if the API class uses a invalid access token.
 // This prevents the Plugin making repetitive API requests that will 401.

@@ -167,6 +167,67 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
+	 * Test that the access token and refresh token are deleted from the Plugin's settings
+	 * when the access token is revoked.
+	 *
+	 * @since   2.1.3
+	 */
+	public function testCredentialsDeletedAndInvalidWhenRevoked()
+	{
+		// Initialize the API without an access token or refresh token.
+		$api = new \CKWC_API(
+			$_ENV['CONVERTKIT_OAUTH_CLIENT_ID'],
+			$_ENV['KIT_OAUTH_REDIRECT_URI']
+		);
+
+		// Generate an access token by API key and secret.
+		$result = $api->get_access_token_by_api_key_and_secret(
+			$_ENV['CONVERTKIT_API_KEY'],
+			$_ENV['CONVERTKIT_API_SECRET'],
+			wp_generate_password( 10, false ) // Random tenant name to produce a token for this request only.
+		);
+
+		// Store the access token in the Plugin's settings.
+		WP_CKWC_Integration()->update_option( 'access_token', $result['oauth']['access_token'] );
+		WP_CKWC_Integration()->update_option( 'refresh_token', $result['oauth']['refresh_token'] );
+		WP_CKWC_Integration()->update_option( 'token_expires', $result['oauth']['expires_at'] );
+
+		// Initialize the API with the access token and refresh token.
+		$api = new \CKWC_API(
+			$_ENV['CONVERTKIT_OAUTH_CLIENT_ID'],
+			$_ENV['KIT_OAUTH_REDIRECT_URI'],
+			WP_CKWC_Integration()->get_access_token(),
+			WP_CKWC_Integration()->get_refresh_token()
+		);
+
+		// Confirm the token works when making an authenticated request.
+		$this->assertNotInstanceOf( 'WP_Error', $api->get_account() );
+
+		// Revoke the access and refresh tokens.
+		$api->revoke_tokens();
+
+		// Confirm the access token and refresh token are deleted from the Plugin's settings.
+		$this->assertEmpty( WP_CKWC_Integration()->get_access_token() );
+		$this->assertEmpty( WP_CKWC_Integration()->get_refresh_token() );
+
+		// Initialize the API with the (now revoked) access token and refresh token.
+		// revoke_tokens() will have removed the access token and refresh token from the API class, so we need to provide them again
+		// to test they're revoked.
+		$api = new \CKWC_API(
+			$_ENV['CONVERTKIT_OAUTH_CLIENT_ID'],
+			$_ENV['CONVERTKIT_OAUTH_REDIRECT_URI'],
+			$result['oauth']['access_token'],
+			$result['oauth']['refresh_token']
+		);
+
+		// Confirm attempting to use the revoked access token no longer works.
+		$this->assertInstanceOf( 'WP_Error', $api->get_account() );
+
+		// Confirm attempting to use the revoked refresh token no longer works.
+		$this->assertInstanceOf( 'WP_Error', $api->refresh_token() );
+	}
+
+	/**
 	 * Test that the User Agent string is in the expected format and
 	 * includes the Plugin's name and version number.
 	 *
