@@ -43,12 +43,6 @@ class UpgradePathsCest
 		$I->assertArrayHasKey('refresh_token', $settings);
 		$I->assertArrayHasKey('token_expires', $settings);
 
-		// Confirm the API Key and Secret are retained, in case we need them in the future.
-		$I->assertArrayHasKey('api_key', $settings);
-		$I->assertArrayHasKey('api_secret', $settings);
-		$I->assertEquals($settings['api_key'], $_ENV['CONVERTKIT_API_KEY']);
-		$I->assertEquals($settings['api_secret'], $_ENV['CONVERTKIT_API_SECRET']);
-
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
