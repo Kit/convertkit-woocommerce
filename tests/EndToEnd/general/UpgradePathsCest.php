@@ -43,12 +43,6 @@ class UpgradePathsCest
 		$I->assertArrayHasKey('refresh_token', $settings);
 		$I->assertArrayHasKey('token_expires', $settings);
 
-		// Confirm the API Key and Secret are retained, in case we need them in the future.
-		$I->assertArrayHasKey('api_key', $settings);
-		$I->assertArrayHasKey('api_secret', $settings);
-		$I->assertEquals($settings['api_key'], $_ENV['CONVERTKIT_API_KEY']);
-		$I->assertEquals($settings['api_secret'], $_ENV['CONVERTKIT_API_SECRET']);
-
 		// Load Settings screen.
 		$I->loadConvertKitSettingsScreen($I);
 
@@ -145,6 +139,39 @@ class UpgradePathsCest
 		// Confirm the Action Scheduler action is scheduled.
 		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
 		$I->assertEquals('ckwc_abandoned_cart', $I->grabTextFrom('tbody[data-wp-lists="list:action-scheduler"] tr:first-child td.column-hook'));
+	}
+
+	/**
+	 * Tests that the v3 API Key and Secret are removed from settings when upgrading to 2.1.3 or later.
+	 *
+	 * @since   2.1.3
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testV3APIKeyAndSecretRemovedFromSettings(EndToEndTester $I)
+	{
+		// Setup Plugin with v3 API Key and Secret.
+		$I->haveOptionInDatabase(
+			'woocommerce_ckwc_settings',
+			[
+				'access_token'  => $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+				'refresh_token' => $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
+				'api_key'       => $_ENV['CONVERTKIT_API_KEY'],
+				'api_secret'    => $_ENV['CONVERTKIT_API_SECRET'],
+				'enabled'       => 'yes',
+			]
+		);
+
+		// Define an installation version older than 2.1.3.
+		$I->haveOptionInDatabase('ckwc_version', '2.0.4');
+
+		// Activate the WooCommerce and Kit Plugins.
+		$I->activateWooCommerceAndConvertKitPlugins($I);
+
+		// Confirm the settings no longer have a value for the v3 API Key and Secret.
+		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
+		$I->assertEmpty($settings['api_key']);
+		$I->assertEmpty($settings['api_secret']);
 	}
 
 	/**
