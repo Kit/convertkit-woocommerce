@@ -49,6 +49,7 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 ### 2.1.3 2026-04-13
 * Added: Settings: Revoke Access and Refresh Tokens, and remove from settings, when `Disconnect` button clicked
 * Added: Uninstall: Revoke Access and Refresh Tokens, and remove from settings, when the Plugin is deleted (Plugins > Kit for WooCommerce > Delete)
+* Removed: v3 API Key and Secret
 * Updated: WordPress Libraries to 2.1.5
 
 ### 2.1.2 2026-03-31
