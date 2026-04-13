@@ -36,6 +36,19 @@ class Plugin extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to delete the Kit Plugin, checking
+	 * it deleted and no errors were output.
+	 *
+	 * @since   2.1.3
+	 *
+	 * @param   EndToEndTester $I     EndToEndTester.
+	 */
+	public function deleteKitPlugin($I)
+	{
+		$I->deleteThirdPartyPlugin($I, 'convertkit-for-woocommerce');
+	}
+
+	/**
 	 * Helper method to activate the following Plugins:
 	 * - WooCommerce
 	 * - WooCommerce Stripe Gateway
@@ -93,6 +106,8 @@ class Plugin extends \Codeception\Module
 	 * @param   EndToEndTester $I                           Acceptance Tester.
 	 * @param   bool|string    $accessToken                 Access Token (if specified, used instead of CONVERTKIT_OAUTH_ACCESS_TOKEN).
 	 * @param   bool|string    $refreshToken                Refresh Token (if specified, used instead of CONVERTKIT_OAUTH_REFRESH_TOKEN).
+	 * @param   bool|string    $apiKey                      v3 API Key.
+	 * @param   bool|string    $apiSecret                   v3 API Secret.
 	 * @param   string         $subscriptionEvent           Subscribe Event.
 	 * @param   bool|string    $subscription                Form, Tag or Sequence to subscribe customer to.
 	 * @param   string         $nameFormat                  Name Format.
@@ -108,6 +123,8 @@ class Plugin extends \Codeception\Module
 		$I,
 		$accessToken = false,
 		$refreshToken = false,
+		$apiKey = false,
+		$apiSecret = false,
 		$subscriptionEvent = 'pending',
 		$subscription = false,
 		$nameFormat = 'first',

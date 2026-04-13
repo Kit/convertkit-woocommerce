@@ -69,6 +69,7 @@ jobs:
           'EndToEnd/subscribe/order-pending-payment',
           'EndToEnd/subscribe/order-processing',
           'EndToEnd/sync-past-orders',
+          'EndToEnd/uninstall',
           'Integration'
         ]
 
