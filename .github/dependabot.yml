@@ -6,3 +6,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-type: "production"
+    versioning-strategy: "increase"
