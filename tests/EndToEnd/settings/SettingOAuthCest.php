@@ -78,8 +78,8 @@ class SettingOAuthCest
 		// Setup Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
-			'fakeAccessToken',
-			'fakeRefreshToken'
+			accessToken: 'fakeAccessToken',
+			refreshToken: 'fakeRefreshToken'
 		);
 
 		// Load Settings screen.
@@ -138,15 +138,57 @@ class SettingOAuthCest
 
 		// Wait for confirmation message to display.
 		$I->waitForElementVisible('div.updated.inline');
+	}
 
-		// Disconnect the Plugin connection to ConvertKit.
+	/**
+	 * Test that the credentials and resources are deleted on disconnect.
+	 *
+	 * @since   2.1.3
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testCredentialsAndResourcesAreDeletedOnDisconnect(EndToEndTester $I)
+	{
+		// Setup Plugin.
+		$I->setupConvertKitPlugin($I);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Fake the API Key, Access and Refresh Tokens; if we revoke the tokens used for tests, future tests will fail.
+		$I->setupConvertKitPlugin(
+			$I,
+			accessToken: 'fakeAccessToken',
+			refreshToken: 'fakeRefreshToken',
+			apiKey: 'fakeAPIKey',
+			apiSecret: 'fakeAPISecret'
+		);
+
+		// Disconnect the Plugin connection to Kit.
 		$I->click('Disconnect');
 
+		// Check credentials are removed from the settings.
+		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
+		$I->assertEmpty($settings['access_token']);
+		$I->assertEmpty($settings['refresh_token']);
+		$I->assertEmpty($settings['token_expires']);
+		$I->assertEmpty($settings['api_key']);
+		$I->assertEmpty($settings['api_secret']);
+
+		// Check cached resources are removed from the database on disconnection.
+		$I->dontSeeOptionInDatabase('ckwc_custom_fields');
+		$I->dontSeeOptionInDatabase('ckwc_custom_fields_last_queried');
+		$I->dontSeeOptionInDatabase('ckwc_forms');
+		$I->dontSeeOptionInDatabase('ckwc_forms_last_queried');
+		$I->dontSeeOptionInDatabase('ckwc_sequences');
+		$I->dontSeeOptionInDatabase('ckwc_sequences_last_queried');
+		$I->dontSeeOptionInDatabase('ckwc_tags');
+		$I->dontSeeOptionInDatabase('ckwc_tags_last_queried');
+
 		// Confirm the Connect button displays.
-		$I->waitForElementVisible('#oauth a.button-primary');
 		$I->see('Connect');
 		$I->dontSee('Disconnect');
-		$I->dontSeeElementInDOM('button.woocommerce-save-button');
+		$I->dontSeeElementInDOM('input#submit');
 	}
 
 	/**

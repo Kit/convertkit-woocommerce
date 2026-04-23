@@ -266,15 +266,15 @@ class WooCommerce extends \Codeception\Module
 		// Setup ConvertKit for WooCommerce Plugin.
 		$I->setupConvertKitPlugin(
 			$I,
-			$_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
-			$_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
-			$options['subscription_event'],
-			$options['plugin_form_tag_sequence'],
-			$options['name_format'],
-			$options['custom_fields'],
-			$options['display_opt_in'],
-			( ( $options['send_purchase_data'] === true ) ? 'processing' : $options['send_purchase_data'] ),
-			$options['address_fields']
+			accessToken: $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
+			refreshToken: $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'],
+			subscriptionEvent: $options['subscription_event'],
+			subscription: $options['plugin_form_tag_sequence'],
+			nameFormat: $options['name_format'],
+			mapCustomFields: $options['custom_fields'],
+			displayOptIn: $options['display_opt_in'],
+			sendPurchaseDataEvent: ( ( $options['send_purchase_data'] === true ) ? 'processing' : $options['send_purchase_data'] ),
+			addressFields: $options['address_fields']
 		);
 
 		// Create Product.

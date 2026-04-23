@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.1
-Stable tag: 2.1.0
+Stable tag: 2.1.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -45,6 +45,24 @@ No. You must first have an account on kit.com, but you do not have to use a paid
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 2.1.4 2026-04-22
+* Updated: WordPress Libraries to 2.1.6
+
+### 2.1.3 2026-04-13
+* Added: Settings: Revoke Access and Refresh Tokens, and remove from settings, when `Disconnect` button clicked
+* Added: Uninstall: Revoke Access and Refresh Tokens, and remove from settings, when the Plugin is deleted (Plugins > Kit for WooCommerce > Delete)
+* Removed: v3 API Key and Secret
+* Updated: WordPress Libraries to 2.1.5
+
+### 2.1.2 2026-03-31
+* Fix: Downgrade WordPress Libraries to 2.1.3, resolving issues in 2.1.1 and 2.1.1.1
+
+### 2.1.1.1 2026-03-30
+* Fix: Fatal error: Cannot redeclare trait ConvertKit_API\ConvertKit_API_Traits
+
+### 2.1.1 2026-03-30
+* Updated: Use WordPress Libraries 2.1.4
 
 ### 2.1.0 2026-03-10
 * Added: Orders: Support opting in customer as subscriber when creating manual orders in WordPress Admin
