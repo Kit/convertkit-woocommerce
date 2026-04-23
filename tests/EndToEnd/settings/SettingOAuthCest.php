@@ -38,7 +38,7 @@ class SettingOAuthCest
 
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/settings.css', 'ckwc-settings-css' );
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/integration.js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/integration.js', 'ckwc-integration-js' );
 
 		// Confirm no option is displayed to save changes, as the Plugin isn't authenticated.
 		$I->dontSeeElementInDOM('button.woocommerce-save-button');
