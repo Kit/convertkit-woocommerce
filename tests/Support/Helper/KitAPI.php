@@ -49,23 +49,32 @@ class KitAPI extends \Codeception\Module
 	 */
 	public function apiCheckSubscriberExists($I, $emailAddress, $firstName = false)
 	{
-		// Wait a second to ensure the subscriber has been created.
-		$I->wait(1);
+		// Wait for the API to update.
+		$I->wait(3);
 
-		// Run request.
-		$results = $this->apiRequest(
-			'subscribers',
-			'GET',
-			[
-				'email_address'       => $emailAddress,
-				'include_total_count' => true,
+		// Retry the API request as sometimes there's a lag before the subscriber is queryable via the API.
+		$results = $this->retryUntil(
+			function () use ($emailAddress) {
+				$results = $this->apiRequest(
+					'subscribers',
+					'GET',
+					[
+						'email_address'       => $emailAddress,
+						'include_total_count' => true,
 
-				// Check all subscriber states.
-				'status'              => 'all',
-			]
+						// Check all subscriber states.
+						'status'              => 'all',
+					]
+				);
+
+				// Return the results only if a subscriber was found, so
+				// retryUntil() will keep trying otherwise.
+				return ( $results['pagination']['total_count'] > 0 ) ? $results : false;
+			}
 		);
 
 		// Check at least one subscriber was returned and it matches the email address.
+		$I->assertNotFalse($results);
 		$I->assertGreaterThan(0, $results['pagination']['total_count']);
 		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
 
@@ -396,5 +405,40 @@ class KitAPI extends \Codeception\Module
 
 		// Return JSON decoded response.
 		return json_decode($result->getBody()->getContents(), true);
+	}
+
+	/**
+	 * Repeatedly invokes the given callback until it returns a truthy value, or
+	 * the maximum number of attempts is reached.
+	 *
+	 * Use this to wrap API checks that can be flaky due to ingestion lag at
+	 * Kit's end (e.g. a subscriber created via a form submission isn't always
+	 * immediately queryable via the `subscribers` endpoint).
+	 *
+	 * @since   2.1.5
+	 *
+	 * @param   callable $callback   Callback to invoke. Should return the value
+	 *                                to use, or false/null to indicate the
+	 *                                check has not yet succeeded.
+	 * @param   int      $attempts   Maximum number of attempts.
+	 * @param   int      $delay      Seconds to wait between attempts.
+	 * @return  mixed                The truthy value returned by $callback, or
+	 *                                false if all attempts are exhausted.
+	 */
+	private function retryUntil(callable $callback, $attempts = 4, $delay = 3)
+	{
+		for ($i = 0; $i < $attempts; $i++) {
+			$result = $callback();
+			if ($result) {
+				return $result;
+			}
+
+			// Don't sleep after the final attempt.
+			if ($i < $attempts - 1) {
+				sleep($delay);
+			}
+		}
+
+		return false;
 	}
 }
