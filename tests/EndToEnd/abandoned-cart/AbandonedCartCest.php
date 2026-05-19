@@ -57,7 +57,6 @@ class AbandonedCartCest
 		// Logout as the WordPress Administrator.
 		$I->logOut();
 
-		/*
 		// Add Product to Cart and load Checkout, completing fields.
 		$I->wooCommerceCheckoutWithProduct(
 			$I,
@@ -97,6 +96,7 @@ class AbandonedCartCest
 		// Logout as the WordPress Administrator.
 		$I->logOut();
 
+		/*
 		// Add Product to Cart and load Checkout, completing fields.
 		$I->wooCommerceCheckoutWithProduct(
 			$I,
