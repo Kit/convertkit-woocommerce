@@ -81,8 +81,6 @@ class AbandonedCartCest
 		// Click the export action.
 		$I->click('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
 
-		$I->see('xxxxxxx');
-
 		// Wait for the action to complete.
 		$I->waitForElementVisible('.updated');
 
@@ -129,6 +127,8 @@ class AbandonedCartCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
+
+		$I->wait(2);
 	}
 
 	/**
