@@ -200,7 +200,5 @@ class AbandonedCartCest
 	{
 		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 		$I->resetConvertKitPlugin($I);
-
-		die();
 	}
 }
