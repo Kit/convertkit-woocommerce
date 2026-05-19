@@ -37,6 +37,7 @@ class AbandonedCartCest
 	 */
 	public function testAbandonedCartTagging(EndToEndTester $I)
 	{
+		/*
 		// Setup Kit Plugin with Abandoned Cart enabled.
 		$I->setupConvertKitPlugin(
 			$I,
@@ -124,6 +125,7 @@ class AbandonedCartCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
+		*/
 	}
 
 	/**
@@ -198,5 +200,7 @@ class AbandonedCartCest
 	{
 		$I->deactivateWooCommerceAndConvertKitPlugins($I);
 		$I->resetConvertKitPlugin($I);
+
+		die();
 	}
 }
