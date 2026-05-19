@@ -132,9 +132,6 @@ class WooCommerceSubscriptionsSubscribeEventCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
-
-		// Logout as the customer.
-		$I->logOut();
 	}
 
 	/**

@@ -119,13 +119,14 @@ class AbandonedCartCest
 			'order_id'      => (int) $I->grabTextFrom('ul.wc-block-order-confirmation-summary-list li:first-child span.wc-block-order-confirmation-summary-list-item__value'),
 		];
 
-		/*
+		// Login as the WordPress Administrator.
+		$I->doLoginAsAdmin($I);
+
 		// Check that the subscriber no longer has the tag.
 		$I->apiCheckSubscriberHasNoTags($I, $subscriber['id']);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
-		*/
 	}
 
 	/**
@@ -182,9 +183,6 @@ class AbandonedCartCest
 			$I,
 			emailAddress: $emailAddress
 		);
-
-		// Logout as the WordPress Administrator.
-		$I->logOut();
 	}
 
 	/**
