@@ -37,7 +37,6 @@ class AbandonedCartCest
 	 */
 	public function testAbandonedCartTagging(EndToEndTester $I)
 	{
-		/*
 		// Setup Kit Plugin with Abandoned Cart enabled.
 		$I->setupConvertKitPlugin(
 			$I,
@@ -58,6 +57,7 @@ class AbandonedCartCest
 		// Logout as the WordPress Administrator.
 		$I->logOut();
 
+		/*
 		// Add Product to Cart and load Checkout, completing fields.
 		$I->wooCommerceCheckoutWithProduct(
 			$I,
