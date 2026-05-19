@@ -28,6 +28,62 @@ class AbandonedCartCest
 	}
 
 	/**
+	 * Test that the subscriber is not tagged when the Abandoned Cart is disabled.
+	 *
+	 * @since   2.0.5
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testAbandonedCartWhenDisabled(EndToEndTester $I)
+	{
+		// Setup Kit Plugin with Abandoned Cart disabled.
+		$I->setupConvertKitPlugin(
+			$I,
+			abandonedCart: false
+		);
+
+		// Create Product.
+		$productName = 'Simple Product';
+		$productID   = $I->wooCommerceCreateSimpleProduct($I, false);
+
+		// Define Email Address for this Test.
+		$emailAddress = $I->generateEmailAddress();
+
+		// Logout as the WordPress Administrator.
+		$I->logOut();
+
+		// Add Product to Cart and load Checkout, completing fields.
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: $productName,
+			emailAddress: $emailAddress
+		);
+
+		// Login and navigate to the Action Scheduler page, to manually run the Abandoned Cart action.
+		$I->doLoginAsAdmin($I);
+		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
+
+		// Hover mouse over Action Scheduler's table row.
+		$I->moveMouseOver('tbody[data-wp-lists="list:action-scheduler"] tr:first-child');
+
+		// Wait for export link to be visible.
+		$I->waitForElementVisible('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
+
+		// Click the export action.
+		$I->click('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
+
+		// Wait for the action to complete.
+		$I->waitForElementVisible('.updated');
+
+		// Confirm that the email address was not added to Kit.
+		$I->apiCheckSubscriberDoesNotExist(
+			$I,
+			emailAddress: $emailAddress
+		);
+	}
+
+	/**
 	 * Test that the subscriber is tagged when the cart is abandoned,
 	 * and the tag is removed when the customer completes the checkout process.
 	 *
@@ -127,64 +183,6 @@ class AbandonedCartCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
-
-		$I->wait(2);
-	}
-
-	/**
-	 * Test that the subscriber is not tagged when the Abandoned Cart is disabled.
-	 *
-	 * @since   2.0.5
-	 *
-	 * @param   EndToEndTester $I  Tester.
-	 */
-	public function testAbandonedCartWhenDisabled(EndToEndTester $I)
-	{
-		// Setup Kit Plugin with Abandoned Cart disabled.
-		$I->setupConvertKitPlugin(
-			$I,
-			abandonedCart: false
-		);
-
-		// Create Product.
-		$productName = 'Simple Product';
-		$productID   = $I->wooCommerceCreateSimpleProduct($I, false);
-
-		// Define Email Address for this Test.
-		$emailAddress = $I->generateEmailAddress();
-
-		// Logout as the WordPress Administrator.
-		$I->logOut();
-
-		// Add Product to Cart and load Checkout, completing fields.
-		$I->wooCommerceCheckoutWithProduct(
-			$I,
-			productID: $productID,
-			productName: $productName,
-			emailAddress: $emailAddress
-		);
-
-		// Login and navigate to the Action Scheduler page, to manually run the Abandoned Cart action.
-		$I->doLoginAsAdmin($I);
-		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
-
-		// Hover mouse over Action Scheduler's table row.
-		$I->moveMouseOver('tbody[data-wp-lists="list:action-scheduler"] tr:first-child');
-
-		// Wait for export link to be visible.
-		$I->waitForElementVisible('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
-
-		// Click the export action.
-		$I->click('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
-
-		// Wait for the action to complete.
-		$I->waitForElementVisible('.updated');
-
-		// Confirm that the email address was not added to Kit.
-		$I->apiCheckSubscriberDoesNotExist(
-			$I,
-			emailAddress: $emailAddress
-		);
 	}
 
 	/**
