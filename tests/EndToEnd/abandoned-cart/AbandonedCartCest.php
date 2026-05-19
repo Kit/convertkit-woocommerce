@@ -81,6 +81,8 @@ class AbandonedCartCest
 		// Click the export action.
 		$I->click('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
 
+		$I->see('xxxxxxx');
+
 		// Wait for the action to complete.
 		$I->waitForElementVisible('.updated');
 
