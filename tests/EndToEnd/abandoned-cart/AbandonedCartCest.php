@@ -96,7 +96,6 @@ class AbandonedCartCest
 		// Logout as the WordPress Administrator.
 		$I->logOut();
 
-		/*
 		// Add Product to Cart and load Checkout, completing fields.
 		$I->wooCommerceCheckoutWithProduct(
 			$I,
@@ -125,7 +124,6 @@ class AbandonedCartCest
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
-		*/
 	}
 
 	/**
