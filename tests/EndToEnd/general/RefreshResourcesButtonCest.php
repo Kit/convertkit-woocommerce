@@ -39,7 +39,7 @@ class RefreshResourcesButtonCest
 		$I->amOnAdminPage('post-new.php?post_type=product');
 
 		// Confirm JS is output by the Plugin.
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js', 'ckwc-admin-refresh-resources-js' );
 
 		// Click the refresh button.
 		$I->click('button.ckwc-refresh-resources');
@@ -88,7 +88,7 @@ class RefreshResourcesButtonCest
 		);
 
 		// Confirm JS is output by the Plugin.
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js', 'ckwc-admin-refresh-resources-js' );
 
 		// Click the refresh button.
 		$I->wait(2);
@@ -127,7 +127,7 @@ class RefreshResourcesButtonCest
 		$I->openQuickEdit($I, 'product', $pageID);
 
 		// Confirm JS is output by the Plugin.
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js', 'ckwc-admin-refresh-resources-js' );
 
 		// Click the refresh button.
 		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources');

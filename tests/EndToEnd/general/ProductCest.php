@@ -82,7 +82,7 @@ class ProductCest
 
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/select2.css', 'ckwc-admin-select2-css' );
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/select2.js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/select2.js', 'ckwc-admin-select2-js' );
 
 		// Check that the ConvertKit meta box exists.
 		$I->seeElementInDOM('#ckwc');
@@ -217,7 +217,7 @@ class ProductCest
 
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/bulk-quick-edit.css', 'ckwc-bulk-quick-edit-css' );
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/quick-edit.js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/quick-edit.js', 'ckwc-admin-quick-edit-js' );
 
 		$I->wait(1);
 
@@ -314,7 +314,7 @@ class ProductCest
 
 		// Confirm CSS and JS is output by the Plugin.
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/bulk-quick-edit.css', 'ckwc-bulk-quick-edit-css' );
-		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/bulk-edit.js' );
+		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/bulk-edit.js', 'ckwc-bulk-edit-js' );
 
 		// Iterate through Products to observe expected changes were made to the settings in the database.
 		foreach ($productIDs as $productID) {

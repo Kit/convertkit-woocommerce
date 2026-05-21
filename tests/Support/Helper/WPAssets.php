@@ -16,10 +16,11 @@ class WPAssets extends \Codeception\Module
 	 *
 	 * @param   AcceptanceHelper $I         Acceptance Helper.
 	 * @param   string           $url       Script URL, relative to Plugin root folder.
+	 * @param   string           $id        Script ID.
 	 */
-	public function seeJSEnqueued($I, $url)
+	public function seeJSEnqueued($I, $url, $id)
 	{
-		$I->seeInSource('<script src="' . $_ENV['WORDPRESS_URL'] . '/wp-content/plugins/' . $url );
+		$I->seeInSource('<script id="' . $id . '" src="' . $_ENV['WORDPRESS_URL'] . '/wp-content/plugins/' . $url );
 	}
 
 	/**

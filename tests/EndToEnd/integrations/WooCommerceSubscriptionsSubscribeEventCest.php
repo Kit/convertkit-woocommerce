@@ -40,6 +40,44 @@ class WooCommerceSubscriptionsSubscribeEventCest
 	 * - WooCommerce Subscriptions Plugin is enabled, and
 	 * - The opt in checkbox is enabled in the integration Settings, and
 	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'Simple' non-subscription WooCommerce Product, and
+	 * - The Customer is subscribed at the point the WooCommerce Order is marked as completed.
+	 *
+	 * @since   1.4.4
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testOptInWhenCheckedWithFormAndNonSubscriptionProduct(EndToEndTester $I)
+	{
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'display_opt_in'           => true,
+				'check_opt_in'             => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'completed',
+			]
+		);
+
+		// Confirm that the email address wasn't yet added to ConvertKit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Change the Order status = Completed, to trigger the Order Completed event.
+		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
+
+		// Confirm that the email address was now added to ConvertKit.
+		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
+
+		// Unsubscribe the email address, so we restore the account back to its previous state.
+		$I->apiUnsubscribe($subscriber['id']);
+	}
+
+	/**
+	 * Test that the Customer is subscribed to ConvertKit when:
+	 * - WooCommerce Subscriptions Plugin is enabled, and
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
 	 * - The Customer purchases a 'Subscription' WooCommerce Product, and
 	 * - The Customer is subscribed at the point the WooCommerce Order is marked as completed.
 	 * - The Customer is not resubscribed when the WooCommerce Subscription is renewed.
@@ -94,47 +132,6 @@ class WooCommerceSubscriptionsSubscribeEventCest
 
 		// Confirm that the email address is not subscribed to ConvertKit, as the Order is for a renewal, not a new subscription.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-	}
-
-	/**
-	 * Test that the Customer is subscribed to ConvertKit when:
-	 * - WooCommerce Subscriptions Plugin is enabled, and
-	 * - The opt in checkbox is enabled in the integration Settings, and
-	 * - The opt in checkbox is checked on the WooCommerce checkout, and
-	 * - The Customer purchases a 'Simple' non-subscription WooCommerce Product, and
-	 * - The Customer is subscribed at the point the WooCommerce Order is marked as completed.
-	 *
-	 * @since   1.4.4
-	 *
-	 * @param   EndToEndTester $I  Tester.
-	 */
-	public function testOptInWhenCheckedWithFormAndNonSubscriptionProduct(EndToEndTester $I)
-	{
-		// Create Product and Checkout for this test.
-		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
-			$I,
-			[
-				'display_opt_in'           => true,
-				'check_opt_in'             => true,
-				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
-				'subscription_event'       => 'completed',
-			]
-		);
-
-		// Confirm that the email address wasn't yet added to ConvertKit.
-		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
-
-		// Change the Order status = Completed, to trigger the Order Completed event.
-		$I->wooCommerceChangeOrderStatus($I, $result['order_id'], 'wc-completed');
-
-		// Confirm that the email address was now added to ConvertKit.
-		$subscriber = $I->apiCheckSubscriberExists($I, $result['email_address']);
-
-		// Unsubscribe the email address, so we restore the account back to its previous state.
-		$I->apiUnsubscribe($subscriber['id']);
-
-		// Logout as the customer.
-		$I->logOut();
 	}
 
 	/**
