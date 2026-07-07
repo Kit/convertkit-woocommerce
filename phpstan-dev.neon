@@ -21,6 +21,7 @@ parameters:
     # Files that include Plugin-specific PHP constants
     bootstrapFiles:
         - woocommerce-convertkit.php
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 
     # Location of WordPress Plugins for PHPStan to scan, building symbols.
     scanDirectories:
