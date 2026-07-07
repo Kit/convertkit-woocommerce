@@ -841,7 +841,9 @@ class WooCommerce extends \Codeception\Module
 			default:
 				// Select COD Payment Method, if a radio button exists, depending on the checkout type.
 				if ($I->tryToSeeElement('#payment_method_cod')) {
-					$I->click('#payment_method_cod');
+					$I->scrollTo('#payment_method_cod', 0, -100);
+					$I->waitForElementNotVisible('.blockOverlay');
+					$I->executeJS("document.querySelector('#payment_method_cod').click();");
 				} elseif ($I->tryToSeeElement('#radio-control-wc-payment-method-options-cod')) {
 					$I->click('#radio-control-wc-payment-method-options-cod');
 				}
