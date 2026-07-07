@@ -36,10 +36,8 @@ Full plugin documentation is located [here](https://help.kit.com/en/articles/250
 == Frequently asked questions ==
 
 = Does this plugin require a paid service? =
-No. You must first have an account on kit.com, but you do not have to use a paid plan!
 
-= Where do I report security bugs found in this plugin? =
-Please report security bugs found in the source code of the Kit (formerly ConvertKit) plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/1010ebe1-02b2-4144-8297-b8cddba0ce7d). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+No. You must first have an account on kit.com, but you do not have to use a paid plan!
 
 == Screenshots ==
 
