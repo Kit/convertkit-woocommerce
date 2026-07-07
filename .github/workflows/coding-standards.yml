@@ -179,12 +179,6 @@ jobs:
         run: npm run lint:js
 
       # Run PHPStan for static analysis.
-      # Skipped on PHP 7.2 and 7.3: PHPStan 2.x and szepeviktor/phpstan-wordpress 2.x
-      # require PHP >= 7.4, so `composer update` downgrades to the unmaintained 1.x line on
-      # these legs, which produces false positives for WooCommerce order methods.
-      # The analysis is deterministic regardless of the runtime PHP because phpstan.neon.dist
-      # pins `phpVersion: 70100`, so minimum-PHP language compatibility is still validated here.
       - name: Run PHPStan Static Analysis
         working-directory: ${{ env.PLUGIN_DIR }}
-        if: ${{ matrix.php-versions != '7.2' && matrix.php-versions != '7.3' }}
-        run: php vendor/bin/phpstan analyse --memory-limit=1024M
+        run: php vendor/bin/phpstan analyse --memory-limit=2G

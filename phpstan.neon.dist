@@ -29,6 +29,11 @@ parameters:
     # Location of constants for PHPStan to scan, building symbols.
     scanFiles:
         - /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/wordpress/wp-config.php
+        # WooCommerce class/function stubs, so WC_Order etc. methods resolve regardless of
+        # whether a live WooCommerce install is present in scanDirectories. Loaded via scanFiles
+        # (not bootstrapFiles) so PHPStan parses rather than executes it — the stubs use PHP 7.4+
+        # syntax, which would ParseError when PHPStan runs on the PHP 7.2/7.3 matrix legs.
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
 
     # Don't report unmatched ignored errors on older PHP versions (7.2, 7.3)
     reportUnmatchedIgnoredErrors: false
