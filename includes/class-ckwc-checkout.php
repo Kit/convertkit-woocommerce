@@ -255,12 +255,18 @@ class CKWC_Checkout {
 			return $value;
 		}
 
-		// Store the value of the opt in checkbox in the `ckwc_opt_in` meta key,
-		// as we do for the block and shortcode methods.
-		$this->save_opt_in_for_order(
-			$wc_object,
-			(bool) $value
-		);
+		// Store the value of the opt in checkbox in the `ckwc_opt_in` meta key.
+		// We can't use save_opt_in_for_order() here: this action fires while WooCommerce is
+		// building the Store API Checkout Block order, before the order has been assigned an ID,
+		// so that method's `OrderUtil::get_order_type( $order->get_id() )` guard would bail on a
+		// zero ID. Instead set the meta directly on the order object. If the order already has an
+		// ID we persist immediately; otherwise WooCommerce saves the order after additional fields
+		// are set, which persists the meta for us.
+		$wc_object->update_meta_data( 'ckwc_opt_in', ( (bool) $value ) ? 'yes' : 'no' );
+
+		if ( $wc_object->get_id() ) {
+			$wc_object->save();
+		}
 
 		// Return original value.
 		return $value;
