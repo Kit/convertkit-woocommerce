@@ -39,6 +39,9 @@ Full plugin documentation is located [here](https://help.kit.com/en/articles/250
 
 No. You must first have an account on kit.com, but you do not have to use a paid plan!
 
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/b599634b-6960-4d4b-bb14-bd00c08392b0). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Screenshots ==
 
 1. Settings page
