@@ -263,9 +263,6 @@ jobs:
       - name: Start nginx
         run: sudo systemctl start nginx.service
         
-      - name: Install chromedriver
-        uses: nanasess/setup-chromedriver@master
-
       - name: Start chromedriver
         run: |
           export DISPLAY=:99
