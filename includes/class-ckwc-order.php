@@ -108,14 +108,14 @@ class CKWC_Order {
 		// Get WooCommerce Order.
 		$order = wc_get_order( $order_id );
 
-		// Bail if the Order does not require that we subscribe the Customer,
-		// or the Customer was already subscribed.
-		if ( ! $this->should_opt_in_customer( $order ) ) {
+		// If no Order could be fetched, bail.
+		if ( ! $order ) {
 			return;
 		}
 
-		// If no Order could be fetched, bail.
-		if ( ! $order ) {
+		// Bail if the Order does not require that we subscribe the Customer,
+		// or the Customer was already subscribed.
+		if ( ! $this->should_opt_in_customer( $order ) ) {
 			return;
 		}
 

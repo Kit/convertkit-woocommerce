@@ -96,7 +96,7 @@ jobs:
     steps:
       - name: Define Test Group Name
         id: test-group
-        uses: mad9000/actions-find-and-replace-string@5
+        uses: mad9000/actions-find-and-replace-string@6
         with:
           source: ${{ matrix.test-groups }}
           find: '/'        
@@ -244,9 +244,6 @@ jobs:
       - name: Start nginx
         run: sudo systemctl start nginx.service
         
-      - name: Install chromedriver
-        uses: nanasess/setup-chromedriver@master
-
       - name: Start chromedriver
         run: |
           export DISPLAY=:99
@@ -270,24 +267,22 @@ jobs:
 
       # Write any secrets, such as API keys, to the .env.testing file now.
       - name: Define GitHub Secrets in .env.dist.testing
-        uses: DamianReeves/write-file-action@v1.3
-        with:
-          path: ${{ env.PLUGIN_DIR }}/.env.testing
-          contents: |
-            STRIPE_TEST_PUBLISHABLE_KEY=${{ env.STRIPE_TEST_PUBLISHABLE_KEY }}
-            STRIPE_TEST_SECRET_KEY=${{ env.STRIPE_TEST_SECRET_KEY }}
-            CONVERTKIT_API_KEY=${{ env.CONVERTKIT_API_KEY }}
-            CONVERTKIT_API_SECRET=${{ env.CONVERTKIT_API_SECRET }}
-            CONVERTKIT_API_KEY_NO_DATA=${{ env.CONVERTKIT_API_KEY_NO_DATA }}
-            CONVERTKIT_API_SECRET_NO_DATA=${{ env.CONVERTKIT_API_SECRET_NO_DATA }}
-            CONVERTKIT_OAUTH_ACCESS_TOKEN=${{ env.CONVERTKIT_OAUTH_ACCESS_TOKEN }}
-            CONVERTKIT_OAUTH_REFRESH_TOKEN=${{ env.CONVERTKIT_OAUTH_REFRESH_TOKEN }}
-            CONVERTKIT_OAUTH_ACCESS_TOKEN_NO_DATA=${{ env.CONVERTKIT_OAUTH_ACCESS_TOKEN_NO_DATA }}
-            CONVERTKIT_OAUTH_REFRESH_TOKEN_NO_DATA=${{ env.CONVERTKIT_OAUTH_REFRESH_TOKEN_NO_DATA }}
-            CONVERTKIT_OAUTH_CLIENT_ID=${{ env.CONVERTKIT_OAUTH_CLIENT_ID }}
-            CONVERTKIT_OAUTH_REDIRECT_URI=${{ env.CONVERTKIT_OAUTH_REDIRECT_URI }}
-            KIT_OAUTH_REDIRECT_URI=${{ env.KIT_OAUTH_REDIRECT_URI }}
-          write-mode: overwrite
+        run: |
+          cat > ${{ env.PLUGIN_DIR }}/.env.testing << 'ENVEOF'
+          STRIPE_TEST_PUBLISHABLE_KEY=${{ env.STRIPE_TEST_PUBLISHABLE_KEY }}
+          STRIPE_TEST_SECRET_KEY=${{ env.STRIPE_TEST_SECRET_KEY }}
+          CONVERTKIT_API_KEY=${{ env.CONVERTKIT_API_KEY }}
+          CONVERTKIT_API_SECRET=${{ env.CONVERTKIT_API_SECRET }}
+          CONVERTKIT_API_KEY_NO_DATA=${{ env.CONVERTKIT_API_KEY_NO_DATA }}
+          CONVERTKIT_API_SECRET_NO_DATA=${{ env.CONVERTKIT_API_SECRET_NO_DATA }}
+          CONVERTKIT_OAUTH_ACCESS_TOKEN=${{ env.CONVERTKIT_OAUTH_ACCESS_TOKEN }}
+          CONVERTKIT_OAUTH_REFRESH_TOKEN=${{ env.CONVERTKIT_OAUTH_REFRESH_TOKEN }}
+          CONVERTKIT_OAUTH_ACCESS_TOKEN_NO_DATA=${{ env.CONVERTKIT_OAUTH_ACCESS_TOKEN_NO_DATA }}
+          CONVERTKIT_OAUTH_REFRESH_TOKEN_NO_DATA=${{ env.CONVERTKIT_OAUTH_REFRESH_TOKEN_NO_DATA }}
+          CONVERTKIT_OAUTH_CLIENT_ID=${{ env.CONVERTKIT_OAUTH_CLIENT_ID }}
+          CONVERTKIT_OAUTH_REDIRECT_URI=${{ env.CONVERTKIT_OAUTH_REDIRECT_URI }}
+          KIT_OAUTH_REDIRECT_URI=${{ env.KIT_OAUTH_REDIRECT_URI }}
+          ENVEOF
 
       # Installs wp-browser, Codeception, PHP CodeSniffer and anything else needed to run tests.
       - name: Run Composer
