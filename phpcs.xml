@@ -51,4 +51,13 @@
 			</property>
 		</properties>
 	</rule>
+
+	<!-- Register WooCommerce custom capabilities so they aren't flagged as unknown. -->
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="manage_woocommerce"/>
+			</property>
+		</properties>
+	</rule>
 </ruleset>
