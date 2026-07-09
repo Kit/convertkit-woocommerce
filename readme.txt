@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.1
-Stable tag: 2.1.6
+Stable tag: 2.1.7
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,6 +48,9 @@ Please report security bugs found in the source code of the plugin through the [
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 2.1.7 2026-07-09
+* Fix: Settings: Export configuration: check nonce to prevent an unauthenticated user from exporting the Plugin's configuration 
 
 ### 2.1.6 2026-07-09
 * Fix: Checkout: Correctly store opt in value against WooCommerce Order when using newer block checkout

@@ -60,6 +60,26 @@ class SettingImportExportCest
 	}
 
 	/**
+	 * Test that the Export Configuration option fails when the nonce is not provided.
+	 *
+	 * @since   2.1.7
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testExportConfigurationFailsWithoutNonce(EndToEndTester $I)
+	{
+		// Load the admin-ajax.php page with the action 'ckwc-export', without a nonce.
+		$I->amOnAdminPage('admin-ajax.php?action=ckwc-export&page=wc-settings&tab=integration&section=ckwc');
+
+		// Wait 2 seconds in case the download is triggered.
+		sleep(2);
+
+		// Confirm that the response is 0, and no download file exists.
+		$I->seeInSource('0');
+		$I->dontSeeFileFound($_ENV['WORDPRESS_ROOT_DIR'] . '/ckwc-export.json');
+	}
+
+	/**
 	 * Test that the Import Configuration option works.
 	 *
 	 * @since   1.4.6

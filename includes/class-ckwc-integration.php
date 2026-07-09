@@ -282,11 +282,24 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
-		// Bail if the action isn't for exporting a configuration file.
-		if ( ! array_key_exists( 'action', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		// Bail if the user isn't permitted to manage WooCommerce settings.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			return;
 		}
-		if ( $_REQUEST['action'] !== 'ckwc-export' ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		// Bail if nonce verification fails.
+		if ( ! isset( $_REQUEST['nonce'] ) ) {
+			return;
+		}
+		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'ckwc-nonce' ) ) {
+			return;
+		}
+
+		// Bail if the action isn't for exporting a configuration file.
+		if ( ! array_key_exists( 'action', $_REQUEST ) ) {
+			return;
+		}
+		if ( $_REQUEST['action'] !== 'ckwc-export' ) {
 			return;
 		}
 
