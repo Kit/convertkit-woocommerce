@@ -277,6 +277,16 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function maybe_export_configuration() {
 
+		// Bail if we're not on the settings screen.
+		if ( ! $this->get_integration_screen_name() ) {
+			return;
+		}
+
+		// Bail if the user isn't permitted to manage WooCommerce settings.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
 		// Bail if nonce verification fails.
 		if ( ! isset( $_REQUEST['nonce'] ) ) {
 			return;
