@@ -277,16 +277,19 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function maybe_export_configuration() {
 
-		// Bail if we're not on the settings screen.
-		if ( ! $this->get_integration_screen_name() ) {
+		// Bail if nonce verification fails.
+		if ( ! isset( $_REQUEST['nonce'] ) ) {
+			return;
+		}
+		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'ckwc-nonce' ) ) {
 			return;
 		}
 
 		// Bail if the action isn't for exporting a configuration file.
-		if ( ! array_key_exists( 'action', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! array_key_exists( 'action', $_REQUEST ) ) {
 			return;
 		}
-		if ( $_REQUEST['action'] !== 'ckwc-export' ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( $_REQUEST['action'] !== 'ckwc-export' ) {
 			return;
 		}
 
