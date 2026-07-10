@@ -11,6 +11,7 @@
   "devDependencies": {
     "@wordpress/prettier-config": "^4.30.0",
     "@wordpress/scripts": "^30.23.0",
-    "eslint-config-prettier": "^10.1.8"
+    "eslint-config-prettier": "^10.1.8",
+    "typescript": "~5.4.5"
   }
 }
