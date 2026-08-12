@@ -53,10 +53,7 @@ class SettingOptInCheckboxCest
 		$I->waitForElementNotVisible('#woocommerce_ckwc_opt_in_location');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Check the fields honor the changes.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
@@ -95,10 +92,7 @@ class SettingOptInCheckboxCest
 		$I->waitForElementVisible('#woocommerce_ckwc_opt_in_location');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Check the fields remain ticked.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
@@ -141,10 +135,7 @@ class SettingOptInCheckboxCest
 		$I->fillField('#woocommerce_ckwc_opt_in_label', $customLabel);
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Check the fields remain ticked.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
@@ -180,10 +171,7 @@ class SettingOptInCheckboxCest
 		$I->checkOption('#woocommerce_ckwc_opt_in_status', 'Checked');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Check the fields remain ticked.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
@@ -223,10 +211,7 @@ class SettingOptInCheckboxCest
 		$I->selectOption('#woocommerce_ckwc_opt_in_status', 'Unchecked');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Check the fields remain ticked.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
@@ -266,10 +251,7 @@ class SettingOptInCheckboxCest
 		$I->selectOption('#woocommerce_ckwc_opt_in_location', 'Billing');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Check the fields remain ticked / selected.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');
@@ -306,10 +288,7 @@ class SettingOptInCheckboxCest
 		$I->selectOption('#woocommerce_ckwc_opt_in_location', 'Order');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Check the fields remain ticked / selected.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_display_opt_in');

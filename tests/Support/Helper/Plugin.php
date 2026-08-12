@@ -494,6 +494,33 @@ class Plugin extends \Codeception\Module
 	}
 
 	/**
+	 * Helper method to click 'Save changes' on the ConvertKit Plugin settings
+	 * and confirm settings saved without errors.
+	 *
+	 * @since   2.1.8
+	 *
+	 * @param   EndToEndTester $I Acceptance Tester.
+	 */
+	public function clickSaveChangesButton($I, $error = false, $message = 'Your settings have been saved.')
+	{
+		// Click the Save changes button.
+		$I->click('Save changes');
+
+		// Wait for the page to load with the success or error notice.
+		if ( ! $error ) {
+			$I->waitForElementVisible('div.updated.inline');
+		} else {
+			$I->waitForElementVisible('div.error.inline');
+		}
+
+		// Check that no PHP warnings or notices were output.
+		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Confirm the expected message displays.
+		$I->see($message);
+	}
+
+	/**
 	 * Helper method to determine the order of <option> values for the given select element
 	 * and values when <optgroup> is used within a <select>.
 	 *

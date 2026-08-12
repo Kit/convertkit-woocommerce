@@ -60,11 +60,7 @@ class UpgradePathsCest
 		$I->checkSelectWithOptionGroupsOptionOrder($I, '#woocommerce_ckwc_subscription');
 
 		// Save changes (avoids a JS alert box which would prevent other tests from running due to changes made on screen).
-		$I->click('Save changes');
-
-		// Wait for settings to save.
-		$I->waitForElementVisible('div.updated.inline');
-		$I->see('Your settings have been saved.');
+		$I->clickSaveChangesButton();
 	}
 
 	/**
