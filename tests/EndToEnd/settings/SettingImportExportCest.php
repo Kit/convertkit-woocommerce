@@ -95,7 +95,10 @@ class SettingImportExportCest
 		$I->attachFile('input[name=woocommerce_ckwc_import]', 'ckwc-export.json');
 
 		// Click the Save changes button.
-		$I->clickSaveChangesButton($I, 'Configuration imported successfully.');
+		$I->clickSaveChangesButton(
+			$I,
+			message: 'Configuration imported successfully.'
+		);
 
 		// Confirm that the options table contains the expected settings.
 		// We don't check the access and refresh tokens, as they're invalid in the export JSON

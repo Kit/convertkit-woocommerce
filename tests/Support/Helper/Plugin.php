@@ -499,7 +499,9 @@ class Plugin extends \Codeception\Module
 	 *
 	 * @since   2.1.8
 	 *
-	 * @param   EndToEndTester $I Acceptance Tester.
+	 * @param   EndToEndTester $I         Acceptance Tester.
+	 * @param   bool           $error     Whether to expect an error notice.
+	 * @param   string         $message   The expected success message.
 	 */
 	public function clickSaveChangesButton($I, $error = false, $message = 'Your settings have been saved.')
 	{
