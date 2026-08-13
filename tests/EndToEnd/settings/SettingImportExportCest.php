@@ -95,13 +95,10 @@ class SettingImportExportCest
 		$I->attachFile('input[name=woocommerce_ckwc_import]', 'ckwc-export.json');
 
 		// Click the Save changes button.
-		$I->click('Save changes');
-
-		// Wait for confirmation message to display.
-		$I->waitForElementVisible('div.updated.inline');
-
-		// Confirm success message displays.
-		$I->seeInSource('Configuration imported successfully.');
+		$I->clickSaveChangesButton(
+			$I,
+			message: 'Configuration imported successfully.'
+		);
 
 		// Confirm that the options table contains the expected settings.
 		// We don't check the access and refresh tokens, as they're invalid in the export JSON
@@ -137,13 +134,11 @@ class SettingImportExportCest
 		$I->attachFile('input[name=woocommerce_ckwc_import]', 'ckwc-export-invalid.json');
 
 		// Click the Save changes button.
-		$I->click('Save changes');
-
-		// Wait for error message to display.
-		$I->waitForElementVisible('div.error.inline');
-
-		// Confirm error message displays.
-		$I->seeInSource('The uploaded configuration file contains no settings.');
+		$I->clickSaveChangesButton(
+			$I,
+			error: true,
+			message: 'The uploaded configuration file contains no settings.'
+		);
 	}
 
 	/**
@@ -163,13 +158,11 @@ class SettingImportExportCest
 		$I->attachFile('input[name=woocommerce_ckwc_import]', 'ckwc-export-fake.json');
 
 		// Click the Save changes button.
-		$I->click('Save changes');
-
-		// Wait for error message to display.
-		$I->waitForElementVisible('div.error.inline');
-
-		// Confirm error message displays.
-		$I->seeInSource('The uploaded configuration file isn\'t valid.');
+		$I->clickSaveChangesButton(
+			$I,
+			error: true,
+			message: 'The uploaded configuration file isn\'t valid.'
+		);
 	}
 
 	/**

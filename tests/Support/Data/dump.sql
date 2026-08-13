@@ -7,42 +7,6 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
 
--- Drop WooCommerce tables, as Plugin activation will create these.
-DROP TABLE IF EXISTS `wp_wc_admin_note_actions`;
-DROP TABLE IF EXISTS `wp_wc_admin_notes`;
-DROP TABLE IF EXISTS `wp_wc_category_lookup`;
-DROP TABLE IF EXISTS `wp_wc_customer_lookup`;
-DROP TABLE IF EXISTS `wp_wc_download_log`;
-DROP TABLE IF EXISTS `wp_wc_order_addresses`;
-DROP TABLE IF EXISTS `wp_wc_order_coupon_lookup`;
-DROP TABLE IF EXISTS `wp_wc_order_operational_data`;
-DROP TABLE IF EXISTS `wp_wc_order_product_lookup`;
-DROP TABLE IF EXISTS `wp_wc_order_stats`;
-DROP TABLE IF EXISTS `wp_wc_order_tax_lookup`;
-DROP TABLE IF EXISTS `wp_wc_orders`;
-DROP TABLE IF EXISTS `wp_wc_orders_meta`;
-DROP TABLE IF EXISTS `wp_wc_product_attributes_lookup`;
-DROP TABLE IF EXISTS `wp_wc_product_download_directories`;
-DROP TABLE IF EXISTS `wp_wc_product_meta_lookup`;
-DROP TABLE IF EXISTS `wp_wc_rate_limits`;
-DROP TABLE IF EXISTS `wp_wc_reserved_stock`;
-DROP TABLE IF EXISTS `wp_wc_tax_rate_classes`;
-DROP TABLE IF EXISTS `wp_wc_webhooks`;
-DROP TABLE IF EXISTS `wp_woocommerce_api_keys`;
-DROP TABLE IF EXISTS `wp_woocommerce_attribute_taxonomies`;
-DROP TABLE IF EXISTS `wp_woocommerce_downloadable_product_permissions`;
-DROP TABLE IF EXISTS `wp_woocommerce_log`;
-DROP TABLE IF EXISTS `wp_woocommerce_order_itemmeta`;
-DROP TABLE IF EXISTS `wp_woocommerce_order_items`;
-DROP TABLE IF EXISTS `wp_woocommerce_payment_tokenmeta`;
-DROP TABLE IF EXISTS `wp_woocommerce_payment_tokens`;
-DROP TABLE IF EXISTS `wp_woocommerce_sessions`;
-DROP TABLE IF EXISTS `wp_woocommerce_shipping_zone_locations`;
-DROP TABLE IF EXISTS `wp_woocommerce_shipping_zone_methods`;
-DROP TABLE IF EXISTS `wp_woocommerce_shipping_zones`;
-DROP TABLE IF EXISTS `wp_woocommerce_tax_rate_locations`;
-DROP TABLE IF EXISTS `wp_woocommerce_tax_rates`;
-
 DROP TABLE IF EXISTS `wp_commentmeta`;
 CREATE TABLE `wp_commentmeta` (
   `meta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -240,13 +204,9 @@ INSERT INTO `wp_options` (`option_id`, `option_name`, `option_value`, `autoload`
 (123, 'theme_mods_twentytwentythree', 'a:1:{s:18:\"custom_css_post_id\";i:-1;}',  'yes'),
 (124, 'db_upgraded',  '', 'yes'),
 (125, 'can_compress_scripts', '1',  'yes'),
-(126, 'WishListMemberOptions_Migrated', '1',  'yes'),
-(127, 'widget_wishlistwidget',  'a:1:{s:12:\"_multiwidget\";i:1;}', 'yes'),
-(128, 'WishListMemberOptions_MigrateLevelData', '1',  'yes'),
-(129, 'WishListMemberOptions_MigrateContentLevelData',  '1',  'yes'),
-(130, 'woocommerce_version',  '10.3.5',  'yes'),
-(131, 'woocommerce_coming_soon', 'no',  'yes'),
-(132, 'woocommerce_cart_redirect_after_add', 'no',  'yes');
+(126, 'woocommerce_version',  '11.0.0',  'yes'),
+(127, 'woocommerce_coming_soon', 'no',  'yes'),
+(128, 'woocommerce_cart_redirect_after_add', 'no',  'yes');
 
 DROP TABLE IF EXISTS `wp_postmeta`;
 CREATE TABLE `wp_postmeta` (
@@ -399,3 +359,623 @@ CREATE TABLE `wp_users` (
 
 INSERT INTO `wp_users` (`ID`, `user_login`, `user_pass`, `user_nicename`, `user_email`, `user_url`, `user_registered`, `user_activation_key`, `user_status`, `display_name`) VALUES
 (1, 'admin',  '$P$BPKHO1xSCwu6j57sJB/p7JndeBdRVd.', 'admin',  'dev-email@flywheel.local', 'http://convertkit.local',  '2023-07-03 13:38:12',  '', 0,  'admin');
+
+-- WooCommerce tables.
+
+DROP TABLE IF EXISTS `wp_actionscheduler_actions`;
+CREATE TABLE `wp_actionscheduler_actions` (
+  `action_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `hook` varchar(191) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `scheduled_date_gmt` datetime DEFAULT '0000-00-00 00:00:00',
+  `scheduled_date_local` datetime DEFAULT '0000-00-00 00:00:00',
+  `priority` tinyint unsigned NOT NULL DEFAULT '10',
+  `args` varchar(191) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `schedule` longtext COLLATE utf8mb4_unicode_520_ci,
+  `group_id` bigint unsigned NOT NULL DEFAULT '0',
+  `attempts` int NOT NULL DEFAULT '0',
+  `last_attempt_gmt` datetime DEFAULT '0000-00-00 00:00:00',
+  `last_attempt_local` datetime DEFAULT '0000-00-00 00:00:00',
+  `claim_id` bigint unsigned NOT NULL DEFAULT '0',
+  `extended_args` varchar(8000) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  PRIMARY KEY (`action_id`),
+  KEY `hook_status_scheduled_date_gmt` (`hook`(163),`status`,`scheduled_date_gmt`),
+  KEY `status_scheduled_date_gmt` (`status`,`scheduled_date_gmt`),
+  KEY `scheduled_date_gmt` (`scheduled_date_gmt`),
+  KEY `args` (`args`),
+  KEY `group_id` (`group_id`),
+  KEY `last_attempt_gmt` (`last_attempt_gmt`),
+  KEY `claim_id_status_priority_scheduled_date_gmt` (`claim_id`,`status`,`priority`,`scheduled_date_gmt`),
+  KEY `status_last_attempt_gmt` (`status`,`last_attempt_gmt`),
+  KEY `status_claim_id` (`status`,`claim_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_actionscheduler_claims`;
+CREATE TABLE `wp_actionscheduler_claims` (
+  `claim_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `date_created_gmt` datetime DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`claim_id`),
+  KEY `date_created_gmt` (`date_created_gmt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_actionscheduler_groups`;
+CREATE TABLE `wp_actionscheduler_groups` (
+  `group_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  PRIMARY KEY (`group_id`),
+  KEY `slug` (`slug`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_actionscheduler_logs`;
+CREATE TABLE `wp_actionscheduler_logs` (
+  `log_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `action_id` bigint unsigned NOT NULL,
+  `message` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `log_date_gmt` datetime DEFAULT '0000-00-00 00:00:00',
+  `log_date_local` datetime DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`log_id`),
+  KEY `action_id` (`action_id`),
+  KEY `log_date_gmt` (`log_date_gmt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_admin_note_actions`;
+CREATE TABLE `wp_wc_admin_note_actions` (
+  `action_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `note_id` bigint unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `label` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `query` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `actioned_text` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `nonce_action` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `nonce_name` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  PRIMARY KEY (`action_id`),
+  KEY `note_id` (`note_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_admin_notes`;
+CREATE TABLE `wp_wc_admin_notes` (
+  `note_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `type` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `locale` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `title` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `content` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `content_data` longtext COLLATE utf8mb4_unicode_520_ci,
+  `status` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `source` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_reminder` datetime DEFAULT NULL,
+  `is_snoozable` tinyint(1) NOT NULL DEFAULT '0',
+  `layout` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `image` varchar(200) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `icon` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'info',
+  PRIMARY KEY (`note_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_category_lookup`;
+CREATE TABLE `wp_wc_category_lookup` (
+  `category_tree_id` bigint unsigned NOT NULL,
+  `category_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`category_tree_id`,`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_customer_lookup`;
+CREATE TABLE `wp_wc_customer_lookup` (
+  `customer_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `username` varchar(60) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `first_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `last_name` varchar(255) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `date_last_active` timestamp NULL DEFAULT NULL,
+  `date_registered` timestamp NULL DEFAULT NULL,
+  `country` char(2) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `postcode` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `city` varchar(100) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `state` varchar(100) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`customer_id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_download_log`;
+CREATE TABLE `wp_wc_download_log` (
+  `download_log_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `timestamp` datetime NOT NULL,
+  `permission_id` bigint unsigned NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `user_ip_address` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT '',
+  PRIMARY KEY (`download_log_id`),
+  KEY `permission_id` (`permission_id`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_email_unsubscribes`;
+CREATE TABLE `wp_wc_email_unsubscribes` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `email_hash` char(64) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `email_kind` varchar(64) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `action` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `email_hash_kind` (`email_hash`,`email_kind`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_order_addresses`;
+CREATE TABLE `wp_wc_order_addresses` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `order_id` bigint unsigned NOT NULL,
+  `address_type` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `first_name` text COLLATE utf8mb4_unicode_520_ci,
+  `last_name` text COLLATE utf8mb4_unicode_520_ci,
+  `company` text COLLATE utf8mb4_unicode_520_ci,
+  `address_1` text COLLATE utf8mb4_unicode_520_ci,
+  `address_2` text COLLATE utf8mb4_unicode_520_ci,
+  `city` text COLLATE utf8mb4_unicode_520_ci,
+  `state` text COLLATE utf8mb4_unicode_520_ci,
+  `postcode` text COLLATE utf8mb4_unicode_520_ci,
+  `country` text COLLATE utf8mb4_unicode_520_ci,
+  `email` varchar(320) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `phone` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `address_type_order_id` (`address_type`,`order_id`),
+  KEY `order_id` (`order_id`),
+  KEY `email` (`email`(191)),
+  KEY `phone` (`phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_order_coupon_lookup`;
+CREATE TABLE `wp_wc_order_coupon_lookup` (
+  `order_id` bigint unsigned NOT NULL,
+  `coupon_id` bigint NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `discount_amount` double NOT NULL DEFAULT '0',
+  PRIMARY KEY (`order_id`,`coupon_id`),
+  KEY `coupon_id` (`coupon_id`),
+  KEY `date_created` (`date_created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_order_operational_data`;
+CREATE TABLE `wp_wc_order_operational_data` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `order_id` bigint unsigned DEFAULT NULL,
+  `created_via` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `woocommerce_version` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `prices_include_tax` tinyint(1) DEFAULT NULL,
+  `coupon_usages_are_counted` tinyint(1) DEFAULT NULL,
+  `download_permission_granted` tinyint(1) DEFAULT NULL,
+  `cart_hash` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `new_order_email_sent` tinyint(1) DEFAULT NULL,
+  `order_key` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `order_stock_reduced` tinyint(1) DEFAULT NULL,
+  `date_paid_gmt` datetime DEFAULT NULL,
+  `date_completed_gmt` datetime DEFAULT NULL,
+  `shipping_tax_amount` decimal(26,8) DEFAULT NULL,
+  `shipping_total_amount` decimal(26,8) DEFAULT NULL,
+  `discount_tax_amount` decimal(26,8) DEFAULT NULL,
+  `discount_total_amount` decimal(26,8) DEFAULT NULL,
+  `recorded_sales` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_id` (`order_id`),
+  KEY `order_key` (`order_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_order_product_lookup`;
+CREATE TABLE `wp_wc_order_product_lookup` (
+  `order_item_id` bigint unsigned NOT NULL,
+  `order_id` bigint unsigned NOT NULL,
+  `product_id` bigint unsigned NOT NULL,
+  `variation_id` bigint unsigned NOT NULL,
+  `customer_id` bigint unsigned DEFAULT NULL,
+  `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `product_qty` int NOT NULL,
+  `product_net_revenue` double NOT NULL DEFAULT '0',
+  `product_gross_revenue` double NOT NULL DEFAULT '0',
+  `coupon_amount` double NOT NULL DEFAULT '0',
+  `tax_amount` double NOT NULL DEFAULT '0',
+  `shipping_amount` double NOT NULL DEFAULT '0',
+  `shipping_tax_amount` double NOT NULL DEFAULT '0',
+  PRIMARY KEY (`order_item_id`,`order_id`),
+  KEY `order_id` (`order_id`),
+  KEY `product_id` (`product_id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `date_created` (`date_created`),
+  KEY `customer_product_date` (`customer_id`,`product_id`,`date_created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_order_stats`;
+CREATE TABLE `wp_wc_order_stats` (
+  `order_id` bigint unsigned NOT NULL,
+  `parent_id` bigint unsigned NOT NULL DEFAULT '0',
+  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_created_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_paid` datetime DEFAULT '0000-00-00 00:00:00',
+  `date_completed` datetime DEFAULT '0000-00-00 00:00:00',
+  `num_items_sold` int NOT NULL DEFAULT '0',
+  `total_sales` double NOT NULL DEFAULT '0',
+  `tax_total` double NOT NULL DEFAULT '0',
+  `shipping_total` double NOT NULL DEFAULT '0',
+  `net_total` double NOT NULL DEFAULT '0',
+  `returning_customer` tinyint(1) DEFAULT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `customer_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`order_id`),
+  KEY `date_created` (`date_created`),
+  KEY `customer_id` (`customer_id`),
+  KEY `status` (`status`),
+  KEY `idx_date_paid_status_parent` (`date_paid`,`status`,`parent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_order_tax_lookup`;
+CREATE TABLE `wp_wc_order_tax_lookup` (
+  `order_id` bigint unsigned NOT NULL,
+  `tax_rate_id` bigint unsigned NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `shipping_tax` double NOT NULL DEFAULT '0',
+  `order_tax` double NOT NULL DEFAULT '0',
+  `total_tax` double NOT NULL DEFAULT '0',
+  PRIMARY KEY (`order_id`,`tax_rate_id`),
+  KEY `tax_rate_id` (`tax_rate_id`),
+  KEY `date_created` (`date_created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_orders`;
+CREATE TABLE `wp_wc_orders` (
+  `id` bigint unsigned NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `currency` varchar(10) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `type` varchar(20) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `tax_amount` decimal(26,8) DEFAULT NULL,
+  `total_amount` decimal(26,8) DEFAULT NULL,
+  `customer_id` bigint unsigned DEFAULT NULL,
+  `billing_email` varchar(320) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `date_created_gmt` datetime DEFAULT NULL,
+  `date_updated_gmt` datetime DEFAULT NULL,
+  `parent_order_id` bigint unsigned DEFAULT NULL,
+  `payment_method` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `payment_method_title` text COLLATE utf8mb4_unicode_520_ci,
+  `transaction_id` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `ip_address` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `user_agent` text COLLATE utf8mb4_unicode_520_ci,
+  `customer_note` text COLLATE utf8mb4_unicode_520_ci,
+  PRIMARY KEY (`id`),
+  KEY `status` (`status`),
+  KEY `date_created` (`date_created_gmt`),
+  KEY `customer_id_billing_email` (`customer_id`,`billing_email`(171)),
+  KEY `customer_id_status` (`customer_id`,`status`),
+  KEY `billing_email` (`billing_email`(191)),
+  KEY `transaction_id` (`transaction_id`(20)),
+  KEY `type_status_date` (`type`,`status`,`date_created_gmt`),
+  KEY `parent_order_id` (`parent_order_id`),
+  KEY `date_updated` (`date_updated_gmt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_orders_meta`;
+CREATE TABLE `wp_wc_orders_meta` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `order_id` bigint unsigned DEFAULT NULL,
+  `meta_key` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `meta_value` text COLLATE utf8mb4_unicode_520_ci,
+  PRIMARY KEY (`id`),
+  KEY `meta_key_value` (`meta_key`(50),`meta_value`(20)),
+  KEY `order_id_meta_key_meta_value` (`order_id`,`meta_key`(100),`meta_value`(82))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_product_attributes_lookup`;
+CREATE TABLE `wp_wc_product_attributes_lookup` (
+  `product_id` bigint NOT NULL,
+  `product_or_parent_id` bigint NOT NULL,
+  `taxonomy` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `term_id` bigint NOT NULL,
+  `is_variation_attribute` tinyint(1) NOT NULL,
+  `in_stock` tinyint(1) NOT NULL,
+  PRIMARY KEY (`product_or_parent_id`,`term_id`,`product_id`,`taxonomy`),
+  KEY `is_variation_attribute_term_id` (`is_variation_attribute`,`term_id`),
+  KEY `taxonomy_term_id_in_stock_product_or_parent_id` (`taxonomy`,`term_id`,`in_stock`,`product_or_parent_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_product_download_directories`;
+CREATE TABLE `wp_wc_product_download_directories` (
+  `url_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`url_id`),
+  KEY `url` (`url`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_product_meta_lookup`;
+CREATE TABLE `wp_wc_product_meta_lookup` (
+  `product_id` bigint NOT NULL,
+  `sku` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT '',
+  `global_unique_id` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT '',
+  `virtual` tinyint(1) DEFAULT '0',
+  `downloadable` tinyint(1) DEFAULT '0',
+  `min_price` decimal(19,4) DEFAULT NULL,
+  `max_price` decimal(19,4) DEFAULT NULL,
+  `onsale` tinyint(1) DEFAULT '0',
+  `stock_quantity` double DEFAULT NULL,
+  `stock_status` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT 'instock',
+  `rating_count` bigint DEFAULT '0',
+  `average_rating` decimal(3,2) DEFAULT '0.00',
+  `total_sales` bigint DEFAULT '0',
+  `tax_status` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT 'taxable',
+  `tax_class` varchar(100) COLLATE utf8mb4_unicode_520_ci DEFAULT '',
+  PRIMARY KEY (`product_id`),
+  KEY `virtual` (`virtual`),
+  KEY `downloadable` (`downloadable`),
+  KEY `stock_status` (`stock_status`),
+  KEY `stock_quantity` (`stock_quantity`),
+  KEY `onsale` (`onsale`),
+  KEY `min_max_price` (`min_price`,`max_price`),
+  KEY `sku` (`sku`(50))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_rate_limits`;
+CREATE TABLE `wp_wc_rate_limits` (
+  `rate_limit_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `rate_limit_key` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `rate_limit_expiry` bigint unsigned NOT NULL,
+  `rate_limit_remaining` smallint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`rate_limit_id`),
+  UNIQUE KEY `rate_limit_key` (`rate_limit_key`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_reserved_stock`;
+CREATE TABLE `wp_wc_reserved_stock` (
+  `order_id` bigint NOT NULL,
+  `product_id` bigint NOT NULL,
+  `stock_quantity` double NOT NULL DEFAULT '0',
+  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `expires` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`order_id`,`product_id`),
+  KEY `product_id_expires` (`product_id`,`expires`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_tax_rate_classes`;
+CREATE TABLE `wp_wc_tax_rate_classes` (
+  `tax_rate_class_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `slug` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`tax_rate_class_id`),
+  UNIQUE KEY `slug` (`slug`(191))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_wc_webhooks`;
+CREATE TABLE `wp_wc_webhooks` (
+  `webhook_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `status` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `name` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `delivery_url` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `secret` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `topic` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_created_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_modified_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `api_version` smallint NOT NULL,
+  `failure_count` smallint NOT NULL DEFAULT '0',
+  `pending_delivery` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`webhook_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_api_keys`;
+CREATE TABLE `wp_woocommerce_api_keys` (
+  `key_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `description` varchar(200) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `permissions` varchar(10) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `consumer_key` char(64) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `consumer_secret` char(43) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `nonces` longtext COLLATE utf8mb4_unicode_520_ci,
+  `truncated_key` char(7) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `last_access` datetime DEFAULT NULL,
+  PRIMARY KEY (`key_id`),
+  KEY `consumer_key` (`consumer_key`),
+  KEY `consumer_secret` (`consumer_secret`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_attribute_taxonomies`;
+CREATE TABLE `wp_woocommerce_attribute_taxonomies` (
+  `attribute_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `attribute_name` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `attribute_label` varchar(200) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `attribute_type` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `attribute_orderby` varchar(20) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `attribute_public` int NOT NULL DEFAULT '1',
+  PRIMARY KEY (`attribute_id`),
+  KEY `attribute_name` (`attribute_name`(20))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_downloadable_product_permissions`;
+CREATE TABLE `wp_woocommerce_downloadable_product_permissions` (
+  `permission_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `download_id` varchar(36) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `product_id` bigint unsigned NOT NULL,
+  `order_id` bigint unsigned NOT NULL DEFAULT '0',
+  `order_key` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `user_email` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `downloads_remaining` varchar(9) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `access_granted` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `access_expires` datetime DEFAULT NULL,
+  `download_count` bigint unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`permission_id`),
+  KEY `download_order_key_product` (`product_id`,`order_id`,`order_key`(16),`download_id`),
+  KEY `download_order_product` (`download_id`,`order_id`,`product_id`),
+  KEY `order_id` (`order_id`),
+  KEY `user_order_remaining_expires` (`user_id`,`order_id`,`downloads_remaining`,`access_expires`),
+  KEY `idx_user_email` (`user_email`(100))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_log`;
+CREATE TABLE `wp_woocommerce_log` (
+  `log_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `timestamp` datetime NOT NULL,
+  `level` smallint NOT NULL,
+  `source` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `message` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `context` longtext COLLATE utf8mb4_unicode_520_ci,
+  PRIMARY KEY (`log_id`),
+  KEY `level` (`level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_order_itemmeta`;
+CREATE TABLE `wp_woocommerce_order_itemmeta` (
+  `meta_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `order_item_id` bigint unsigned NOT NULL,
+  `meta_key` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `meta_value` longtext COLLATE utf8mb4_unicode_520_ci,
+  PRIMARY KEY (`meta_id`),
+  KEY `order_item_id` (`order_item_id`),
+  KEY `meta_key` (`meta_key`(32))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_order_items`;
+CREATE TABLE `wp_woocommerce_order_items` (
+  `order_item_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `order_item_name` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `order_item_type` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `order_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`order_item_id`),
+  KEY `order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_payment_tokenmeta`;
+CREATE TABLE `wp_woocommerce_payment_tokenmeta` (
+  `meta_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `payment_token_id` bigint unsigned NOT NULL,
+  `meta_key` varchar(255) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `meta_value` longtext COLLATE utf8mb4_unicode_520_ci,
+  PRIMARY KEY (`meta_id`),
+  KEY `payment_token_id` (`payment_token_id`),
+  KEY `meta_key` (`meta_key`(32))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_payment_tokens`;
+CREATE TABLE `wp_woocommerce_payment_tokens` (
+  `token_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `gateway_id` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `token` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `user_id` bigint unsigned NOT NULL DEFAULT '0',
+  `type` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `is_default` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`token_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_sessions`;
+CREATE TABLE `wp_woocommerce_sessions` (
+  `session_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `session_key` char(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `session_value` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `session_expiry` bigint unsigned NOT NULL,
+  PRIMARY KEY (`session_id`),
+  UNIQUE KEY `session_key` (`session_key`),
+  KEY `session_expiry` (`session_expiry`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_shipping_zone_locations`;
+CREATE TABLE `wp_woocommerce_shipping_zone_locations` (
+  `location_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `zone_id` bigint unsigned NOT NULL,
+  `location_code` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `location_type` varchar(40) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  PRIMARY KEY (`location_id`),
+  KEY `zone_id` (`zone_id`),
+  KEY `location_type_code` (`location_type`(10),`location_code`(20))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_shipping_zone_methods`;
+CREATE TABLE `wp_woocommerce_shipping_zone_methods` (
+  `zone_id` bigint unsigned NOT NULL,
+  `instance_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `method_id` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `method_order` bigint unsigned NOT NULL,
+  `is_enabled` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`instance_id`),
+  KEY `zone_id` (`zone_id`),
+  KEY `method_id` (`method_id`(20))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_shipping_zones`;
+CREATE TABLE `wp_woocommerce_shipping_zones` (
+  `zone_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `zone_name` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `zone_order` bigint unsigned NOT NULL,
+  PRIMARY KEY (`zone_id`),
+  KEY `zone_order_id` (`zone_order`,`zone_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_tax_rate_locations`;
+CREATE TABLE `wp_woocommerce_tax_rate_locations` (
+  `location_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `location_code` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `tax_rate_id` bigint unsigned NOT NULL,
+  `location_type` varchar(40) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  PRIMARY KEY (`location_id`),
+  KEY `tax_rate_id` (`tax_rate_id`),
+  KEY `location_type_code` (`location_type`(10),`location_code`(20))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+DROP TABLE IF EXISTS `wp_woocommerce_tax_rates`;
+CREATE TABLE `wp_woocommerce_tax_rates` (
+  `tax_rate_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `tax_rate_country` varchar(2) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `tax_rate_state` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `tax_rate` varchar(8) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `tax_rate_name` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `tax_rate_priority` bigint unsigned NOT NULL,
+  `tax_rate_compound` int NOT NULL DEFAULT '0',
+  `tax_rate_shipping` int NOT NULL DEFAULT '1',
+  `tax_rate_order` bigint unsigned NOT NULL,
+  `tax_rate_class` varchar(200) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`tax_rate_id`),
+  KEY `tax_rate_country` (`tax_rate_country`),
+  KEY `tax_rate_state` (`tax_rate_state`(2)),
+  KEY `tax_rate_class` (`tax_rate_class`(10)),
+  KEY `tax_rate_priority` (`tax_rate_priority`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

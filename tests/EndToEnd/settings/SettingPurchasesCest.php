@@ -47,10 +47,7 @@ class SettingPurchasesCest
 		$I->waitForElementVisible('#woocommerce_ckwc_send_purchases_event');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
@@ -74,10 +71,7 @@ class SettingPurchasesCest
 		$I->waitForElementNotVisible('#woocommerce_ckwc_send_purchases_event');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
@@ -101,10 +95,7 @@ class SettingPurchasesCest
 		$I->selectOption('#woocommerce_ckwc_send_purchases_event', 'Order Processing');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
@@ -128,10 +119,7 @@ class SettingPurchasesCest
 		$I->selectOption('#woocommerce_ckwc_send_purchases_event', 'Order Completed');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_send_purchases');
