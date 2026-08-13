@@ -24,12 +24,14 @@ class PurchaseDataCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Activate Custom Order Numbers, so that we can prefix Order IDs with
-		// an environment-specific string.
-		$I->activateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
+		// Enable HPOS.
+		$I->enableWooCommerceHPOS($I);
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
+
+		// Activate Custom Order Numbers Plugin.
+		$I->activateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
 
 		// Setup Custom Order Numbers Plugin.
 		$I->setupCustomOrderNumbersPlugin($I);
@@ -80,14 +82,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 
 		// Confirm that the email address was added to ConvertKit.
@@ -147,14 +149,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -228,14 +230,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 
 		// Confirm that the email address was now added to ConvertKit.
@@ -336,14 +338,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 	}
 
@@ -424,14 +426,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 	}
 
@@ -522,14 +524,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 	}
 
@@ -630,14 +632,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 	}
 
@@ -738,14 +740,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 	}
 
@@ -847,14 +849,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 	}
 
@@ -954,14 +956,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 	}
 
@@ -1061,7 +1063,7 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist($I, $result['order_id'], 'ckwc_purchase_data_id', $purchaseDataID, true);
 	}
@@ -1173,14 +1175,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 	}
 
@@ -1291,14 +1293,14 @@ class PurchaseDataCest
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_sent',
 			metaValue: 'yes',
-			hposEnabled: false
+			hposEnabled: true
 		);
 		$I->wooCommerceOrderMetaKeyAndValueExist(
 			$I,
 			orderID: $result['order_id'],
 			metaKey: 'ckwc_purchase_data_id',
 			metaValue: $purchaseDataID,
-			hposEnabled: false
+			hposEnabled: true
 		);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
