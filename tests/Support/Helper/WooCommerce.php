@@ -885,11 +885,15 @@ class WooCommerce extends \Codeception\Module
 			]
 		);
 
-		// Load New Order screen.
-		$I->amOnAdminPage('post-new.php?post_type=shop_order');
+		// Load New Order screen depending on whether HPOS is enabled.
+		if ($I->grabOptionFromDatabase('woocommerce_custom_orders_table_enabled') === 'yes') {
+			$I->amOnAdminPage('admin.php?page=wc-orders&action=new');
+		} else {
+			$I->amOnAdminPage('post-new.php?post_type=shop_order');
+		}
 
 		// Wait for the New Order screen to load.
-		$I->waitForElementVisible('body.woocommerce_page_wc-orders');
+		$I->waitForElementVisible('#order_data');
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
