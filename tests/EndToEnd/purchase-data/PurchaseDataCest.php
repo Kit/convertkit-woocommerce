@@ -24,12 +24,14 @@ class PurchaseDataCest
 		// Activate Plugin.
 		$I->activateWooCommerceAndConvertKitPlugins($I);
 
-		// Activate Custom Order Numbers, so that we can prefix Order IDs with
-		// an environment-specific string.
-		$I->activateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
+		// Enable HPOS.
+		$I->enableWooCommerceHPOS($I);
 
 		// Setup WooCommerce Plugin.
 		$I->setupWooCommercePlugin($I);
+
+		// Activate Custom Order Numbers Plugin.
+		$I->activateThirdPartyPlugin($I, 'custom-order-numbers-for-woocommerce');
 
 		// Setup Custom Order Numbers Plugin.
 		$I->setupCustomOrderNumbersPlugin($I);

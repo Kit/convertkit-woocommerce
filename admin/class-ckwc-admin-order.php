@@ -40,7 +40,8 @@ class CKWC_Admin_Order extends CKWC_Admin_Post_Type {
 	 */
 	public function __construct() {
 
-		// Orders uses a different hook for saving.
+		// Register the meta box and save its settings on non-HPOS order screens.
+		add_action( 'add_meta_boxes_shop_order', array( $this, 'add_meta_boxes' ) );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save' ) );
 
 		// Call parent constructor.
@@ -53,9 +54,19 @@ class CKWC_Admin_Order extends CKWC_Admin_Post_Type {
 	 *
 	 * @since   2.1.0
 	 *
-	 * @param   WC_Order $order   Order.
+	 * @param   WC_Order|WP_Post $order   Order.
 	 */
 	public function display_meta_box( $order ) {
+
+		// Fetch the Order.
+		// WooCommerce supplies a WC_Order when HPOS is enabled, whereas WordPress supplies a
+		// WP_Post when HPOS is disabled and Orders are stored as Posts.
+		$order = wc_get_order( $order );
+
+		// Bail if the Order could not be fetched.
+		if ( ! $order ) {
+			return;
+		}
 
 		// Get order meta.
 		$opt_in   = $order->get_meta( 'ckwc_opt_in', true ) === 'yes' ? true : false;

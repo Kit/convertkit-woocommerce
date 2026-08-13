@@ -134,10 +134,7 @@ class SettingOAuthCest
 		$I->selectOption('#woocommerce_ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
 
 		// Save changes.
-		$I->click('Save changes');
-
-		// Wait for confirmation message to display.
-		$I->waitForElementVisible('div.updated.inline');
+		$I->clickSaveChangesButton($I);
 	}
 
 	/**
