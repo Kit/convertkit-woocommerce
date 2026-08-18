@@ -48,10 +48,7 @@ class SettingNameFormatCest
 		$I->selectOption('#woocommerce_ckwc_name_format', 'Billing First Name');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_name_format', 'Billing First Name');
@@ -89,10 +86,7 @@ class SettingNameFormatCest
 		$I->selectOption('#woocommerce_ckwc_name_format', 'Billing Last Name');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_name_format', 'Billing Last Name');
@@ -131,10 +125,7 @@ class SettingNameFormatCest
 		$I->selectOption('#woocommerce_ckwc_name_format', 'Billing First Name + Billing Last Name');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_name_format', 'Billing First Name + Billing Last Name');
