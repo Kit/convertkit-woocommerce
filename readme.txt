@@ -3,9 +3,9 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://kit.com
 Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.1
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,6 +48,10 @@ Please report security bugs found in the source code of the plugin through the [
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 2.1.8 2026-08-19
+* Fix: Orders: Register opt-in metabox on Orders screen when HPOS is disabled
+* Updated: WordPress Libraries to 2.6.0
 
 ### 2.1.7 2026-07-09
 * Fix: Settings: Export configuration: check nonce to prevent an unauthenticated user from exporting the Plugin's configuration 
