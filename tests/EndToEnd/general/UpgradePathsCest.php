@@ -134,7 +134,7 @@ class UpgradePathsCest
 
 		// Confirm the Action Scheduler action is scheduled.
 		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
-		$I->assertEquals('ckwc_abandoned_cart', $I->grabTextFrom('tbody[data-wp-lists="list:action-scheduler"] tr:first-child td.column-hook'));
+		$I->assertEquals('ckwc_abandoned_cart', $I->grabTextFrom('tbody[data-wp-lists="list:action-scheduler"] tr:first-child .column-hook'));
 	}
 
 	/**
