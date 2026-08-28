@@ -102,10 +102,7 @@ class SettingEnabledDisabledCest
 		$I->waitForElementVisible('#woocommerce_ckwc_debug');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_enabled');
@@ -168,10 +165,7 @@ class SettingEnabledDisabledCest
 		$I->waitForElementNotVisible('#woocommerce_ckwc_debug');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_enabled');

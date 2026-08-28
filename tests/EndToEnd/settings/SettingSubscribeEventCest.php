@@ -48,10 +48,7 @@ class SettingSubscribeEventCest
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Pending payment');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Pending payment');
@@ -70,10 +67,7 @@ class SettingSubscribeEventCest
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Processing');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Processing');
@@ -93,10 +87,7 @@ class SettingSubscribeEventCest
 		$I->selectOption('#woocommerce_ckwc_event', 'Order Completed');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_event', 'Order Completed');

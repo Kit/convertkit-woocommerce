@@ -123,7 +123,7 @@ class WooCommerceSubscriptionsSubscribeEventCheckoutBlockCest
 		// Scheduled Actions and searching for the Subscription ID.
 		// https://woocommerce.com/document/testing-subscription-renewal-payments/.
 		$I->amOnAdminPage('admin.php?page=wc-status&tab=action-scheduler&s=' . $result['subscription_id'] . '&action=-1&paged=1&action2=-1&status=pending');
-		$I->moveMouseOver('tbody tr td.column-hook');
+		$I->moveMouseOver('tbody tr .column-hook');
 		$I->click('span.run a');
 
 		// Wait for task to complete.

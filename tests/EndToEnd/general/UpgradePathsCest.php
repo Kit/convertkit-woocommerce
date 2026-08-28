@@ -60,11 +60,7 @@ class UpgradePathsCest
 		$I->checkSelectWithOptionGroupsOptionOrder($I, '#woocommerce_ckwc_subscription');
 
 		// Save changes (avoids a JS alert box which would prevent other tests from running due to changes made on screen).
-		$I->click('Save changes');
-
-		// Wait for settings to save.
-		$I->waitForElementVisible('div.updated.inline');
-		$I->see('Your settings have been saved.');
+		$I->clickSaveChangesButton($I);
 	}
 
 	/**
@@ -138,7 +134,7 @@ class UpgradePathsCest
 
 		// Confirm the Action Scheduler action is scheduled.
 		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
-		$I->assertEquals('ckwc_abandoned_cart', $I->grabTextFrom('tbody[data-wp-lists="list:action-scheduler"] tr:first-child td.column-hook'));
+		$I->assertEquals('ckwc_abandoned_cart', $I->grabTextFrom('tbody[data-wp-lists="list:action-scheduler"] tr:first-child .column-hook'));
 	}
 
 	/**

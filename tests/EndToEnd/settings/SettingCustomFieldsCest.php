@@ -63,10 +63,7 @@ class SettingCustomFieldsCest
 		$I->selectOption('#woocommerce_ckwc_custom_field_customer_note', 'Notes');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the settings saved.
 		$I->seeOptionIsSelected('#woocommerce_ckwc_custom_field_last_name', 'Last Name');

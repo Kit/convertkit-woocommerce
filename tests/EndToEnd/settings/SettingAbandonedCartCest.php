@@ -48,10 +48,7 @@ class SettingsAbandonedCartCest
 		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_subscription');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
@@ -80,10 +77,7 @@ class SettingsAbandonedCartCest
 		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_subscription');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
@@ -109,10 +103,7 @@ class SettingsAbandonedCartCest
 		$I->fillField('#woocommerce_ckwc_abandoned_cart_threshold', '10');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the settings saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
@@ -137,10 +128,7 @@ class SettingsAbandonedCartCest
 		$I->selectOption('#woocommerce_ckwc_abandoned_cart_subscription', $_ENV['CONVERTKIT_API_TAG_NAME']);
 
 		// Save.
-		$I->click('Save changes');
-
-		// Check that no PHP warnings or notices were output.
-		$I->checkNoWarningsAndNoticesOnScreen($I);
+		$I->clickSaveChangesButton($I);
 
 		// Confirm the settings saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');

@@ -50,10 +50,7 @@ class BackwardCompatSettingOptInCheckboxCest
 		$I->checkOption('#woocommerce_ckwc_display_opt_in');
 
 		// Save.
-		$I->click('Save changes');
-
-		// Wait for the page to load.
-		$I->waitForElementVisible('div.updated.inline');
+		$I->clickSaveChangesButton($I);
 
 		// Get Checkout Page.
 		$pageID = $I->grabFromDatabase(
