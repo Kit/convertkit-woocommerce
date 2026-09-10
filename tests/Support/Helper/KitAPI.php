@@ -214,7 +214,7 @@ class KitAPI extends \Codeception\Module
 
 					// Compare as strings, as the Order ID may be a string when a third party
 					// Plugin defines custom order numbers.
-					if ( (string) $request['body']['transaction_id'] === (string) $orderID) {
+					if ((string) $request['body']['transaction_id'] === (string) $orderID) {
 						return $request;
 					}
 				}
@@ -515,6 +515,44 @@ class KitAPI extends \Codeception\Module
 	}
 
 	/**
+	 * Returns the subscriber for the given subscriber ID once their custom field data
+	 * matches the given data.
+	 *
+	 * The Plugin updates the subscriber with custom field data after sending purchase data,
+	 * so the subscriber may not have the data when this is first called.
+	 *
+	 * @since   2.2.0
+	 *
+	 * @param   int   $subscriberID  Subscriber ID.
+	 * @param   array $fields        Custom Field key/value pairs to check.
+	 * @return  bool|array
+	 */
+	private function grabSubscriberWithFields($subscriberID, $fields)
+	{
+		return $this->retryUntil(
+			function () use ($subscriberID, $fields) {
+				$results = $this->apiRequest('subscribers/' . $subscriberID, 'GET');
+
+				// Return the subscriber only if every custom field matches, so
+				// retryUntil() will keep trying otherwise.
+				foreach ($fields as $key => $value) {
+					if ( ! array_key_exists($key, $results['subscriber']['fields'])) {
+						return false;
+					}
+
+					// Compare loosely, as an unset custom field is returned as null, which the
+					// assertions treat as matching an empty string.
+					if ($results['subscriber']['fields'][ $key ] != $value) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+						return false;
+					}
+				}
+
+				return $results['subscriber'];
+			}
+		);
+	}
+
+	/**
 	 * Check the subscriber array's custom field data is valid.
 	 *
 	 * @param   EndToEndTester $I                         EndToEndTester.
@@ -548,6 +586,26 @@ class KitAPI extends \Codeception\Module
 		$addressString = implode(', ', $address);
 		$addressString = str_replace('CA, 12345', 'CA 12345', $addressString);
 
+		// Define the expected custom field data.
+		$fields = array(
+			'last_name'       => 'Last',
+			'phone_number'    => '6159684594',
+			'billing_address' => $addressString,
+			'payment_method'  => 'cod',
+			'notes'           => 'Notes',
+		);
+
+		// Wait for the subscriber to have the custom field data.
+		$subscriberID = $subscriber['id'];
+		$subscriber   = $this->grabSubscriberWithFields($subscriberID, $fields);
+
+		// Re-fetch the subscriber if the data never matched, so the assertions below report which
+		// custom field is incorrect.
+		if ($subscriber === false) {
+			$results    = $this->apiRequest('subscribers/' . $subscriberID, 'GET');
+			$subscriber = $results['subscriber'];
+		}
+
 		// Check the subscriber's custom field data is valid.
 		$I->assertEquals($subscriber['fields']['last_name'], 'Last');
 		$I->assertEquals($subscriber['fields']['phone_number'], '6159684594');
@@ -564,6 +622,27 @@ class KitAPI extends \Codeception\Module
 	 */
 	public function apiCustomFieldDataIsEmpty($I, $subscriber)
 	{
+		// Define the expected custom field data.
+		$fields = array(
+			'last_name'        => '',
+			'phone_number'     => '',
+			'billing_address'  => '',
+			'shipping_address' => '',
+			'payment_method'   => '',
+			'notes'            => '',
+		);
+
+		// Confirm the subscriber's custom field data is empty.
+		$subscriberID = $subscriber['id'];
+		$subscriber   = $this->grabSubscriberWithFields($subscriberID, $fields);
+
+		// Re-fetch the subscriber if the data never matched, so the assertions below report which
+		// custom field is incorrect.
+		if ($subscriber === false) {
+			$results    = $this->apiRequest('subscribers/' . $subscriberID, 'GET');
+			$subscriber = $results['subscriber'];
+		}
+
 		$I->assertEquals($subscriber['fields']['last_name'], '');
 		$I->assertEquals($subscriber['fields']['phone_number'], '');
 		$I->assertEquals($subscriber['fields']['billing_address'], '');
