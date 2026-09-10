@@ -10,6 +10,24 @@ namespace Tests\Support\Helper;
 class KitAPI extends \Codeception\Module
 {
 	/**
+	 * Installs the Kit API recorder mu-plugin, and clears any previously recorded
+	 * requests, before each test runs.
+	 *
+	 * @since   2.2.0
+	 *
+	 * @param   \Codeception\TestInterface $test   Test.
+	 */
+	public function _before(\Codeception\TestInterface $test) // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+	{
+		$this->getModule('lucatume\WPBrowser\Module\WPFilesystem')->haveMuPlugin(
+			'kit-api-recorder.php',
+			(string) file_get_contents(__DIR__ . '/../mu-plugins/kit-api-recorder.php') // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		);
+
+		$this->getModule('lucatume\WPBrowser\Module\WPDb')->haveOptionInDatabase('kit_api_log', []);
+	}
+
+	/**
 	 * Returns an encoded `state` parameter compatible with OAuth.
 	 *
 	 * @since   2.5.0
@@ -40,7 +58,182 @@ class KitAPI extends \Codeception\Module
 	}
 
 	/**
+	 * Returns the Kit API requests the Plugin made during this test, optionally
+	 * filtered by method, path and email address.
+	 *
+	 * @since   2.2.0
+	 *
+	 * @param   EndToEndTester $I              EndToEndTester.
+	 * @param   bool|string    $method         HTTP method (GET,POST,PUT,DELETE).
+	 * @param   bool|string    $path           Request path, excluding the API version e.g. `subscribers`.
+	 * @param   bool|string    $emailAddress   Email address in the request body.
+	 * @return  array
+	 */
+	public function grabKitAPIRequests($I, $method = false, $path = false, $emailAddress = false)
+	{
+		$log = $I->grabOptionFromDatabase('kit_api_log');
+
+		if ( ! is_array($log)) {
+			return [];
+		}
+
+		return array_values(
+			array_filter(
+				$log,
+				function ($request) use ($method, $path, $emailAddress) {
+					if ($method && $request['method'] !== $method) {
+						return false;
+					}
+					if ($path && $request['path'] !== $path) {
+						return false;
+					}
+					if ($emailAddress && ( ! array_key_exists('email_address', $request['body']) || $request['body']['email_address'] !== $emailAddress )) {
+						return false;
+					}
+
+					return true;
+				}
+			)
+		);
+	}
+
+	/**
+	 * Returns the first Kit API request the Plugin made during this test that matches
+	 * the given method, path and email address, waiting for it to be made.
+	 *
+	 * @since   2.2.0
+	 *
+	 * @param   EndToEndTester $I              EndToEndTester.
+	 * @param   string         $method         HTTP method (GET,POST,PUT,DELETE).
+	 * @param   string         $path           Request path, excluding the API version e.g. `subscribers`.
+	 * @param   bool|string    $emailAddress   Email address in the request body.
+	 * @return  bool|array
+	 */
+	public function grabKitAPIRequest($I, $method, $path, $emailAddress = false)
+	{
+		// The request is made by WordPress when the order is placed or its status changes,
+		// which may not have completed when this is called.
+		return $this->retryUntil(
+			function () use ($I, $method, $path, $emailAddress) {
+				$requests = $this->grabKitAPIRequests($I, $method, $path, $emailAddress);
+
+				return count($requests) ? $requests[0] : false;
+			},
+			10,
+			1
+		);
+	}
+
+	/**
+	 * Returns the Kit API request the Plugin made that resulted in a subscriber existing
+	 * for the given email address, waiting for it to be made.
+	 *
+	 * The Plugin creates a subscriber with a POST request, updates an existing subscriber
+	 * with a PUT request, and Kit creates a subscriber when the Plugin sends purchase data,
+	 * so all three are checked.
+	 *
+	 * @since   2.2.0
+	 *
+	 * @param   EndToEndTester $I              EndToEndTester.
+	 * @param   string         $emailAddress   Email Address.
+	 * @return  bool|array
+	 */
+	public function grabKitAPISubscriberRequest($I, $emailAddress)
+	{
+		return $this->retryUntil(
+			function () use ($I, $emailAddress) {
+				// Check if the Plugin created the subscriber.
+				$requests = $this->grabKitAPIRequests($I, 'POST', 'subscribers', $emailAddress);
+				if (count($requests)) {
+					return $requests[0];
+				}
+
+				// Check if the Plugin updated an existing subscriber with this email address.
+				$requests = array_filter(
+					$this->grabKitAPIRequests($I, 'PUT', false, $emailAddress),
+					function ($request) {
+						return strpos($request['path'], 'subscribers/') === 0;
+					}
+				);
+
+				// Use the most recent update request, as a subscriber may be updated more than once.
+				if (count($requests)) {
+					return end($requests);
+				}
+
+				// Check if the Plugin sent purchase data, which subscribes the email address.
+				$requests = $this->grabKitAPIRequests($I, 'POST', 'purchases', $emailAddress);
+
+				return count($requests) ? $requests[0] : false;
+			},
+			10,
+			1
+		);
+	}
+
+	/**
+	 * Returns the subscriber ID for the given Kit API request the Plugin made.
+	 *
+	 * @since   2.2.0
+	 *
+	 * @param   array $request  Kit API request.
+	 * @return  int
+	 */
+	private function grabKitAPISubscriberID($request)
+	{
+		// The subscriber was created or updated by the Plugin, so the response contains the subscriber.
+		if ($request['path'] !== 'purchases') {
+			return $request['response']['subscriber']['id'];
+		}
+
+		// Kit created the subscriber when the Plugin sent purchase data.
+		// Fetch the purchase by its ID, which includes the subscriber ID.
+		$results = $this->apiRequest('purchases/' . $request['response']['purchase']['id'], 'GET');
+
+		return $results['purchase']['subscriber_id'];
+	}
+
+	/**
+	 * Returns the Kit API request the Plugin made that sent purchase data for the given
+	 * Order ID, waiting for it to be made.
+	 *
+	 * @since   2.2.0
+	 *
+	 * @param   EndToEndTester $I         EndToEndTester.
+	 * @param   int            $orderID   Order ID.
+	 * @return  bool|array
+	 */
+	public function grabKitAPIPurchaseRequest($I, $orderID)
+	{
+		return $this->retryUntil(
+			function () use ($I, $orderID) {
+				foreach ($this->grabKitAPIRequests($I, 'POST', 'purchases') as $request) {
+					if ( ! array_key_exists('transaction_id', $request['body'])) {
+						continue;
+					}
+
+					// Compare as strings, as the Order ID may be a string when a third party
+					// Plugin defines custom order numbers.
+					if ((string) $request['body']['transaction_id'] === (string) $orderID) {
+						return $request;
+					}
+				}
+
+				return false;
+			},
+			10,
+			1
+		);
+	}
+
+	/**
 	 * Check the given email address exists as a subscriber on ConvertKit.
+	 *
+	 * The Plugin's request that resulted in the subscriber is used to determine the subscriber ID,
+	 * as querying the API by email address is subject to eventual consistency. Querying by
+	 * subscriber ID returns strongly consistent results.
+	 *
+	 * @see     https://developers.kit.com/api-reference/eventual-consistency
 	 *
 	 * @param   EndToEndTester $I             EndToEndTester.
 	 * @param   string         $emailAddress   Email Address.
@@ -49,45 +242,41 @@ class KitAPI extends \Codeception\Module
 	 */
 	public function apiCheckSubscriberExists($I, $emailAddress, $firstName = false)
 	{
-		// Wait for the API to update.
-		$I->wait(3);
+		// Get the request the Plugin made that resulted in the subscriber.
+		$request = $this->grabKitAPISubscriberRequest($I, $emailAddress);
 
-		// Retry the API request as sometimes there's a lag before the subscriber is queryable via the API.
-		$results = $this->retryUntil(
-			function () use ($emailAddress) {
-				$results = $this->apiRequest(
-					'subscribers',
-					'GET',
-					[
-						'email_address'       => $emailAddress,
-						'include_total_count' => true,
-
-						// Check all subscriber states.
-						'status'              => 'all',
-					]
-				);
-
-				// Return the results only if a subscriber was found, so
-				// retryUntil() will keep trying otherwise.
-				return ( $results['pagination']['total_count'] > 0 ) ? $results : false;
-			}
+		// Check the Plugin sent a request that subscribes the email address.
+		$I->assertNotFalse(
+			$request,
+			sprintf('The Plugin did not send a request that subscribes %s.', $emailAddress)
+		);
+		$I->assertLessThan(
+			300,
+			$request['code'],
+			sprintf('The API returned a %s response when the Plugin subscribed %s.', $request['code'], $emailAddress)
 		);
 
-		// Check at least one subscriber was returned and it matches the email address.
-		$I->assertNotFalse($results);
-		$I->assertGreaterThan(0, $results['pagination']['total_count']);
-		$I->assertEquals($emailAddress, $results['subscribers'][0]['email_address']);
+		// Fetch the subscriber by their ID, which returns strongly consistent results.
+		$results = $this->apiRequest('subscribers/' . $this->grabKitAPISubscriberID($request), 'GET');
+
+		// Check the subscriber matches the email address.
+		$I->assertEquals($emailAddress, $results['subscriber']['email_address']);
 
 		// If defined, check that the name matches for the subscriber.
 		if ($firstName) {
-			$I->assertEquals($firstName, $results['subscribers'][0]['first_name']);
+			$I->assertEquals($firstName, $results['subscriber']['first_name']);
 		}
 
-		return $results['subscribers'][0];
+		return $results['subscriber'];
 	}
 
 	/**
 	 * Check the given email address does not exists as a subscriber.
+	 *
+	 * This deliberately queries the API by email address, and deliberately does not specify a
+	 * status, so that only active subscribers are returned. Tests that subscribe an email
+	 * address, unsubscribe it and then confirm the Plugin does not resubscribe it depend on
+	 * this behaviour.
 	 *
 	 * @param   EndToEndTester $I             EndToEndTester.
 	 * @param   string         $emailAddress   Email Address.
@@ -120,28 +309,35 @@ class KitAPI extends \Codeception\Module
 	 */
 	public function apiCheckSubscriberHasForm($I, $subscriberID, $formID, $referrer = false)
 	{
-		// Run request.
-		$results = $this->apiRequest(
-			'forms/' . $formID . '/subscribers',
-			'GET',
-			[
-				// Check all subscriber states.
-				'status'   => 'all',
-				'per_page' => 20,
-			]
+		// Wait for the subscriber to be assigned to the form, as list endpoints are eventually consistent.
+		$subscriber = $this->retryUntil(
+			function () use ($subscriberID, $formID) {
+				$results = $this->apiRequest(
+					'forms/' . $formID . '/subscribers',
+					'GET',
+					[
+						// Check all subscriber states.
+						'status' => 'all',
+					]
+				);
+
+				// Return the subscriber only if they're assigned to the form, so
+				// retryUntil() will keep trying otherwise.
+				foreach ($results['subscribers'] as $subscriber) {
+					if ( (int) $subscriber['id'] === (int) $subscriberID) {
+						return $subscriber;
+					}
+				}
+
+				return false;
+			}
 		);
 
-		// Iterate through subscribers.
-		$subscriberHasForm = false;
-		foreach ($results['subscribers'] as $subscriber) {
-			if ($subscriber['id'] === $subscriberID) {
-				$subscriberHasForm = true;
-				break;
-			}
-		}
-
-		// Assert if the subscriber has the form.
-		$this->assertTrue($subscriberHasForm);
+		// Assert the subscriber has the form.
+		$I->assertNotFalse(
+			$subscriber,
+			sprintf('Subscriber %s was not assigned to Form %s in time.', $subscriberID, $formID)
+		);
 
 		// If a referrer is specified, assert it matches the subscriber's referrer now.
 		if ($referrer) {
@@ -158,14 +354,31 @@ class KitAPI extends \Codeception\Module
 	 */
 	public function apiCheckSubscriberHasTag($I, $subscriberID, $tagID)
 	{
-		// Run request.
-		$results = $this->apiRequest(
-			'subscribers/' . $subscriberID . '/tags',
-			'GET'
+		// Wait for the tag to be assigned to the subscriber, as list endpoints are eventually consistent.
+		$tag = $this->retryUntil(
+			function () use ($subscriberID, $tagID) {
+				$results = $this->apiRequest(
+					'subscribers/' . $subscriberID . '/tags',
+					'GET'
+				);
+
+				// Return the tag only if it's assigned to the subscriber, so
+				// retryUntil() will keep trying otherwise.
+				foreach ($results['tags'] as $tag) {
+					if ( (int) $tag['id'] === (int) $tagID) {
+						return $tag;
+					}
+				}
+
+				return false;
+			}
 		);
 
-		// Confirm the tag has been assigned to the subscriber.
-		$I->assertEquals($tagID, $results['tags'][0]['id']);
+		// Assert the subscriber has the tag.
+		$I->assertNotFalse(
+			$tag,
+			sprintf('Subscriber %s was not assigned Tag %s in time.', $subscriberID, $tagID)
+		);
 	}
 
 	/**
@@ -176,18 +389,35 @@ class KitAPI extends \Codeception\Module
 	 */
 	public function apiCheckSubscriberHasNoTags($I, $subscriberID)
 	{
-		// Run request.
-		$results = $this->apiRequest(
-			'subscribers/' . $subscriberID . '/tags',
-			'GET'
+		// Wait for the subscriber to have no tags, as list endpoints are eventually consistent.
+		$result = $this->retryUntil(
+			function () use ($subscriberID) {
+				$results = $this->apiRequest(
+					'subscribers/' . $subscriberID . '/tags',
+					'GET'
+				);
+
+				// Return the tags only if none are assigned, so retryUntil() will keep trying otherwise.
+				// The result is wrapped in an array, as an empty array is falsy.
+				return count($results['tags']) === 0 ? array( 'tags' => $results['tags'] ) : false;
+			}
 		);
 
-		// Confirm no tags have been assigned to the subscriber.
-		$I->assertCount(0, $results['tags']);
+		// Assert the subscriber has no tags.
+		$I->assertNotFalse(
+			$result,
+			sprintf('Subscriber %s still has tags assigned.', $subscriberID)
+		);
 	}
 
 	/**
 	 * Check the given order ID exists as a purchase on ConvertKit.
+	 *
+	 * The Plugin's request to send the purchase data is used to determine the purchase ID,
+	 * as the purchases list endpoint is subject to eventual consistency. Querying by
+	 * purchase ID returns strongly consistent results.
+	 *
+	 * @see     https://developers.kit.com/api-reference/eventual-consistency
 	 *
 	 * @param   EndToEndTester $I             EndToEndTester.
 	 * @param   int            $orderID        Order ID.
@@ -197,18 +427,32 @@ class KitAPI extends \Codeception\Module
 	 */
 	public function apiCheckPurchaseExists($I, $orderID, $emailAddress, $productID)
 	{
-		// Run request.
-		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiGetPurchases(), $orderID);
+		// Get the request the Plugin made to send the purchase data.
+		$request = $this->grabKitAPIPurchaseRequest($I, $orderID);
+
+		// Check the Plugin sent the purchase data.
+		$I->assertNotFalse(
+			$request,
+			sprintf('The Plugin did not send purchase data for Order %s.', $orderID)
+		);
+		$I->assertLessThan(
+			300,
+			$request['code'],
+			sprintf('The API returned a %s response when the Plugin sent purchase data for Order %s.', $request['code'], $orderID)
+		);
+
+		// Fetch the purchase by its ID, which returns strongly consistent results.
+		$results  = $this->apiRequest('purchases/' . $request['response']['purchase']['id'], 'GET');
+		$purchase = $results['purchase'];
 
 		// Check data returned for this Order ID.
-		$I->assertIsArray($purchase);
 		$I->assertEquals($orderID, $purchase['transaction_id']);
 		$I->assertEquals($emailAddress, $purchase['email_address']);
 
 		// Iterate through the array of products, to find a pid matching the Product ID.
 		$productExistsInPurchase = false;
 		foreach ($purchase['products'] as $product) {
-			if ($productID === (int) $product['pid']) {
+			if ( (int) $productID === (int) $product['pid']) {
 				$productExistsInPurchase = true;
 				break;
 			}
@@ -224,70 +468,38 @@ class KitAPI extends \Codeception\Module
 	/**
 	 * Check the given order ID does not exist as a purchase on ConvertKit.
 	 *
+	 * The Plugin's requests are inspected, instead of querying the purchases list endpoint,
+	 * as that endpoint is subject to eventual consistency and is capped at the most recent
+	 * purchases, either of which would return no purchase even when the Plugin sent one.
+	 *
+	 * @see     https://developers.kit.com/api-reference/eventual-consistency
+	 *
 	 * @param   EndToEndTester $I             EndToEndTester.
 	 * @param   int            $orderID        Order ID.
 	 * @param   string         $emailAddress   Email Address.
 	 */
-	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress)
+	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress) // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 	{
-		// Run request.
-		$purchase = $this->apiExtractPurchaseFromPurchases($this->apiGetPurchases(), $orderID);
+		// Get any requests the Plugin made to send purchase data for this Order ID.
+		$requests = array_filter(
+			$this->grabKitAPIRequests($I, 'POST', 'purchases'),
+			function ($request) use ($orderID) {
+				if ( ! array_key_exists('transaction_id', $request['body'])) {
+					return false;
+				}
 
-		// Check data not returned for this Order ID.
-		// We check the email address, because each test will reset, meaning the Order ID will match that
-		// of a previous test, and therefore the API will return data from an existing test.
-		$I->assertIsArray($purchase);
-		$I->assertNotEquals($emailAddress, $purchase['email_address']);
-	}
-
-	/**
-	 * Returns a Purchase from the /purchases API endpoint based on the given Order ID (transaction_id).
-	 *
-	 * We cannot use /purchases/{id} as {id} is the ConvertKit ID, not the WooCommerce Order ID (which
-	 * is stored in the transaction_id).
-	 *
-	 * @param   array $purchases  Purchases Data.
-	 * @param   int   $orderID    Order ID.
-	 * @return  array
-	 */
-	private function apiExtractPurchaseFromPurchases($purchases, $orderID)
-	{
-		// Bail if no purchases exist.
-		if ( ! isset($purchases)) {
-			return [
-				'id'            => 0,
-				'order_id'      => 0,
-				'email_address' => 'no',
-			];
-		}
-
-		// Iterate through purchases to find one where the transaction ID matches the order ID.
-		foreach ($purchases as $purchase) {
-			// Skip if order ID does not match.
-			if ($purchase['transaction_id'] !== $orderID) {
-				continue;
+				// Compare as strings, as the Order ID may be a string when a third party
+				// Plugin defines custom order numbers.
+				return (string) $request['body']['transaction_id'] === (string) $orderID;
 			}
+		);
 
-			return $purchase;
-		}
-
-		// No purchase exists with the given order ID. Return a blank array.
-		return [
-			'id'            => 0,
-			'order_id'      => 0,
-			'email_address' => 'no',
-		];
-	}
-
-	/**
-	 * Returns the first 50 purchases from the API.
-	 *
-	 * @return  array
-	 */
-	public function apiGetPurchases()
-	{
-		$purchases = $this->apiRequest('purchases', 'GET');
-		return $purchases['purchases'];
+		// Check the Plugin did not send the purchase data.
+		$I->assertCount(
+			0,
+			$requests,
+			sprintf('The Plugin sent purchase data for Order %s.', $orderID)
+		);
 	}
 
 	/**
@@ -325,7 +537,7 @@ class KitAPI extends \Codeception\Module
 		);
 
 		// If no address fields are specified, build the expected address based on the integration's default setting.
-		if ( ! $addressFields ) {
+		if ( ! $addressFields) {
 			$addressFields = array( 'name', 'address_1', 'city', 'state', 'postcode', 'country' );
 		}
 
@@ -380,8 +592,8 @@ class KitAPI extends \Codeception\Module
 					[
 						'headers' => [
 							'Authorization' => 'Bearer ' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
-							'timeout'       => 5,
 						],
+						'timeout' => 5,
 					]
 				);
 				break;
@@ -395,8 +607,8 @@ class KitAPI extends \Codeception\Module
 							'Accept'        => 'application/json',
 							'Content-Type'  => 'application/json; charset=utf-8',
 							'Authorization' => 'Bearer ' . $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'],
-							'timeout'       => 5,
 						],
+						'timeout' => 5,
 						'body'    => (string) json_encode($params), // phpcs:ignore WordPress.WP.AlternativeFunctions
 					]
 				);
@@ -412,8 +624,8 @@ class KitAPI extends \Codeception\Module
 	 * the maximum number of attempts is reached.
 	 *
 	 * Use this to wrap API checks that can be flaky due to ingestion lag at
-	 * Kit's end (e.g. a subscriber created via a form submission isn't always
-	 * immediately queryable via the `subscribers` endpoint).
+	 * Kit's end (e.g. a subscriber assigned to a form isn't always immediately
+	 * returned by the `forms/{id}/subscribers` endpoint).
 	 *
 	 * @since   2.1.5
 	 *
