@@ -214,7 +214,7 @@ class KitAPI extends \Codeception\Module
 
 					// Compare as strings, as the Order ID may be a string when a third party
 					// Plugin defines custom order numbers.
-					if ((string) $request['body']['transaction_id'] === (string) $orderID) {
+					if ( (string) $request['body']['transaction_id'] === (string) $orderID) {
 						return $request;
 					}
 				}
