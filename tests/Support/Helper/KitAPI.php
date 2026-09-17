@@ -176,10 +176,11 @@ class KitAPI extends \Codeception\Module
 	 *
 	 * @since   2.2.0
 	 *
-	 * @param   array $request  Kit API request.
-	 * @return  int
+	 * @param   array  $request        Kit API request.
+	 * @param   string $emailAddress   Email Address.
+	 * @return  bool|int
 	 */
-	private function grabKitAPISubscriberID($request)
+	private function grabKitAPISubscriberID($request, $emailAddress)
 	{
 		// The subscriber was created or updated by the Plugin, so the response contains the subscriber.
 		if ($request['path'] !== 'purchases') {
@@ -190,7 +191,53 @@ class KitAPI extends \Codeception\Module
 		// Fetch the purchase by its ID, which includes the subscriber ID.
 		$results = $this->apiRequest('purchases/' . $request['response']['purchase']['id'], 'GET');
 
-		return $results['purchase']['subscriber_id'];
+		// Use the purchase's subscriber only if the purchase is for this email address. Kit matches
+		// purchases on their transaction_id, so a WooCommerce Order Number that another test or
+		// environment already used returns that test's purchase, and therefore its subscriber.
+		if ($results['purchase']['email_address'] === $emailAddress) {
+			return $results['purchase']['subscriber_id'];
+		}
+
+		// The purchase belongs to another subscriber, so fall back to querying by email address.
+		return $this->grabKitAPISubscriberIDByEmail($emailAddress);
+	}
+
+	/**
+	 * Returns the subscriber ID for the given email address, querying the API by email address.
+	 *
+	 * This is subject to eventual consistency, so is only used when the subscriber ID cannot be
+	 * determined from the requests the Plugin made.
+	 *
+	 * @see     https://developers.kit.com/api-reference/eventual-consistency
+	 *
+	 * @since   2.2.0
+	 *
+	 * @param   string $emailAddress   Email Address.
+	 * @return  bool|int
+	 */
+	private function grabKitAPISubscriberIDByEmail($emailAddress)
+	{
+		$results = $this->retryUntil(
+			function () use ($emailAddress) {
+				$results = $this->apiRequest(
+					'subscribers',
+					'GET',
+					[
+						'email_address'       => $emailAddress,
+						'include_total_count' => true,
+
+						// Check all subscriber states.
+						'status'              => 'all',
+					]
+				);
+
+				// Return the results only if a subscriber was found, so
+				// retryUntil() will keep trying otherwise.
+				return ( $results['pagination']['total_count'] > 0 ) ? $results : false;
+			}
+		);
+
+		return $results === false ? false : $results['subscribers'][0]['id'];
 	}
 
 	/**
@@ -256,8 +303,15 @@ class KitAPI extends \Codeception\Module
 			sprintf('The API returned a %s response when the Plugin subscribed %s.', $request['code'], $emailAddress)
 		);
 
+		// Determine the subscriber ID from the request.
+		$subscriberID = $this->grabKitAPISubscriberID($request, $emailAddress);
+		$I->assertNotFalse(
+			$subscriberID,
+			sprintf('No subscriber could be determined for %s.', $emailAddress)
+		);
+
 		// Fetch the subscriber by their ID, which returns strongly consistent results.
-		$results = $this->apiRequest('subscribers/' . $this->grabKitAPISubscriberID($request), 'GET');
+		$results = $this->apiRequest('subscribers/' . $subscriberID, 'GET');
 
 		// Check the subscriber matches the email address.
 		$I->assertEquals($emailAddress, $results['subscriber']['email_address']);
