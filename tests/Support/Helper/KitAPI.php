@@ -187,15 +187,15 @@ class KitAPI extends \Codeception\Module
 			return $request['response']['subscriber']['id'];
 		}
 
-		// Kit created the subscriber when the Plugin sent purchase data.
-		// Fetch the purchase by its ID, which includes the subscriber ID.
-		$results = $this->apiRequest('purchases/' . $request['response']['purchase']['id'], 'GET');
+		// Kit created the subscriber when the Plugin sent purchase data, and returns its ID
+		// in the response.
+		$purchase = $request['response']['purchase'];
 
 		// Use the purchase's subscriber only if the purchase is for this email address. Kit matches
 		// purchases on their transaction_id, so a WooCommerce Order Number that another test or
 		// environment already used returns that test's purchase, and therefore its subscriber.
-		if ($results['purchase']['email_address'] === $emailAddress) {
-			return $results['purchase']['subscriber_id'];
+		if (array_key_exists('subscriber_id', $purchase) && $purchase['email_address'] === $emailAddress) {
+			return $purchase['subscriber_id'];
 		}
 
 		// The purchase belongs to another subscriber, so fall back to querying by email address.
