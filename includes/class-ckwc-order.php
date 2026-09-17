@@ -575,35 +575,8 @@ class CKWC_Order {
 			return $response;
 		}
 
-		// Get subscriber ID by email address.
-		$subscriber_id = $this->api->get_subscriber_id( $purchase['email_address'] );
-
-		// If an error occured fetching the subscriber, add a WooCommerce Order note and bail.
-		if ( is_wp_error( $subscriber_id ) ) {
-			$order->add_order_note(
-				sprintf(
-					/* translators: %1$s: Error Code, %2$s: Error Message */
-					__( '[Kit] Purchase Data: Custom Fields: Get Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
-					$subscriber_id->get_error_code(),
-					$subscriber_id->get_error_message()
-				)
-			);
-
-			return $subscriber_id;
-		}
-
-		// If no subscriber could be found, add a WooCommerce Order note and bail.
-		if ( ! $subscriber_id ) {
-			$order->add_order_note(
-				sprintf(
-					/* translators: %1$s: Error Code, %2$s: Error Message */
-					__( '[Kit] Purchase Data: Custom Fields: No subscriber found for email address %s', 'woocommerce-convertkit' ),
-					$purchase['email_address']
-				)
-			);
-
-			return $subscriber_id;
-		}
+		// Get the subscriber ID, which Kit returns in the purchase data response.
+		$subscriber_id = $response['purchase']['subscriber_id'];
 
 		// Update subscriber with custom field data.
 		$response = $this->api->update_subscriber(
