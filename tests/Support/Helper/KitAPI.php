@@ -596,7 +596,7 @@ class KitAPI extends \Codeception\Module
 
 					// Compare loosely, as an unset custom field is returned as null, which the
 					// assertions treat as matching an empty string.
-					if ($results['subscriber']['fields'][ $key ] != $value) { // phpcs:ignore WordPress.PHP.StrictComparisons.LooseComparison
+					if ($results['subscriber']['fields'][ $key ] != $value) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseNotEqual
 						return false;
 					}
 				}
