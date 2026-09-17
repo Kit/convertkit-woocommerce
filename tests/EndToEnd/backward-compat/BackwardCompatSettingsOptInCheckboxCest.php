@@ -67,11 +67,15 @@ class BackwardCompatSettingOptInCheckboxCest
 		// Wait for the page to load.
 		$I->waitForElementVisible('body.post-type-page');
 
-		// Close Gutenberg modal.
-		$I->maybeCloseGutenbergWelcomeModal($I);
+		// Switch to the Gutenberg IFrame.
+		$I->switchToGutenbergIFrameEditor($I);
 
 		// Confirm Checkout Block exists in Checkout.
+		$I->waitForElementVisible('div[data-type="ckwc/opt-in"]');
 		$I->click('div[data-type="ckwc/opt-in"]');
+
+		// Switch back to main window.
+		$I->switchToIFrame();
 
 		// Confirm block cannot be deleted.
 		$I->waitForElementVisible('button[aria-label="Locked"]');
