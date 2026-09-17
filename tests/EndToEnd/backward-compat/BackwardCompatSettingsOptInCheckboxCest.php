@@ -67,6 +67,9 @@ class BackwardCompatSettingOptInCheckboxCest
 		// Wait for the page to load.
 		$I->waitForElementVisible('body.post-type-page');
 
+		// Close Gutenberg modal, which would otherwise intercept clicks made in the editor.
+		$I->maybeCloseGutenbergWelcomeModal($I);
+
 		// Switch to the Gutenberg IFrame.
 		$I->switchToGutenbergIFrameEditor($I);
 
