@@ -155,6 +155,28 @@ function ckwc_get_settings_link( $query_args = array() ) {
 }
 
 /**
+ * Helper method to return the URL Kit redirects to after the user authorizes the Plugin
+ * via OAuth, including a nonce that is verified before the authorization code is
+ * exchanged for an access token.
+ *
+ * @since   2.2.1
+ *
+ * @return  string  OAuth Return URL
+ */
+function ckwc_get_oauth_return_url() {
+
+	return add_query_arg(
+		array(
+			'page'    => 'wc-settings',
+			'tab'     => 'integration',
+			'section' => 'ckwc-oauth-' . wp_create_nonce( 'ckwc-oauth-connect' ),
+		),
+		admin_url( 'admin.php' )
+	);
+
+}
+
+/**
  * Helper method to enqueue Select2 scripts for use within the ConvertKit Plugin.
  *
  * @since   1.4.3
