@@ -33,6 +33,8 @@ define( 'CKWC_PLUGIN_PATH', __DIR__ );
 define( 'CKWC_PLUGIN_VERSION', '2.2.0' );
 define( 'CKWC_OAUTH_CLIENT_ID', 'L0kyADsB3WP5zO5MvUpXQU64gIntQg9BBAIme17r_7A' );
 define( 'CKWC_OAUTH_CLIENT_REDIRECT_URI', 'https://app.kit.com/wordpress/redirect' );
+define( 'CKWC_NONCE_ACTION_OAUTH_CONNECT', 'ckwc-oauth-connect' );
+define( 'CKWC_NONCE_ACTION_OAUTH_DISCONNECT', 'ckwc-oauth-disconnect' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
 if ( ! trait_exists( 'ConvertKit_API_Traits' ) && ! trait_exists( 'ConvertKit_API\ConvertKit_API_Traits' ) ) {
