@@ -54,7 +54,8 @@ class SettingOAuthCest
 		$state = $I->apiDecodeStateFromOAuthURL($I->grabAttributeFrom('a[href*="oauth/authorize"]', 'href'));
 		$I->assertEquals($_ENV['CONVERTKIT_OAUTH_CLIENT_ID'], $state['client_id']);
 		$I->assertStringStartsWith($_ENV['WORDPRESS_URL'] . '/wp-admin/admin.php?', $state['return_to']);
-		$I->assertStringContainsString('page=wc-settings&tab=integration&section=ckwc-oauth-', $state['return_to']);
+		$I->assertStringContainsString('page=wc-settings&tab=integration&section=ckwc', $state['return_to']);
+		$I->assertStringContainsString('nonce=', $state['return_to']);
 
 		// Click the connect button.
 		$I->click('Connect');
@@ -206,7 +207,7 @@ class SettingOAuthCest
 
 		// Attempt to exchange an authorization code without being logged in.
 		$I->amOnPage('/wp-admin/admin-ajax.php?action=ckwc&page=wc-settings&tab=integration&section=ckwc&code=fakeAuthorizationCode');
-		$I->amOnPage('/wp-admin/admin-ajax.php?action=ckwc&page=wc-settings&tab=integration&section=ckwc-oauth-invalid&code=fakeAuthorizationCode');
+		$I->amOnPage('/wp-admin/admin-ajax.php?action=ckwc&page=wc-settings&tab=integration&section=ckwc&code=fakeAuthorizationCode&nonce=invalid');
 
 		// Confirm the authorization code was not exchanged.
 		$I->apiCheckAuthorizationCodeNotExchanged($I);
@@ -235,7 +236,7 @@ class SettingOAuthCest
 		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc&code=fakeAuthorizationCode');
 
 		// Attempt to exchange an authorization code with an invalid nonce.
-		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc-oauth-invalid&code=fakeAuthorizationCode');
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc&code=fakeAuthorizationCode&nonce=invalid');
 
 		// Confirm the authorization code was not exchanged.
 		$I->apiCheckAuthorizationCodeNotExchanged($I);

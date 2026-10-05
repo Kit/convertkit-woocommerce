@@ -165,13 +165,10 @@ function ckwc_get_settings_link( $query_args = array() ) {
  */
 function ckwc_get_oauth_return_url() {
 
-	return add_query_arg(
+	return ckwc_get_settings_link(
 		array(
-			'page'    => 'wc-settings',
-			'tab'     => 'integration',
-			'section' => 'ckwc-oauth-' . wp_create_nonce( 'ckwc-oauth-connect' ),
-		),
-		admin_url( 'admin.php' )
+			'nonce' => wp_create_nonce( CKWC_NONCE_ACTION_OAUTH_CONNECT ),
+		)
 	);
 
 }

@@ -174,7 +174,7 @@ class CKWC_Integration extends WC_Integration {
 		if ( ! isset( $_REQUEST['nonce'] ) ) {
 			return;
 		}
-		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'ckwc-oauth-disconnect' ) ) {
+		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), CKWC_NONCE_ACTION_OAUTH_DISCONNECT ) ) {
 			return;
 		}
 
@@ -233,11 +233,13 @@ class CKWC_Integration extends WC_Integration {
 	 */
 	public function maybe_get_and_store_access_token() {
 
-		// Get the nonce from the OAuth callback request.
-		$nonce = $this->get_oauth_callback_nonce();
+		// Bail if we're not on the integration screen.
+		if ( ! $this->get_integration_screen_name() ) {
+			return;
+		}
 
-		// Bail if the request isn't an OAuth callback.
-		if ( ! $nonce ) {
+		// Bail if no authorization code is included in the request, as this isn't an OAuth callback.
+		if ( ! array_key_exists( 'code', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return;
 		}
 
@@ -247,8 +249,8 @@ class CKWC_Integration extends WC_Integration {
 			exit();
 		}
 
-		// Redirect with an error if nonce verification fails.
-		if ( ! wp_verify_nonce( $nonce, 'ckwc-oauth-connect' ) ) {
+		// Redirect with an error if the nonce is missing or invalid.
+		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), CKWC_NONCE_ACTION_OAUTH_CONNECT ) ) {
 			wp_safe_redirect(
 				ckwc_get_settings_link(
 					array(
@@ -256,12 +258,6 @@ class CKWC_Integration extends WC_Integration {
 					)
 				)
 			);
-			exit();
-		}
-
-		// Redirect to the settings screen if no authorization code is included in the request.
-		if ( ! array_key_exists( 'code', $_REQUEST ) ) {
-			wp_safe_redirect( ckwc_get_settings_link() );
 			exit();
 		}
 
@@ -293,44 +289,6 @@ class CKWC_Integration extends WC_Integration {
 		// is now authenticated.
 		wp_safe_redirect( ckwc_get_settings_link() );
 		exit();
-
-	}
-
-	/**
-	 * Returns the nonce from an OAuth callback request.
-	 *
-	 * Kit's OAuth redirect only preserves the page, tab and section parameters of the return URL,
-	 * so the nonce is included in the section parameter. See ckwc_get_oauth_return_url().
-	 *
-	 * @since   2.2.1
-	 *
-	 * @return  bool|string
-	 */
-	private function get_oauth_callback_nonce() {
-
-		// phpcs:disable WordPress.Security.NonceVerification
-
-		// Return false if the request isn't for the WooCommerce Integration settings screen.
-		if ( ! isset( $_REQUEST['page'], $_REQUEST['tab'], $_REQUEST['section'] ) ) {
-			return false;
-		}
-		if ( sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) !== 'wc-settings' ) {
-			return false;
-		}
-		if ( sanitize_text_field( wp_unslash( $_REQUEST['tab'] ) ) !== 'integration' ) {
-			return false;
-		}
-
-		// Return false if the section isn't for this Plugin's OAuth callback.
-		$section = sanitize_key( wp_unslash( $_REQUEST['section'] ) );
-		if ( strpos( $section, 'ckwc-oauth-' ) !== 0 ) {
-			return false;
-		}
-
-		// phpcs:enable
-
-		// Return the nonce.
-		return substr( $section, strlen( 'ckwc-oauth-' ) );
 
 	}
 
@@ -583,7 +541,7 @@ class CKWC_Integration extends WC_Integration {
 							'tab'     => 'integration',
 							'section' => 'ckwc',
 							'action'  => 'ckwc-oauth-disconnect',
-							'nonce'   => wp_create_nonce( 'ckwc-oauth-disconnect' ),
+							'nonce'   => wp_create_nonce( CKWC_NONCE_ACTION_OAUTH_DISCONNECT ),
 						),
 						'admin.php'
 					)
