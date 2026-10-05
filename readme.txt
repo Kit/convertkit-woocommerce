@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.1
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,6 +48,10 @@ Please report security bugs found in the source code of the plugin through the [
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 2.2.1 2026-10-05
+* Fix: OAuth: Connect: Check user has required permissions
+* Fix: OAuth: Connect: Use nonce to prevent CSRF
 
 ### 2.2.0 2026-09-21
 * Fix: Purchase Data: Use subscriber ID from purchase data instead of expensive subscriber lookup by email
