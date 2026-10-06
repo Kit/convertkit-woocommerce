@@ -588,11 +588,11 @@ class CKWC_Order {
 				)
 			);
 
-			return $subscriber_id;
+			return $response;
 		}
 
 		// Update subscriber with custom field data.
-		$response = $this->api->update_subscriber(
+		$update_subscriber = $this->api->update_subscriber(
 			$subscriber_id,
 			$purchase['first_name'],
 			$purchase['email_address'],
@@ -600,13 +600,14 @@ class CKWC_Order {
 		);
 
 		// If an error occured updating the subscriber, add a WooCommerce Order note and bail.
-		if ( is_wp_error( $response ) ) {
+		// The purchase data was sent, so return the purchase data response.
+		if ( is_wp_error( $update_subscriber ) ) {
 			$order->add_order_note(
 				sprintf(
 					/* translators: %1$s: Error Code, %2$s: Error Message */
 					__( '[Kit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
-					$response->get_error_code(),
-					$response->get_error_message()
+					$update_subscriber->get_error_code(),
+					$update_subscriber->get_error_message()
 				)
 			);
 
