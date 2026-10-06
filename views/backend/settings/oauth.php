@@ -16,7 +16,7 @@
 		</p>
 
 		<p class="submit">
-			<a href="<?php echo esc_url( $api->get_oauth_url( admin_url( 'admin.php?page=wc-settings&tab=integration&section=ckwc' ), get_site_url() ) ); ?>" class="button button-primary"><?php esc_html_e( 'Connect', 'woocommerce-convertkit' ); ?></a>
+			<a href="<?php echo esc_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ); ?>" class="button button-primary"><?php esc_html_e( 'Connect', 'woocommerce-convertkit' ); ?></a>
 		</p>
 	</div><!-- .postbox -->
 

@@ -165,11 +165,16 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
+		// Bail if the user isn't permitted to manage WooCommerce settings.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
 		// Bail if nonce verification fails.
 		if ( ! isset( $_REQUEST['nonce'] ) ) {
 			return;
 		}
-		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), 'ckwc-oauth-disconnect' ) ) {
+		if ( ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), CKWC_NONCE_ACTION_OAUTH_DISCONNECT ) ) {
 			return;
 		}
 
@@ -233,13 +238,31 @@ class CKWC_Integration extends WC_Integration {
 			return;
 		}
 
-		// Bail if no authorization code is included in the request.
+		// Bail if no authorization code is included in the request, as this isn't an OAuth callback.
 		if ( ! array_key_exists( 'code', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			return;
 		}
 
+		// Redirect to the settings screen if the user isn't permitted to manage WooCommerce settings.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_safe_redirect( ckwc_get_settings_link() );
+			exit();
+		}
+
+		// Redirect with an error if the nonce is missing or invalid.
+		if ( ! isset( $_REQUEST['nonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['nonce'] ), CKWC_NONCE_ACTION_OAUTH_CONNECT ) ) {
+			wp_safe_redirect(
+				ckwc_get_settings_link(
+					array(
+						'error' => __( 'The Kit authorization request could not be verified. Please click Connect again.', 'woocommerce-convertkit' ),
+					)
+				)
+			);
+			exit();
+		}
+
 		// Sanitize token.
-		$authorization_code = sanitize_text_field( wp_unslash( $_REQUEST['code'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$authorization_code = sanitize_text_field( wp_unslash( $_REQUEST['code'] ) );
 
 		// Exchange the authorization code and verifier for an access token.
 		$api    = new CKWC_API( CKWC_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI );
@@ -518,7 +541,7 @@ class CKWC_Integration extends WC_Integration {
 							'tab'     => 'integration',
 							'section' => 'ckwc',
 							'action'  => 'ckwc-oauth-disconnect',
-							'nonce'   => wp_create_nonce( 'ckwc-oauth-disconnect' ),
+							'nonce'   => wp_create_nonce( CKWC_NONCE_ACTION_OAUTH_DISCONNECT ),
 						),
 						'admin.php'
 					)
