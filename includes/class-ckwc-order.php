@@ -460,7 +460,7 @@ class CKWC_Order {
 				'lid'        => $item_key,
 				'name'       => $item->get_name(),
 				'sku'        => $item->get_product()->get_sku(),
-				'unit_price' => $item->get_product()->get_price(),
+				'unit_price' => $order->get_item_subtotal( $item, false, true ),
 				'quantity'   => $item->get_quantity(),
 			);
 		}
