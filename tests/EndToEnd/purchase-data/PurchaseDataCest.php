@@ -105,6 +105,70 @@ class PurchaseDataCest
 	}
 
 	/**
+	 * Test that only an error Order Note is added when the Customer's purchase is sent to ConvertKit
+	 * with custom field data, and the API fails to update the subscriber's custom fields.
+	 *
+	 * @since   2.2.2
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testSendPurchaseDataWithCustomFieldsWhenUpdateSubscriberFails(EndToEndTester $I)
+	{
+		// Make the Kit API reject requests to update a subscriber.
+		$I->haveMuPlugin(
+			'kit-api-fail-update-subscriber.php',
+			<<<'PHP'
+			add_filter(
+				'pre_http_request',
+				function ( $pre, $args, $url ) {
+					if ( $args['method'] !== 'PUT' || strpos( $url, 'https://api.kit.com/v4/subscribers/' ) !== 0 ) {
+						return $pre;
+					}
+					return array(
+						'headers'  => array(),
+						'body'     => wp_json_encode( array( 'errors' => array( 'Custom fields could not be updated.' ) ) ),
+						'response' => array( 'code' => 422, 'message' => 'Unprocessable Entity' ),
+						'cookies'  => array(),
+						'filename' => null,
+					);
+				},
+				10,
+				3
+			);
+			PHP
+		);
+
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'send_purchase_data' => true,
+				'custom_fields'      => true,
+			]
+		);
+
+		// Confirm that the purchase was added to ConvertKit.
+		$I->apiCheckPurchaseExists(
+			$I,
+			orderID: $result['order_id'],
+			emailAddress: $result['email_address'],
+			productID: $result['product_id']
+		);
+
+		// Check that the Order's Notes include the error, and not a note confirming the custom field data was sent.
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: '[Kit] Purchase Data: Custom Fields: Update Subscriber Error: convertkit_api_error Custom fields could not be updated.'
+		);
+		$I->wooCommerceOrderNoteDoesNotExist(
+			$I,
+			orderID: $result['order_id'],
+			noteText: '[Kit] Purchase Data: Custom Fields sent successfully'
+		);
+	}
+
+	/**
 	 * Test that the Customer's purchase is sent to ConvertKit with custom field data when:
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The opt in settings are disabled, and

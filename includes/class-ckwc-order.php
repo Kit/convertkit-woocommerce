@@ -599,7 +599,7 @@ class CKWC_Order {
 			$fields
 		);
 
-		// If an error occured updating the subscriber, add a WooCommerce Order note.
+		// If an error occured updating the subscriber, add a WooCommerce Order note and bail.
 		if ( is_wp_error( $response ) ) {
 			$order->add_order_note(
 				sprintf(
@@ -609,6 +609,8 @@ class CKWC_Order {
 					$response->get_error_message()
 				)
 			);
+
+			return $response;
 		}
 
 		// Add a note to the WooCommerce Order that the custom fields data sent successfully.
