@@ -133,6 +133,70 @@ class RESTAPITest extends WPRestApiTestCase
 	}
 
 	/**
+	 * Test that the /wp-json/kit/v1/woocommerce/order/send REST API route returns a 403
+	 * when the user cannot manage WooCommerce.
+	 *
+	 * @since   2.2.2
+	 */
+	public function testSyncPastOrderWhenEditor()
+	{
+		// Create and become editor.
+		$this->actAsEditor();
+
+		// Send request.
+		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/order/send/123' );
+		$response = rest_get_server()->dispatch( $request );
+
+		// Assert response is unsuccessful.
+		$this->assertSame( 403, $response->get_status() );
+	}
+
+	/**
+	 * Test that the /wp-json/kit/v1/woocommerce/order/send REST API route sends the Order
+	 * when the user is a WooCommerce Shop Manager.
+	 *
+	 * @since   2.2.2
+	 */
+	public function testSyncPastOrderWhenShopManager()
+	{
+		// Create and become shop manager.
+		$this->actAsShopManager();
+
+		// Create a WooCommerce Product.
+		$product = new \WC_Product_Simple();
+		$product->set_name( 'Test Product' );
+		$product->set_regular_price( '29.99' );
+		$product->set_price( '29.99' );
+		$product->set_sku( 'test-product-' . wp_generate_uuid4() );
+		$product->set_catalog_visibility( 'visible' );
+		$product->set_status( 'publish' );
+		$product->save();
+
+		// Create a WooCommerce Order.
+		$order = wc_create_order(
+			[
+				'status' => 'processing',
+			]
+		);
+		$order->add_product( $product, 1 );
+		$order->set_billing_email( $_ENV['CONVERTKIT_API_SUBSCRIBER_EMAIL'] );
+		$order->calculate_totals();
+		$order->save();
+
+		// Send request.
+		$request  = new \WP_REST_Request( 'POST', '/kit/v1/woocommerce/order/send/' . $order->get_id() );
+		$response = rest_get_server()->dispatch( $request );
+
+		// Assert response is successful.
+		$this->assertSame( 200, $response->get_status() );
+
+		// Assert response data contains the expected message.
+		$data = $response->get_data();
+		$this->assertEquals( true, $data['success'] );
+		$this->assertStringContainsString( 'WooCommerce Order ID #' . $order->get_id() . ' added to Kit Purchase Data successfully.', $data['data'] );
+	}
+
+	/**
 	 * Test that the /wp-json/kit/v1/woocommerce/resources/refresh REST API route returns a 401 when the user is not authorized.
 	 *
 	 * @since   2.0.6
@@ -190,6 +254,17 @@ class RESTAPITest extends WPRestApiTestCase
 	{
 		$editor_id = static::factory()->user->create( [ 'role' => 'editor' ] );
 		wp_set_current_user( $editor_id );
+	}
+
+	/**
+	 * Act as a WooCommerce Shop Manager.
+	 *
+	 * @since   2.2.2
+	 */
+	private function actAsShopManager()
+	{
+		$shop_manager_id = static::factory()->user->create( [ 'role' => 'shop_manager' ] );
+		wp_set_current_user( $shop_manager_id );
 	}
 
 	/**
