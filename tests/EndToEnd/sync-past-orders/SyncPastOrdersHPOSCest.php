@@ -301,9 +301,6 @@ class SyncPastOrdersHPOSCest
 		$orderIDParts = explode('-', $result['order_id']);
 		$postID       = $orderIDParts[ count($orderIDParts) - 1 ];
 
-		// Confirm that the log shows a success message.
-		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to Kit Purchase Data successfully.');
-
 		// Confirm that the purchase was added to ConvertKit.
 		$purchaseDataID = $I->apiCheckPurchaseExists(
 			$I,
@@ -311,6 +308,9 @@ class SyncPastOrdersHPOSCest
 			emailAddress: $result['email_address'],
 			productID: $result['product_id']
 		);
+
+		// Confirm that the log shows a success message, including the Kit Purchase ID.
+		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . $purchaseDataID);
 
 		// Confirm that the Cancel Sync button is disabled.
 		$I->seeElementInDOM('a.cancel[disabled]');
@@ -405,9 +405,6 @@ class SyncPastOrdersHPOSCest
 		// Wait a few seconds for the API call to be made.
 		$I->wait(5);
 
-		// Confirm that the log shows a success message.
-		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to Kit Purchase Data successfully.');
-
 		// Confirm that the purchase was added to ConvertKit.
 		$purchaseDataID = $I->apiCheckPurchaseExists(
 			$I,
@@ -415,6 +412,9 @@ class SyncPastOrdersHPOSCest
 			emailAddress: $result['email_address'],
 			productID: $result['product_id']
 		);
+
+		// Confirm that the log shows a success message, including the Kit Purchase ID.
+		$I->seeInSource('WooCommerce Order ID #' . $postID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . $purchaseDataID);
 
 		// Confirm that the Cancel Sync button is disabled.
 		$I->seeElementInDOM('a.cancel[disabled]');
