@@ -27,7 +27,7 @@ class ActivateDeactivatePluginCest
 
 		// Confirm the Action Scheduler action is scheduled.
 		$I->amOnAdminPage('admin.php?page=wc-status&status=pending&tab=action-scheduler&s=ckwc_abandoned_cart');
-		$I->assertEquals('ckwc_abandoned_cart', $I->grabTextFrom('tbody[data-wp-lists="list:action-scheduler"] tr:first-child .column-hook'));
+		$I->see('ckwc_abandoned_cart', 'tbody[data-wp-lists="list:action-scheduler"] tr:first-child .column-hook');
 
 		// Deactivate the Plugin.
 		$I->deactivateConvertKitPlugin($I);
