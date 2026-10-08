@@ -134,6 +134,11 @@ class CKWC_Order {
 			// Get the WC_Product object.
 			$product = wc_get_product( $item['product_id'] );
 
+			// If this Order Item's Product could not be found e.g. it was deleted, skip it.
+			if ( ! $product ) {
+				continue;
+			}
+
 			// Get the Form, Tag or Sequence for this Product.
 			$resource_id = $product->get_meta( 'ckwc_subscription', true );
 
