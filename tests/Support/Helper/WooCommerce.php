@@ -922,8 +922,8 @@ class WooCommerce extends \Codeception\Module
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
 
-		// Define Order Status.
-		$I->selectOption('#order_status', $orderStatus);
+		// Create as Pending payment first, so Custom Order Numbers assigns the Order Number before purchase data is sent.
+		$I->selectOption('#order_status', 'wc-pending');
 
 		// Define User and Payment Method.
 		$I->fillSelect2Field($I, '#select2-customer_user-container', $emailAddress, 'aria-owns');
@@ -948,6 +948,14 @@ class WooCommerce extends \Codeception\Module
 
 		// Check that no WooCommerce, PHP warnings or notices were output.
 		$I->checkNoWarningsAndNoticesOnScreen($I);
+
+		// Change the Order Status, if required.
+		if ($orderStatus !== 'wc-pending') {
+			$I->selectOption('#order_status', $orderStatus);
+			$I->executeJS('window.scrollTo(0,0);');
+			$I->click('button.save_order');
+			$I->checkNoWarningsAndNoticesOnScreen($I);
+		}
 
 		// Determine the Order ID.
 		$orderID = $I->grabTextFrom('h2.woocommerce-order-data__heading');
