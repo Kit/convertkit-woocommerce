@@ -182,7 +182,31 @@ class WooCommerce extends \Codeception\Module
 	public function setupCustomOrderNumbersPlugin($I)
 	{
 		// Setup WooCommerce Order Number prefix based on the current date and PHP version.
-		$I->haveOptionInDatabase('alg_wc_custom_order_numbers_prefix', 'ckwc-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '-');
+		$prefix = 'ckwc-' . date( 'Y-m-d-H-i-s' ) . '-php-' . PHP_VERSION_ID . '-';
+
+		// Enable the Plugin, which is disabled by default, using the Order ID as the number
+		// so tests can remove the prefix to get the Order ID.
+		$I->haveOptionInDatabase(
+			'con_general_settings',
+			[
+				'enabled'                       => true,
+				'counter_type'                  => 'order_id',
+				'settings_to_apply'             => 'new_order',
+				'min_width'                     => 0,
+				'custom_order_numbers_template' => '{prefix}{date_prefix}{number}{suffix}{date_suffix}',
+				'enable_prefix_suffix'          => true,
+				'prefix_suffix_rules'           => [
+					[
+						'condition_type'  => 'custom',
+						'condition_value' => [],
+						'prefix'          => $prefix,
+						'suffix'          => '',
+						'sequential'      => false,
+						'custom_counter'  => 1,
+					],
+				],
+			]
+		);
 	}
 
 	/**
