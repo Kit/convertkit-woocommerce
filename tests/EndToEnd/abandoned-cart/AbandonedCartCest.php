@@ -74,7 +74,7 @@ class AbandonedCartCest
 		$I->click('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
 
 		// Wait for the action to complete.
-		$I->waitForElementVisible('.updated');
+		$I->waitForText('Successfully executed action', 10);
 
 		// Confirm that the email address was not added to Kit.
 		$I->apiCheckSubscriberDoesNotExist(
@@ -138,7 +138,7 @@ class AbandonedCartCest
 		$I->click('tbody[data-wp-lists="list:action-scheduler"] tr:first-child span.run a');
 
 		// Wait for the action to complete.
-		$I->waitForElementVisible('.updated');
+		$I->waitForText('Successfully executed action', 10);
 
 		// Confirm that the email address was added to Kit.
 		$subscriber = $I->apiCheckSubscriberExists(
