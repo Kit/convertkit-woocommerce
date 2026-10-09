@@ -127,7 +127,7 @@ class WooCommerceSubscriptionsSubscribeEventCheckoutBlockCest
 		$I->click('span.run a');
 
 		// Wait for task to complete.
-		$I->waitForElement('.updated', 10);
+		$I->waitForText('Successfully executed action', 10);
 
 		// Confirm that the email address is not subscribed to ConvertKit, as the Order is for a renewal, not a new subscription.
 		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
