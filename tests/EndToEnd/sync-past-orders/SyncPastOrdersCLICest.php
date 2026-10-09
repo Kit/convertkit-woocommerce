@@ -90,6 +90,45 @@ class SyncPastOrdersCLICest
 	}
 
 	/**
+	 * Test that the CLI command returns the expected console output, including the
+	 * Kit Purchase ID, when attempting to sync past orders to Kit Purchase Data,
+	 * WooCommerce Orders exist and Custom Fields are mapped.
+	 *
+	 * @since   2.2.2
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testSyncPastOrdersWithCustomFields(EndToEndTester $I)
+	{
+		// Create Product and Checkout for this test, not sending the Order
+		// to Kit.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'custom_fields' => true,
+			]
+		);
+
+		// Remove prefix from Order ID, as CLI will not show the Custom Order Number Prefix.
+		$orderIDParts = explode( '-', $result['order_id'] );
+		$orderID      = $orderIDParts[ count($orderIDParts) - 1 ];
+
+		// Run CLI command.
+		$I->cli([ 'ckwc-sync-past-orders' ]);
+
+		// Confirm that the Order was added to Kit.
+		$purchaseID = $I->apiCheckPurchaseExists(
+			$I,
+			orderID: $result['order_id'],
+			emailAddress: $result['email_address'],
+			productID: $result['product_id']
+		);
+
+		// Confirm the output includes the Kit Purchase ID.
+		$I->seeInShellOutput('WooCommerce Order ID #' . $orderID . ' added to Kit Purchase Data successfully. Kit Purchase ID: #' . $purchaseID);
+	}
+
+	/**
 	 * Test that the CLI command returns the expected console output when
 	 * attempting to sync past orders to ConvertKit Purchase Data using
 	 * the --limit argument, and WooCommerce Orders exist.
