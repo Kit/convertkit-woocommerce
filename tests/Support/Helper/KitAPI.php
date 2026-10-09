@@ -542,23 +542,17 @@ class KitAPI extends \Codeception\Module
 	 *
 	 * @see     https://developers.kit.com/api-reference/eventual-consistency
 	 *
-	 * @param   EndToEndTester $I                      EndToEndTester.
-	 * @param   int            $orderID                Order ID.
-	 * @param   string         $emailAddress           Email Address.
-	 * @param   bool           $ignoreFailedRequests   Ignore requests that the API rejected.
+	 * @param   EndToEndTester $I              EndToEndTester.
+	 * @param   int            $orderID        Order ID.
+	 * @param   string         $emailAddress   Email Address.
 	 */
-	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress, $ignoreFailedRequests = false) // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+	public function apiCheckPurchaseDoesNotExist($I, $orderID, $emailAddress) // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
 	{
 		// Get any requests the Plugin made to send purchase data for this Order ID.
 		$requests = array_filter(
 			$this->grabKitAPIRequests($I, 'POST', 'purchases'),
-			function ($request) use ($orderID, $ignoreFailedRequests) {
+			function ($request) use ($orderID) {
 				if ( ! array_key_exists('transaction_id', $request['body'])) {
-					return false;
-				}
-
-				// Ignore requests the API rejected, as no purchase was created.
-				if ($ignoreFailedRequests && ( $request['code'] < 200 || $request['code'] >= 300 )) {
 					return false;
 				}
 

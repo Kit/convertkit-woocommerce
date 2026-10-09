@@ -134,6 +134,11 @@ class CKWC_Order {
 			// Get the WC_Product object.
 			$product = wc_get_product( $item['product_id'] );
 
+			// If this Order Item's Product could not be found e.g. it was deleted, skip it.
+			if ( ! $product ) {
+				continue;
+			}
+
 			// Get the Form, Tag or Sequence for this Product.
 			$resource_id = $product->get_meta( 'ckwc_subscription', true );
 
@@ -460,7 +465,7 @@ class CKWC_Order {
 				'lid'        => $item_key,
 				'name'       => $item->get_name(),
 				'sku'        => $item->get_product()->get_sku(),
-				'unit_price' => $item->get_product()->get_price(),
+				'unit_price' => $order->get_item_subtotal( $item, false, true ),
 				'quantity'   => $item->get_quantity(),
 			);
 		}
@@ -588,27 +593,30 @@ class CKWC_Order {
 				)
 			);
 
-			return $subscriber_id;
+			return $response;
 		}
 
 		// Update subscriber with custom field data.
-		$response = $this->api->update_subscriber(
+		$update_subscriber = $this->api->update_subscriber(
 			$subscriber_id,
 			$purchase['first_name'],
 			$purchase['email_address'],
 			$fields
 		);
 
-		// If an error occured updating the subscriber, add a WooCommerce Order note.
-		if ( is_wp_error( $response ) ) {
+		// If an error occured updating the subscriber, add a WooCommerce Order note and bail.
+		// The purchase data was sent, so return the purchase data response.
+		if ( is_wp_error( $update_subscriber ) ) {
 			$order->add_order_note(
 				sprintf(
 					/* translators: %1$s: Error Code, %2$s: Error Message */
 					__( '[Kit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s', 'woocommerce-convertkit' ),
-					$response->get_error_code(),
-					$response->get_error_message()
+					$update_subscriber->get_error_code(),
+					$update_subscriber->get_error_message()
 				)
 			);
+
+			return $response;
 		}
 
 		// Add a note to the WooCommerce Order that the custom fields data sent successfully.

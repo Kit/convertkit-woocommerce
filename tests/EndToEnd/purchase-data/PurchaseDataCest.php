@@ -105,6 +105,70 @@ class PurchaseDataCest
 	}
 
 	/**
+	 * Test that only an error Order Note is added when the Customer's purchase is sent to ConvertKit
+	 * with custom field data, and the API fails to update the subscriber's custom fields.
+	 *
+	 * @since   2.2.2
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testSendPurchaseDataWithCustomFieldsWhenUpdateSubscriberFails(EndToEndTester $I)
+	{
+		// Make the Kit API reject requests to update a subscriber.
+		$I->haveMuPlugin(
+			'kit-api-fail-update-subscriber.php',
+			<<<'PHP'
+			add_filter(
+				'pre_http_request',
+				function ( $pre, $args, $url ) {
+					if ( $args['method'] !== 'PUT' || strpos( $url, 'https://api.kit.com/v4/subscribers/' ) !== 0 ) {
+						return $pre;
+					}
+					return array(
+						'headers'  => array(),
+						'body'     => wp_json_encode( array( 'errors' => array( 'Custom fields could not be updated.' ) ) ),
+						'response' => array( 'code' => 422, 'message' => 'Unprocessable Entity' ),
+						'cookies'  => array(),
+						'filename' => null,
+					);
+				},
+				10,
+				3
+			);
+			PHP
+		);
+
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'send_purchase_data' => true,
+				'custom_fields'      => true,
+			]
+		);
+
+		// Confirm that the purchase was added to ConvertKit.
+		$I->apiCheckPurchaseExists(
+			$I,
+			orderID: $result['order_id'],
+			emailAddress: $result['email_address'],
+			productID: $result['product_id']
+		);
+
+		// Check that the Order's Notes include the error, and not a note confirming the custom field data was sent.
+		$I->wooCommerceOrderNoteExists(
+			$I,
+			orderID: $result['order_id'],
+			noteText: '[Kit] Purchase Data: Custom Fields: Update Subscriber Error: convertkit_api_error Custom fields could not be updated.'
+		);
+		$I->wooCommerceOrderNoteDoesNotExist(
+			$I,
+			orderID: $result['order_id'],
+			noteText: '[Kit] Purchase Data: Custom Fields sent successfully'
+		);
+	}
+
+	/**
 	 * Test that the Customer's purchase is sent to ConvertKit with custom field data when:
 	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
 	 * - The opt in settings are disabled, and
@@ -1184,6 +1248,64 @@ class PurchaseDataCest
 			metaValue: $purchaseDataID,
 			hposEnabled: true
 		);
+	}
+
+	/**
+	 * Test that the Customer's purchase is sent to ConvertKit with the price paid for the Product when:
+	 * - The 'Send purchase data to ConvertKit' is enabled in the integration Settings, and
+	 * - The Send Purchase Data Event is set to Order Completed, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Product's price is changed after the Order is created, and
+	 * - The Order's status is changed from processing to completed.
+	 *
+	 * @since   2.2.2
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testSendPurchaseDataUsesOrderPriceWhenProductPriceChanged(EndToEndTester $I)
+	{
+		// Create Product and Checkout for this test, purchasing the Product at 10.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'send_purchase_data' => 'completed',
+			]
+		);
+
+		// Change the Product's price after the Order was created.
+		$I->dontHavePostMetaInDatabase(
+			[
+				'post_id'  => $result['product_id'],
+				'meta_key' => '_price',
+			]
+		);
+		$I->dontHavePostMetaInDatabase(
+			[
+				'post_id'  => $result['product_id'],
+				'meta_key' => '_regular_price',
+			]
+		);
+		$I->havePostmetaInDatabase($result['product_id'], '_price', 25);
+		$I->havePostmetaInDatabase($result['product_id'], '_regular_price', 25);
+
+		// Change Order Status = Completed.
+		$I->wooCommerceChangeOrderStatus(
+			$I,
+			orderID: $result['order_id'],
+			orderStatus: 'wc-completed'
+		);
+
+		// Confirm that the purchase was added to ConvertKit.
+		$I->apiCheckPurchaseExists(
+			$I,
+			orderID: $result['order_id'],
+			emailAddress: $result['email_address'],
+			productID: $result['product_id']
+		);
+
+		// Confirm the Product's unit price is the price paid in the Order, not its current price.
+		$request = $I->grabKitAPIPurchaseRequest($I, $result['order_id']);
+		$I->assertEquals(10, $request['body']['products'][0]['unit_price']);
 	}
 
 	/**
