@@ -483,14 +483,14 @@ class SyncPastOrdersHPOSCest
 		$I->dontSee('Disconnect');
 		$I->dontSeeElementInDOM('button.woocommerce-save-button');
 
-		// Confirm that the purchase was not added to ConvertKit.
-		// Loading the screen starts the sync, which sends purchase data that the API rejects
-		// because the access token is invalid, so failed requests are ignored.
+		// Wait a few seconds, in case the sync starts.
+		$I->wait(5);
+
+		// Confirm that the purchase data was not sent to Kit.
 		$I->apiCheckPurchaseDoesNotExist(
 			$I,
 			orderID: $result['order_id'],
-			emailAddress: $result['email_address'],
-			ignoreFailedRequests: true
+			emailAddress: $result['email_address']
 		);
 	}
 
