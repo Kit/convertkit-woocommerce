@@ -13,6 +13,11 @@
  */
 function ckwcSyncPastOrders() {
 	(function ($) {
+		// Don't start the sync if the Sync Past Orders screen isn't displayed e.g. invalid credentials.
+		if (!$('#progress-bar').length) {
+			return;
+		}
+
 		$('#progress-bar').synchronous_request({
 			url: ckwc_sync_past_orders.url,
 			number_requests: ckwc_sync_past_orders.number_of_requests,
