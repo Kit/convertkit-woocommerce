@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.1
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,6 +48,16 @@ Please report security bugs found in the source code of the plugin through the [
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 2.2.2 2026-10-15
+* Fix: Purchase Data: Send the price paid for each Product, instead of the Product's current price
+* Fix: Purchase Data: Don't add a success Order Note when updating the subscriber's Custom Fields fails
+* Fix: Sync Past Orders: Don't report an Order as failed when updating the subscriber's Custom Fields fails
+* Fix: Sync Past Orders: Display Kit Purchase ID when HPOS is enabled
+* Fix: Sync Past Orders: Permit Shop Managers to sync past Orders
+* Fix: Sync Past Orders: Don't start sync when credentials are invalid
+* Fix: Subscribe: Fatal error when an Order contains a deleted Product
+* Updated: WordPress Libraries to 2.8.0
 
 ### 2.2.1 2026-10-05
 * Fix: OAuth: Connect: Check user has required permissions
