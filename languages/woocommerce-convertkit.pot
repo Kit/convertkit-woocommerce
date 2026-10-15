@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 2.2.1\n"
+"Project-Id-Version: Kit (formerly ConvertKit) for WooCommerce 2.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/convertkit-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-05T04:11:21+00:00\n"
+"POT-Creation-Date: 2026-10-14T08:26:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: woocommerce-convertkit\n"
@@ -587,77 +587,77 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: Resource Type
-#: includes/class-ckwc-order.php:289
+#: includes/class-ckwc-order.php:294
 #, php-format
 msgid "Resource type %s is not supported in CKWC_Order::subscribe_customer()"
 msgstr ""
 
 #. translators: %1$s: Form Name, %2$s: Form ID
-#: includes/class-ckwc-order.php:322
+#: includes/class-ckwc-order.php:327
 #, php-format
 msgid "[Kit] Customer subscribed to the Form: %1$s [%2$s]"
 msgstr ""
 
 #. translators: %1$s: Tag Name, %2$s: Tag ID
-#: includes/class-ckwc-order.php:339
+#: includes/class-ckwc-order.php:344
 #, php-format
 msgid "[Kit] Customer subscribed to the Tag: %1$s [%2$s]"
 msgstr ""
 
 #. translators: %1$s: Sequence Name, %2$s: Sequence ID
-#: includes/class-ckwc-order.php:357
+#: includes/class-ckwc-order.php:362
 #, php-format
 msgid "[Kit] Customer subscribed to the Sequence: %1$s [%2$s]"
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:417
+#: includes/class-ckwc-order.php:422
 #, php-format
 msgid "Order ID #%s could not be found in WooCommerce."
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:429
+#: includes/class-ckwc-order.php:434
 #, php-format
 msgid "Order ID #%s is a refund. Skipping..."
 msgstr ""
 
 #. translators: WooCommerce Order ID
-#: includes/class-ckwc-order.php:443
+#: includes/class-ckwc-order.php:448
 #, php-format
 msgid "Order ID #%s has already been sent to Kit."
 msgstr ""
 
-#: includes/class-ckwc-order.php:474
+#: includes/class-ckwc-order.php:479
 msgid "[Kit] Purchase Data skipped, as this Order has no Products"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:545
+#: includes/class-ckwc-order.php:550
 #, php-format
 msgid "[Kit] Send Purchase Data Error: %1$s %2$s"
 msgstr ""
 
 #. translators: ConvertKit Purchase ID
-#: includes/class-ckwc-order.php:561
+#: includes/class-ckwc-order.php:566
 #, php-format
 msgid "[Kit] Purchase Data sent successfully: ID [%s]"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:586
+#: includes/class-ckwc-order.php:591
 #, php-format
 msgid "[Kit] Purchase Data: Custom Fields: No subscriber found for email address %s"
 msgstr ""
 
 #. translators: %1$s: Error Code, %2$s: Error Message
-#: includes/class-ckwc-order.php:607
+#: includes/class-ckwc-order.php:613
 #, php-format
 msgid "[Kit] Purchase Data: Custom Fields: Update Subscriber Error: %1$s %2$s"
 msgstr ""
 
 #. translators: ConvertKit Subscriber ID
-#: includes/class-ckwc-order.php:618
+#: includes/class-ckwc-order.php:626
 #, php-format
 msgid "[Kit] Purchase Data: Custom Fields sent successfully: Subscriber ID [%s]"
 msgstr ""
