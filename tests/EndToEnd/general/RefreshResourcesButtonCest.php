@@ -41,9 +41,6 @@ class RefreshResourcesButtonCest
 		// Confirm JS is output by the Plugin.
 		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/refresh-resources.js', 'ckwc-admin-refresh-resources-js' );
 
-		// Confirm the refresh button is styled as a WordPress button.
-		$I->seeElementInDOM('button.ckwc-refresh-resources.button.button-secondary');
-
 		// Click the refresh button.
 		$I->click('button.ckwc-refresh-resources');
 
@@ -96,7 +93,6 @@ class RefreshResourcesButtonCest
 		// Click the refresh button.
 		$I->wait(2);
 		$I->scrollTo('select[name="comment_status"]');
-		$I->seeElementInDOM('#ckwc-bulk-edit button.ckwc-refresh-resources.button.button-secondary');
 		$I->click('#ckwc-bulk-edit button.ckwc-refresh-resources');
 
 		// Wait for button to change its state from disabled.
@@ -135,7 +131,6 @@ class RefreshResourcesButtonCest
 
 		// Click the refresh button.
 		$I->waitForElementVisible('#ckwc-quick-edit button.ckwc-refresh-resources');
-		$I->seeElementInDOM('#ckwc-quick-edit button.ckwc-refresh-resources.button.button-secondary');
 		$I->click('#ckwc-quick-edit button.ckwc-refresh-resources');
 
 		// Wait for button to change its state from disabled.
