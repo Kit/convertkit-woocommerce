@@ -279,10 +279,15 @@ class CKWC_Checkout {
 	 *
 	 * @since   1.7.1
 	 *
-	 * @param   WC_Order $order   WooCommerce Order.
-	 * @param   bool     $checkbox_checked  Whether the opt in checkbox was checked.
+	 * @param   bool|WC_Order $order             WooCommerce Order.
+	 * @param   bool          $checkbox_checked  Whether the opt in checkbox was checked.
 	 */
 	private function save_opt_in_for_order( $order, $checkbox_checked = false ) {
+
+		// Bail if no Order was found e.g. a third party Plugin called the action with an invalid ID.
+		if ( ! $order instanceof WC_Order ) {
+			return;
+		}
 
 		// Bail if the given Order ID isn't for a WooCommerce Order.
 		// Third party Plugins e.g. WooCommerce Subscriptions may call the `woocommerce_checkout_update_order_meta`
