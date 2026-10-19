@@ -60,6 +60,7 @@ class CKWC_Abandoned_Cart {
 
 		// Clear the abandoned cart when the checkout is completed.
 		add_action( 'woocommerce_checkout_order_processed', array( $this, 'clear_abandoned_cart' ), 10, 3 );
+		add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'clear_abandoned_cart_block' ) );
 
 		// Enqueue the abandoned cart script.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -176,6 +177,19 @@ class CKWC_Abandoned_Cart {
 
 		// Remove tag from subscriber.
 		$api->remove_tag_from_subscriber_by_email( absint( $tag_id ), $email );
+
+	}
+
+	/**
+	 * Clear the abandoned cart when the checkout is completed using the Checkout block.
+	 *
+	 * @since   2.2.3
+	 *
+	 * @param   WC_Order $order  WooCommerce Order object.
+	 */
+	public function clear_abandoned_cart_block( $order ) {
+
+		$this->clear_abandoned_cart( $order->get_id(), array(), $order );
 
 	}
 
