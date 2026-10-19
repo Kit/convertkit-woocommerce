@@ -13,7 +13,7 @@
 	require CKWC_PLUGIN_PATH . '/views/backend/subscription-dropdown-field.php';
 	?>
 
-	<button class="ckwc-refresh-resources" class="button button-secondary" title="<?php esc_attr_e( 'Refresh sequences, forms and tags from Kit account', 'woocommerce-convertkit' ); ?>" data-field="#<?php echo esc_attr( $subscription['id'] ); ?>">
+	<button class="ckwc-refresh-resources button button-secondary" title="<?php esc_attr_e( 'Refresh sequences, forms and tags from Kit account', 'woocommerce-convertkit' ); ?>" data-field="#<?php echo esc_attr( $subscription['id'] ); ?>">
 		<span class="dashicons dashicons-update"></span>
 	</button>
 </div>
