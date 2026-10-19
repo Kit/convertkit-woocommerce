@@ -55,11 +55,6 @@
 	align-items: end;
 }
 
-/* Fill the remaining width, so the refresh button isn't pushed outside of the container */
-.ckwc-select2-container-grid .select2-container {
-	width: 100% !important;
-}
-
 @media screen and (max-width: 782px) {
 
 	.ckwc-select2-container select + .select2-container {
