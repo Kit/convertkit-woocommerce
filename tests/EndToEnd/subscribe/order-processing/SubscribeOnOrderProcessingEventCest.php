@@ -83,6 +83,62 @@ class SubscribeOnOrderProcessingEventCest
 	}
 
 	/**
+	 * Test that an Order Note is added with the error message when:
+	 * - The opt in checkbox is enabled in the integration Settings, and
+	 * - The opt in checkbox is checked on the WooCommerce checkout, and
+	 * - The Customer purchases a 'Simple' WooCommerce Product, and
+	 * - The Kit API fails to create the subscriber before adding them to the Form.
+	 *
+	 * @since   2.2.3
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testOptInWhenCheckedWithFormAndCreateSubscriberFails(EndToEndTester $I)
+	{
+		// Make the Kit API reject requests to create a subscriber.
+		$I->haveMuPlugin(
+			'kit-api-fail-create-subscriber.php',
+			<<<'PHP'
+			add_filter(
+				'pre_http_request',
+				function ( $pre, $args, $url ) {
+					if ( $args['method'] !== 'POST' || strtok( $url, '?' ) !== 'https://api.kit.com/v4/subscribers' ) {
+						return $pre;
+					}
+					return array(
+						'headers'  => array(),
+						'body'     => wp_json_encode( array( 'errors' => array( 'Subscriber could not be created.' ) ) ),
+						'response' => array( 'code' => 422, 'message' => 'Unprocessable Entity' ),
+						'cookies'  => array(),
+						'filename' => null,
+					);
+				},
+				10,
+				3
+			);
+			PHP
+		);
+
+		// Create Product and Checkout for this test.
+		$result = $I->wooCommerceCreateProductAndCheckoutWithConfig(
+			$I,
+			[
+				'display_opt_in'           => true,
+				'check_opt_in'             => true,
+				'plugin_form_tag_sequence' => 'form:' . $_ENV['CONVERTKIT_API_FORM_ID'],
+				'subscription_event'       => 'processing',
+			]
+		);
+
+		// Confirm that the email address was not added to Kit.
+		$I->apiCheckSubscriberDoesNotExist($I, $result['email_address']);
+
+		// Check that the Order's Notes include the error, and not a note confirming the Customer was subscribed to the Form.
+		$I->wooCommerceOrderNoteExists($I, $result['order_id'], 'Subscriber could not be created.');
+		$I->wooCommerceOrderNoteDoesNotExist($I, $result['order_id'], 'Customer subscribed to the Form');
+	}
+
+	/**
 	 * Test that the Customer is NOT subscribed to ConvertKit when:
 	 * - The opt in checkbox is enabled in the integration Settings, and
 	 * - The opt in checkbox is unchecked on the WooCommerce checkout, and
