@@ -50,7 +50,7 @@
 /* Align select and refresh button onto a single row */
 .ckwc-select2-container-grid {
 	display: grid;
-	grid-template-columns: auto 36px;
+	grid-template-columns: minmax(0, 1fr) 36px;
 	column-gap: 10px;
 	align-items: end;
 }
