@@ -186,8 +186,8 @@ class AbandonedCartCest
 	}
 
 	/**
-	 * Test that the subscriber is tagged when the cart is abandoned
-	 * using the Checkout block.
+	 * Test that the subscriber is tagged when the cart is abandoned using the Checkout block,
+	 * and the tag is removed when the customer completes the checkout process.
 	 *
 	 * @since   2.2.3
 	 *
@@ -251,6 +251,40 @@ class AbandonedCartCest
 
 		// Confirm the subscriber has the expected abandoned cart tag.
 		$I->apiCheckSubscriberHasTag($I, $subscriber['id'], $_ENV['CONVERTKIT_API_TAG_ID']);
+
+		// Logout as the WordPress Administrator.
+		$I->logOut();
+
+		// Add Product to Cart and load the Checkout block, completing fields.
+		$I->wooCommerceCheckoutWithProduct(
+			$I,
+			productID: $productID,
+			productName: $productName,
+			emailAddress: $emailAddress,
+			useLegacyCheckout: false
+		);
+
+		// Click Place order button.
+		$I->click('button.wc-block-components-checkout-place-order-button');
+
+		// WooCommerce has a bug where clicking the Place Order button the first time doesn't do anything,
+		// so click it again if it's still visible.
+		try {
+			$I->wait(2);
+			$I->seeElement('button.wc-block-components-checkout-place-order-button');
+			$I->click('button.wc-block-components-checkout-place-order-button');
+		} catch (\Exception $e) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			// Don't throw an error. Continue through the assertions.
+		}
+
+		// Wait until the Order is received.
+		$I->waitForElement('body.woocommerce-order-received', 30);
+
+		// Login as the WordPress Administrator.
+		$I->doLoginAsAdmin($I);
+
+		// Check that the subscriber no longer has the tag.
+		$I->apiCheckSubscriberHasNoTags($I, $subscriber['id']);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
