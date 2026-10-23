@@ -8,14 +8,18 @@ jQuery(document).ready(function ($) {
 	// Set timeout flag to prevent multiple requests.
 	let ckwcAbandonedCartTimeout = null;
 
+	// Email field selectors for the checkout shortcode and Checkout block, scoped to the WooCommerce checkout.
+	const ckwcEmailFields =
+		'.woocommerce-checkout #billing_email, .wp-block-woocommerce-checkout #email';
+
 	// Check and store initial email, if valid.
-	const initialEmail = $('#billing_email').val();
+	const initialEmail = $(ckwcEmailFields).val();
 	if (ckwcIsValidEmail(initialEmail)) {
 		ckwcStoreEmailInSession(initialEmail);
 	}
 
 	// Listen for changes / input to the email field at checkout.
-	$(document).on('input change', '#billing_email', function () {
+	$(document).on('input change', ckwcEmailFields, function () {
 		const email = $(this).val();
 
 		// If email is valid, store in session.
