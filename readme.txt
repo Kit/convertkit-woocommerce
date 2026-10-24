@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.1
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,6 +48,13 @@ Please report security bugs found in the source code of the plugin through the [
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 2.2.3 2026-10-26
+* Fix: Subscribe: Add Order Note when creating the subscriber for a Form fails
+* Fix: Checkout: Fatal error when saving the opt in for an invalid Order ID
+* Fix: Abandoned Cart: Store email address entered in the Checkout block
+* Fix: Abandoned Cart: Remove tag when the Order is placed using the Checkout block
+* Fix: Refresh Resources: Button displayed outside of its container
 
 ### 2.2.2 2026-10-15
 * Fix: Purchase Data: Send the price paid for each Product, instead of the Product's current price
