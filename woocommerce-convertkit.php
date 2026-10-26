@@ -32,7 +32,7 @@ define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
 define( 'CKWC_PLUGIN_VERSION', '2.2.3' );
 define( 'CKWC_OAUTH_CLIENT_ID', 'NXMHMATeDPobWYsPZkoWODM6vPb1eB15IeUqt_Jyjjc' );
-define( 'CKWC_APP_SERVER_URL', 'https://nonmeditatively-propagative-jan.ngrok-free.dev' ); // Kit App Store app server.
+define( 'CKWC_APP_SERVER_URL', 'https://kit-wp-app-server-production-d4wcia.laravel.cloud' ); // Kit App Store app server.
 define( 'CKWC_OAUTH_CLIENT_REDIRECT_URI', CKWC_APP_SERVER_URL . '/kit/api/callback' );
 define( 'CKWC_NONCE_ACTION_OAUTH_CONNECT', 'ckwc-oauth-connect' );
 define( 'CKWC_NONCE_ACTION_OAUTH_DISCONNECT', 'ckwc-oauth-disconnect' );
