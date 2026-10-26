@@ -91,6 +91,7 @@ class CKWC_Integration extends WC_Integration {
 			// Perform OAuth and export configuration options, if required.
 			add_action( 'admin_init', array( $this, 'maybe_disconnect' ), 1 );
 			add_action( 'admin_init', array( $this, 'maybe_get_and_store_access_token' ), 2 );
+			add_action( 'admin_init', array( $this, 'maybe_connect_via_app_server' ), 2 );
 			add_action( 'admin_init', array( $this, 'maybe_export_configuration' ), 3 );
 
 			// Enqueue JS and CSS.
@@ -285,9 +286,38 @@ class CKWC_Integration extends WC_Integration {
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
 		$this->update_option( 'token_expires', ( time() + $result['expires_in'] ) );
 
-		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
-		// is now authenticated.
-		wp_safe_redirect( ckwc_get_settings_link() );
+		// Return to the app server to complete the Kit App Store install, which then
+		// redirects to the Plugin's settings.
+		wp_safe_redirect( CKWC_APP_SERVER_URL . '/kit/complete' );
+		exit();
+
+	}
+
+	/**
+	 * Begins OAuth if the Kit App Store app server requests it, when the Kit app
+	 * was installed from the Kit App Store.
+	 *
+	 * @since   2.3.0
+	 */
+	public function maybe_connect_via_app_server() {
+
+		// Bail if we're not on the integration screen.
+		if ( ! $this->get_integration_screen_name() ) {
+			return;
+		}
+
+		// Bail if the app server didn't request a connection.
+		if ( ! array_key_exists( 'kit_app_connect', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+
+		// Bail if the user isn't permitted to manage WooCommerce settings.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		// Begin OAuth, which the app server continues with Kit.
+		wp_safe_redirect( ckwc_get_oauth_connect_url( new CKWC_API( CKWC_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI ) ) );
 		exit();
 
 	}
