@@ -13,6 +13,12 @@ zip -r convertkit-for-woocommerce.zip . \
 -x ".scripts/*" \
 -x ".wordpress-org/*" \
 -x "log/*" \
+-x "log.txt" \
+-x "node_modules/*" \
+-x "package.json" \
+-x "package-lock.json" \
+-x ".stylelintrc.json" \
+-x ".eslintrc.js" \
 -x "tests/*" \
 -x "vendor/composer/*" \
 -x "vendor/convertkit/convertkit-wordpress-libraries/.github" \
