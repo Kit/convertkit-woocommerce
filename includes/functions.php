@@ -173,8 +173,21 @@ function ckwc_get_oauth_return_url() {
 
 }
 
+/**
+ * Returns the Kit App Store app server instance.
+ *
+ * @since   2.3.0
+ *
+ * @return  ConvertKit_App_Server
+ */
+function ckwc_get_app_server() {
+
+	return new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL );
+
+}
+
 // Permit redirects to the Kit App Store app server.
-add_filter( 'allowed_redirect_hosts', array( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ), 'allowed_redirect_hosts' ) );
+add_filter( 'allowed_redirect_hosts', array( ckwc_get_app_server(), 'allowed_redirect_hosts' ) );
 
 /**
  * Helper method to enqueue Select2 scripts for use within the ConvertKit Plugin.

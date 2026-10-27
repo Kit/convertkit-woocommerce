@@ -64,7 +64,7 @@ class CKWC_Admin_Notices {
 						esc_html__( 'Kit for WooCommerce: Authorization failed. Please', 'woocommerce-convertkit' ),
 						sprintf(
 							'<a href="%s">%s</a>',
-							esc_url( ( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ) )->get_connect_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ) ),
+							esc_url( ckwc_get_app_server()->get_connect_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ) ),
 							esc_html__( 'connect your Kit account.', 'woocommerce-convertkit' )
 						)
 					);

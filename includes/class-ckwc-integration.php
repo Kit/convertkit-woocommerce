@@ -204,7 +204,7 @@ class CKWC_Integration extends WC_Integration {
 		}
 
 		// Unregister this site from the Kit App Store app server, while the access token is still valid.
-		$response = ( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ) )->unregister_site( $this->get_access_token() );
+		$response = ckwc_get_app_server()->unregister_site( $this->get_access_token() );
 
 		// If other sites are still connected, only delete this site's credentials, as revoking the tokens
 		// would uninstall the Kit app for all sites.
@@ -300,14 +300,14 @@ class CKWC_Integration extends WC_Integration {
 		$this->update_option( 'token_expires', ( time() + $result['expires_in'] ) );
 
 		// Register this site with the Kit App Store app server, storing the site secret it returns.
-		$response = ( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ) )->register_site( $result['access_token'] );
+		$response = ckwc_get_app_server()->register_site( $result['access_token'] );
 		if ( ! is_wp_error( $response ) && isset( $response['site_secret'] ) ) {
 			$this->update_option( 'app_server_site_secret', sanitize_text_field( $response['site_secret'] ) );
 		}
 
 		// Return to the app server to complete the Kit App Store install, which then
 		// redirects to the Plugin's settings.
-		wp_safe_redirect( ( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ) )->get_complete_url() );
+		wp_safe_redirect( ckwc_get_app_server()->get_complete_url() );
 		exit();
 
 	}
@@ -330,7 +330,7 @@ class CKWC_Integration extends WC_Integration {
 			return false;
 		}
 
-		$result = ( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ) )->send_automation_event( $site_secret, $type, $subscriber_id, $context );
+		$result = ckwc_get_app_server()->send_automation_event( $site_secret, $type, $subscriber_id, $context );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -364,7 +364,7 @@ class CKWC_Integration extends WC_Integration {
 
 		// Begin OAuth, which the app server continues with Kit.
 		$api = new CKWC_API( CKWC_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI );
-		wp_safe_redirect( ( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ) )->get_connect_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ) );
+		wp_safe_redirect( ckwc_get_app_server()->get_connect_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ) );
 		exit();
 
 	}
