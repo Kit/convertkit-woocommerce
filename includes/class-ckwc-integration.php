@@ -313,6 +313,64 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
+	 * Sends an automation event to the Kit App Store app server, which Kit polls for its event nodes.
+	 *
+	 * @since   2.3.0
+	 *
+	 * @param   string $type           Event type (abandoned_checkout, product_purchased).
+	 * @param   int    $subscriber_id  Kit Subscriber ID.
+	 * @param   array  $context        Event data, available in Kit emails as Liquid.
+	 * @return  bool|WP_Error
+	 */
+	public function send_automation_event( $type, $subscriber_id, $context = array() ) {
+
+		// Bail if this site isn't registered with the app server.
+		$site_secret = $this->get_option( 'app_server_site_secret' );
+		if ( empty( $site_secret ) ) {
+			return false;
+		}
+
+		$response = wp_remote_post(
+			CKWC_APP_SERVER_URL . '/api/automation-events',
+			array(
+				'timeout' => 10,
+				'headers' => array(
+					'Accept'        => 'application/json',
+					'Content-Type'  => 'application/json',
+					'Authorization' => 'Bearer ' . $site_secret,
+				),
+				'body'    => wp_json_encode(
+					array(
+						'site_url'      => get_site_url(),
+						'client_id'     => CKWC_OAUTH_CLIENT_ID,
+						'type'          => $type,
+						'subscriber_id' => absint( $subscriber_id ),
+						'context'       => ! empty( $context ) ? $context : null,
+					)
+				),
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		if ( 201 !== wp_remote_retrieve_response_code( $response ) ) {
+			return new WP_Error(
+				'ckwc_app_server_error',
+				sprintf(
+					/* translators: HTTP response code */
+					__( 'Kit App Store app server returned HTTP %s', 'woocommerce-convertkit' ),
+					wp_remote_retrieve_response_code( $response )
+				)
+			);
+		}
+
+		return true;
+
+	}
+
+	/**
 	 * Registers or unregisters this site with the Kit App Store app server, authenticating
 	 * with this site's Kit access token.
 	 *

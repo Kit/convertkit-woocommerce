@@ -150,14 +150,6 @@ class CKWC_Abandoned_Cart {
 		WC()->session->__unset( 'ckwc_abandoned_cart_email' );
 		WC()->session->__unset( 'ckwc_abandoned_cart_timestamp' );
 
-		// Get tag ID from the integration's setting.
-		$subscription = $this->integration->get_option( 'abandoned_cart_subscription' );
-
-		// Bail if no subscription is configured.
-		if ( empty( $subscription ) ) {
-			return;
-		}
-
 		// Get email address from order.
 		// We don't use the session data here, as the Action Scheduler may have triggered the abandoned cart
 		// function, which itself clears session data to ensure subscribers aren't repetitively tagged.
@@ -171,6 +163,22 @@ class CKWC_Abandoned_Cart {
 			$this->integration->get_option( 'refresh_token' ),
 			$this->integration->get_option_bool( 'debug' )
 		);
+
+		// Send the product purchased event for Kit's automation event node, if the customer is a subscriber.
+		if ( ! empty( $this->integration->get_option( 'app_server_site_secret' ) ) ) {
+			$subscriber_id = $api->get_subscriber_id( $email );
+			if ( $subscriber_id && ! is_wp_error( $subscriber_id ) ) {
+				$this->integration->send_automation_event( 'product_purchased', $subscriber_id, ckwc_get_order_context( $order ) );
+			}
+		}
+
+		// Get tag ID from the integration's setting.
+		$subscription = $this->integration->get_option( 'abandoned_cart_subscription' );
+
+		// Bail if no subscription is configured.
+		if ( empty( $subscription ) ) {
+			return;
+		}
 
 		// Get the resource type and ID.
 		list( $resource_type, $tag_id ) = explode( ':', $subscription );

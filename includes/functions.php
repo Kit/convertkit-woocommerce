@@ -326,6 +326,111 @@ function ckwc_delete_credentials( $client_id ) {
 
 }
 
+/**
+ * Returns the abandoned_checkout automation event context for a WooCommerce session's cart.
+ *
+ * @since   2.3.0
+ *
+ * @param   array $session_data   WooCommerce session data.
+ * @return  array
+ */
+function ckwc_get_abandoned_cart_context( $session_data ) {
+
+	$cart    = maybe_unserialize( isset( $session_data['cart'] ) ? $session_data['cart'] : '' );
+	$totals  = maybe_unserialize( isset( $session_data['cart_totals'] ) ? $session_data['cart_totals'] : '' );
+	$coupons = maybe_unserialize( isset( $session_data['applied_coupons'] ) ? $session_data['applied_coupons'] : '' );
+
+	$products = array();
+	foreach ( is_array( $cart ) ? $cart : array() as $item ) {
+		$product = wc_get_product( ! empty( $item['variation_id'] ) ? $item['variation_id'] : $item['product_id'] );
+		if ( ! $product ) {
+			continue;
+		}
+
+		$quantity   = absint( $item['quantity'] );
+		$products[] = ckwc_get_automation_event_product( $product, $quantity, $quantity ? floatval( $item['line_subtotal'] ) / $quantity : 0 );
+	}
+
+	return array(
+		'checkout_url'   => wc_get_checkout_url(),
+		'products'       => array_slice( $products, 0, 20 ),
+		'subtotal'       => ckwc_format_price( is_array( $totals ) && isset( $totals['subtotal'] ) ? $totals['subtotal'] : 0 ),
+		'discount_codes' => is_array( $coupons ) ? array_values( $coupons ) : array(),
+		'total'          => ckwc_format_price( is_array( $totals ) && isset( $totals['total'] ) ? $totals['total'] : 0 ),
+	);
+
+}
+
+/**
+ * Returns the product_purchased automation event context for a WooCommerce Order.
+ *
+ * @since   2.3.0
+ *
+ * @param   WC_Order $order  WooCommerce Order.
+ * @return  array
+ */
+function ckwc_get_order_context( $order ) {
+
+	$products = array();
+	foreach ( $order->get_items() as $item ) {
+		if ( ! $item->get_product() ) {
+			continue;
+		}
+
+		$products[] = ckwc_get_automation_event_product( $item->get_product(), $item->get_quantity(), $order->get_item_subtotal( $item, false, true ), $order->get_currency() );
+	}
+
+	return array(
+		'order_id'       => $order->get_order_number(),
+		'products'       => array_slice( $products, 0, 20 ),
+		'subtotal'       => ckwc_format_price( $order->get_subtotal(), $order->get_currency() ),
+		'discount_codes' => array_values( $order->get_coupon_codes() ),
+		'total'          => ckwc_format_price( $order->get_total(), $order->get_currency() ),
+	);
+
+}
+
+/**
+ * Returns a Product's automation event data.
+ *
+ * @since   2.3.0
+ *
+ * @param   WC_Product $product   WooCommerce Product.
+ * @param   int        $quantity  Quantity.
+ * @param   float      $price     Unit price.
+ * @param   string     $currency  Currency code (defaults to the store's currency).
+ * @return  array
+ */
+function ckwc_get_automation_event_product( $product, $quantity, $price, $currency = '' ) {
+
+	$description = $product->get_short_description() ? $product->get_short_description() : $product->get_description();
+
+	return array(
+		'name'        => $product->get_name(),
+		'quantity'    => $quantity,
+		'price'       => ckwc_format_price( $price, $currency ),
+		'description' => mb_substr( trim( html_entity_decode( wp_strip_all_tags( $description ), ENT_QUOTES, 'UTF-8' ) ), 0, 300 ),
+		'image_url'   => $product->get_image_id() ? (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_thumbnail' ) : '',
+		'url'         => $product->get_permalink(),
+	);
+
+}
+
+/**
+ * Returns a price as plain text, e.g. $29.99.
+ *
+ * @since   2.3.0
+ *
+ * @param   float  $amount    Amount.
+ * @param   string $currency  Currency code (defaults to the store's currency).
+ * @return  string
+ */
+function ckwc_format_price( $amount, $currency = '' ) {
+
+	return html_entity_decode( wp_strip_all_tags( wc_price( $amount, array( 'currency' => $currency ) ) ), ENT_QUOTES, 'UTF-8' );
+
+}
+
 // Update Access Token when refreshed by the API class.
 add_action( 'convertkit_api_get_access_token', 'ckwc_maybe_update_credentials', 10, 2 );
 add_action( 'convertkit_api_refresh_token', 'ckwc_maybe_update_credentials', 10, 2 );
