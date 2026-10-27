@@ -16,7 +16,7 @@
 		</p>
 
 		<p class="submit">
-			<a href="<?php echo esc_url( ckwc_get_oauth_connect_url( $api ) ); ?>" class="button button-primary"><?php esc_html_e( 'Connect', 'woocommerce-convertkit' ); ?></a>
+			<a href="<?php echo esc_url( ( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ) )->get_connect_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ) ); ?>" class="button button-primary"><?php esc_html_e( 'Connect', 'woocommerce-convertkit' ); ?></a>
 		</p>
 	</div><!-- .postbox -->
 

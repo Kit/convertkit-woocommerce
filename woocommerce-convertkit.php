@@ -47,6 +47,9 @@ if ( ! class_exists( 'ConvertKit_API_V4' ) ) {
 if ( ! class_exists( 'ConvertKit_Resource_V4' ) ) {
 	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource-v4.php';
 }
+if ( ! class_exists( 'ConvertKit_App_Server' ) ) {
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-app-server.php';
+}
 if ( ! class_exists( 'ConvertKit_Review_Request' ) ) {
 	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-review-request.php';
 }

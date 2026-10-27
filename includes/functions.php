@@ -173,43 +173,8 @@ function ckwc_get_oauth_return_url() {
 
 }
 
-/**
- * Returns the URL the Connect button links to, to begin the OAuth process.
- *
- * The creator is sent to the Kit App Store app server to install the Kit app,
- * which then continues this Plugin's OAuth request.
- *
- * @since   2.3.0
- *
- * @param   CKWC_API $api  API instance.
- * @return  string          Connect URL
- */
-function ckwc_get_oauth_connect_url( $api ) {
-
-	return add_query_arg(
-		array(
-			'authorize_url' => rawurlencode( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ),
-		),
-		CKWC_APP_SERVER_URL . '/connect/start'
-	);
-
-}
-
-/**
- * Permits redirecting to the Kit App Store app server.
- *
- * @since   2.3.0
- *
- * @param   array $hosts  Allowed redirect hosts.
- * @return  array          Allowed redirect hosts
- */
-function ckwc_allowed_redirect_hosts( $hosts ) {
-
-	$hosts[] = wp_parse_url( CKWC_APP_SERVER_URL, PHP_URL_HOST );
-	return $hosts;
-
-}
-add_filter( 'allowed_redirect_hosts', 'ckwc_allowed_redirect_hosts' );
+// Permit redirects to the Kit App Store app server.
+add_filter( 'allowed_redirect_hosts', array( new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL ), 'allowed_redirect_hosts' ) );
 
 /**
  * Helper method to enqueue Select2 scripts for use within the ConvertKit Plugin.
