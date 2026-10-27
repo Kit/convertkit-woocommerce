@@ -43,6 +43,11 @@ class CKWC_Abandoned_Cart {
 			return;
 		}
 
+		// If this site isn't registered with the Kit App Store app server, don't load any other actions or filters.
+		if ( empty( $this->integration->get_option( 'app_server_site_secret' ) ) ) {
+			return;
+		}
+
 		// Track the abandoned cart when products are added, edited or removed from the cart.
 		add_action( 'woocommerce_add_to_cart', array( $this, 'track_abandoned_cart' ) );
 		add_action( 'woocommerce_after_cart_item_quantity_update', array( $this, 'track_abandoned_cart' ) );
@@ -135,8 +140,8 @@ class CKWC_Abandoned_Cart {
 	}
 
 	/**
-	 * Clear the abandoned cart session data, and removes the abandoned cart tag from the subscriber
-	 * in Kit.
+	 * Clear the abandoned cart session data, and send the product purchased event to Kit
+	 * if the customer is a subscriber.
 	 *
 	 * @since   2.0.5
 	 *
@@ -150,11 +155,6 @@ class CKWC_Abandoned_Cart {
 		WC()->session->__unset( 'ckwc_abandoned_cart_email' );
 		WC()->session->__unset( 'ckwc_abandoned_cart_timestamp' );
 
-		// Get email address from order.
-		// We don't use the session data here, as the Action Scheduler may have triggered the abandoned cart
-		// function, which itself clears session data to ensure subscribers aren't repetitively tagged.
-		$email = $order->get_billing_email();
-
 		// Setup the API.
 		$api = new CKWC_API(
 			CKWC_OAUTH_CLIENT_ID,
@@ -165,26 +165,11 @@ class CKWC_Abandoned_Cart {
 		);
 
 		// Send the product purchased event for Kit's automation event node, if the customer is a subscriber.
-		if ( ! empty( $this->integration->get_option( 'app_server_site_secret' ) ) ) {
-			$subscriber_id = $api->get_subscriber_id( $email );
-			if ( $subscriber_id && ! is_wp_error( $subscriber_id ) ) {
-				$this->integration->send_automation_event( 'product_purchased', $subscriber_id, ckwc_get_order_context( $order ) );
-			}
+		// We use the order's email, as the Action Scheduler may have already cleared the session's email.
+		$subscriber_id = $api->get_subscriber_id( $order->get_billing_email() );
+		if ( $subscriber_id && ! is_wp_error( $subscriber_id ) ) {
+			$this->integration->send_automation_event( 'product_purchased', $subscriber_id, ckwc_get_order_context( $order ) );
 		}
-
-		// Get tag ID from the integration's setting.
-		$subscription = $this->integration->get_option( 'abandoned_cart_subscription' );
-
-		// Bail if no subscription is configured.
-		if ( empty( $subscription ) ) {
-			return;
-		}
-
-		// Get the resource type and ID.
-		list( $resource_type, $tag_id ) = explode( ':', $subscription );
-
-		// Remove tag from subscriber.
-		$api->remove_tag_from_subscriber_by_email( absint( $tag_id ), $email );
 
 	}
 

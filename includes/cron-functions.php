@@ -7,7 +7,7 @@
  */
 
 /**
- * Subscribe abandoned cart emails to the abandoned cart tag
+ * Send abandoned carts to Kit's Abandoned checkout automation event
  * by checking the WooCommerce sessions table.
  *
  * @since   2.0.5
@@ -29,17 +29,9 @@ function ckwc_abandoned_cart() {
 		return;
 	}
 
-	// Bail if no tag is configured, and this site isn't registered with the Kit App Store app server.
-	$subscription = WP_CKWC_Integration()->get_option( 'abandoned_cart_subscription' );
-	$send_events  = ! empty( WP_CKWC_Integration()->get_option( 'app_server_site_secret' ) );
-	if ( empty( $subscription ) && ! $send_events ) {
+	// Bail if this site isn't registered with the Kit App Store app server.
+	if ( empty( WP_CKWC_Integration()->get_option( 'app_server_site_secret' ) ) ) {
 		return;
-	}
-
-	// Get the tag ID.
-	$tag_id = 0;
-	if ( ! empty( $subscription ) ) {
-		list( $resource_type, $tag_id ) = explode( ':', $subscription );
 	}
 
 	// Calculate the threshold.
@@ -74,14 +66,9 @@ function ckwc_abandoned_cart() {
 
 		// Check if cart looks abandoned.
 		if ( $timestamp < $threshold ) {
-			// Create subscriber and tag.
+			// Create subscriber, and send the abandoned checkout event for Kit's automation event node.
 			$subscriber = $api->create_subscriber( $email );
-			if ( $tag_id ) {
-				$api->tag_subscriber_by_email( absint( $tag_id ), $email );
-			}
-
-			// Send the abandoned checkout event for Kit's automation event node.
-			if ( $send_events && ! is_wp_error( $subscriber ) && isset( $subscriber['subscriber']['id'] ) ) {
+			if ( ! is_wp_error( $subscriber ) && isset( $subscriber['subscriber']['id'] ) ) {
 				WP_CKWC_Integration()->send_automation_event( 'abandoned_checkout', $subscriber['subscriber']['id'], ckwc_get_abandoned_cart_context( $session_data ) );
 			}
 

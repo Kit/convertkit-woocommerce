@@ -989,7 +989,7 @@ class CKWC_Integration extends WC_Integration {
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => __(
-					'If enabled, the visitor will be subscribed to a tag in Kit, if they leave items in their cart without completing the checkout process after the below number of minutes. The tag is removed when they complete checkout.',
+					'If enabled, visitors who leave items in their cart without completing the checkout process after the below number of minutes are sent to Kit\'s Abandoned checkout automation event. Use the WooCommerce abandoned checkout automation template in Kit to email them.',
 					'woocommerce-convertkit'
 				),
 				'desc_tip'    => false,
@@ -1014,19 +1014,6 @@ class CKWC_Integration extends WC_Integration {
 					'step' => 1,
 				),
 			),
-			'abandoned_cart_subscription'   => array(
-				'title'             => __( 'Abandoned Cart: Tag', 'woocommerce-convertkit' ),
-				'type'              => 'subscription',
-				'default'           => '',
-				'description'       => __( 'The Kit tag to subscribe visitors to when they abandon their cart. This can be used in a Sequence or Automation to send abandoned cart emails to the subscriber. This tag is removed when the customer completes the checkout process.', 'woocommerce-convertkit' ),
-				'include_forms'     => false,
-				'include_tags'      => true,
-				'include_sequences' => false,
-
-				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'             => 'enabled abandoned_cart',
-			),
-
 			// Debugging.
 			'debug'                         => array(
 				'title'       => __( 'Debug', 'woocommerce-convertkit' ),
