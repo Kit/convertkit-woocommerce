@@ -141,7 +141,7 @@ class CKWC_Abandoned_Cart {
 
 	/**
 	 * Clear the abandoned cart session data, and send the product purchased event to Kit
-	 * if the customer is a subscriber.
+	 * if the customer's cart was sent to Kit as abandoned.
 	 *
 	 * @since   2.0.5
 	 *
@@ -155,21 +155,17 @@ class CKWC_Abandoned_Cart {
 		WC()->session->__unset( 'ckwc_abandoned_cart_email' );
 		WC()->session->__unset( 'ckwc_abandoned_cart_timestamp' );
 
-		// Setup the API.
-		$api = new CKWC_API(
-			CKWC_OAUTH_CLIENT_ID,
-			CKWC_OAUTH_CLIENT_REDIRECT_URI,
-			$this->integration->get_option( 'access_token' ),
-			$this->integration->get_option( 'refresh_token' ),
-			$this->integration->get_option_bool( 'debug' )
-		);
-
-		// Send the product purchased event for Kit's automation event node, if the customer is a subscriber.
+		// Bail if this customer's cart wasn't sent to Kit as abandoned.
 		// We use the order's email, as the Action Scheduler may have already cleared the session's email.
-		$subscriber_id = $api->get_subscriber_id( $order->get_billing_email() );
-		if ( $subscriber_id && ! is_wp_error( $subscriber_id ) ) {
-			$this->integration->send_automation_event( 'product_purchased', $subscriber_id, ckwc_get_order_context( $order ) );
+		$transient     = ckwc_get_abandoned_cart_transient_name( $order->get_billing_email() );
+		$subscriber_id = get_transient( $transient );
+		if ( ! $subscriber_id ) {
+			return;
 		}
+
+		// Send the product purchased event for Kit's automation event node.
+		$this->integration->send_automation_event( 'product_purchased', $subscriber_id, ckwc_get_order_context( $order ) );
+		delete_transient( $transient );
 
 	}
 

@@ -327,6 +327,20 @@ function ckwc_delete_credentials( $client_id ) {
 }
 
 /**
+ * Returns the transient name storing the Kit subscriber ID for an email address whose cart was sent to Kit as abandoned.
+ *
+ * @since   2.3.0
+ *
+ * @param   string $email  Email address.
+ * @return  string
+ */
+function ckwc_get_abandoned_cart_transient_name( $email ) {
+
+	return 'ckwc_abandoned_cart_' . md5( strtolower( trim( $email ) ) );
+
+}
+
+/**
  * Returns the abandoned_checkout automation event context for a WooCommerce session's cart.
  *
  * @since   2.3.0
@@ -410,7 +424,7 @@ function ckwc_get_automation_event_product( $product, $quantity, $price, $curren
 		'quantity'    => $quantity,
 		'price'       => ckwc_format_price( $price, $currency ),
 		'description' => mb_substr( trim( html_entity_decode( wp_strip_all_tags( $description ), ENT_QUOTES, 'UTF-8' ) ), 0, 300 ),
-		'image_url'   => $product->get_image_id() ? (string) wp_get_attachment_image_url( $product->get_image_id(), 'woocommerce_thumbnail' ) : '',
+		'image_url'   => $product->get_image_id() ? (string) wp_get_attachment_image_url( absint( $product->get_image_id() ), 'woocommerce_thumbnail' ) : '',
 		'url'         => $product->get_permalink(),
 	);
 

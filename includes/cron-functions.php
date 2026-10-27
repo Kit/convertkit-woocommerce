@@ -70,6 +70,9 @@ function ckwc_abandoned_cart() {
 			$subscriber = $api->create_subscriber( $email );
 			if ( ! is_wp_error( $subscriber ) && isset( $subscriber['subscriber']['id'] ) ) {
 				WP_CKWC_Integration()->send_automation_event( 'abandoned_checkout', $subscriber['subscriber']['id'], ckwc_get_abandoned_cart_context( $session_data ) );
+
+				// Remember the subscriber, to send the product purchased event if they complete checkout.
+				set_transient( ckwc_get_abandoned_cart_transient_name( $email ), $subscriber['subscriber']['id'], 30 * DAY_IN_SECONDS );
 			}
 
 			// Remove session data so we don't trigger this email again.

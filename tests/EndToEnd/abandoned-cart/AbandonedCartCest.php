@@ -150,7 +150,7 @@ class AbandonedCartCest
 
 		// Confirm the product purchased event was sent for the subscriber.
 		$event = $this->seeProductPurchasedEvent($I, $subscriber['id'], $productName);
-		$I->assertEquals((string) $orderID, (string) $event['body']['context']['order_id']);
+		$I->assertEquals( (string) $orderID, (string) $event['body']['context']['order_id']);
 
 		// Unsubscribe the email address, so we restore the account back to its previous state.
 		$I->apiUnsubscribe($subscriber['id']);
@@ -345,7 +345,7 @@ class AbandonedCartCest
 		$I->assertEquals('POST', $event['method']);
 		$I->assertEquals('Bearer ' . $this->siteSecret, $event['authorization']);
 		$I->assertEquals($_ENV['WORDPRESS_URL'], $event['body']['site_url']);
-		$I->assertEquals((int) $subscriberID, (int) $event['body']['subscriber_id']);
+		$I->assertEquals( (int) $subscriberID, (int) $event['body']['subscriber_id']);
 	}
 
 	/**

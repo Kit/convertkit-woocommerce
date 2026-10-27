@@ -44,7 +44,6 @@ add_filter(
 			'cookies'  => array(),
 			'filename' => null,
 		);
-
 	},
 	10,
 	3
