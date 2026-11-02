@@ -98,19 +98,27 @@ function ckwc_schedule_actions() {
 		return;
 	}
 
-	// Bail if the scheduled action already exists.
-	if ( as_next_scheduled_action( 'ckwc_abandoned_cart' ) ) {
-		return;
+	// Schedule the abandoned cart action, if not already scheduled.
+	if ( ! as_next_scheduled_action( 'ckwc_abandoned_cart' ) ) {
+		as_schedule_recurring_action(
+			time(),
+			15 * MINUTE_IN_SECONDS,
+			'ckwc_abandoned_cart',
+			array(),
+			'ckwc'
+		);
 	}
 
-	// Schedule action.
-	as_schedule_recurring_action(
-		time(),
-		15 * MINUTE_IN_SECONDS,
-		'ckwc_abandoned_cart',
-		array(),
-		'ckwc'
-	);
+	// Schedule the daily Kit App Store app server heartbeat, if not already scheduled.
+	if ( ! as_next_scheduled_action( 'ckwc_app_server_heartbeat' ) ) {
+		as_schedule_recurring_action(
+			time(),
+			DAY_IN_SECONDS,
+			'ckwc_app_server_heartbeat',
+			array(),
+			'ckwc'
+		);
+	}
 
 }
 
@@ -126,8 +134,9 @@ function ckwc_unschedule_actions() {
 		return;
 	}
 
-	// Unschedule action.
+	// Unschedule actions.
 	as_unschedule_all_actions( 'ckwc_abandoned_cart' );
+	as_unschedule_all_actions( 'ckwc_app_server_heartbeat' );
 
 }
 
@@ -182,7 +191,16 @@ function ckwc_get_oauth_return_url() {
  */
 function ckwc_get_app_server() {
 
-	return new ConvertKit_App_Server( CKWC_OAUTH_CLIENT_ID, CKWC_APP_SERVER_URL );
+	return new ConvertKit_App_Server(
+		CKWC_OAUTH_CLIENT_ID,
+		CKWC_APP_SERVER_URL,
+		array(
+			'plugin'      => CKWC_PLUGIN_VERSION,
+			'wordpress'   => get_bloginfo( 'version' ),
+			'php'         => PHP_VERSION,
+			'woocommerce' => defined( 'WC_VERSION' ) ? WC_VERSION : '',
+		)
+	);
 
 }
 

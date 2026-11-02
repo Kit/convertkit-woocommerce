@@ -303,6 +303,9 @@ class CKWC_Integration extends WC_Integration {
 		$response = ckwc_get_app_server()->register_site( $result['access_token'] );
 		if ( ! is_wp_error( $response ) && isset( $response['site_secret'] ) ) {
 			$this->update_option( 'app_server_site_secret', sanitize_text_field( $response['site_secret'] ) );
+
+			// Ensure the daily heartbeat is scheduled.
+			ckwc_schedule_actions();
 		}
 
 		// Return to the app server to complete the Kit App Store install, which then

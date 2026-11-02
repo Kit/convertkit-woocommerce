@@ -346,6 +346,11 @@ class AbandonedCartCest
 		$I->assertEquals('Bearer ' . $this->siteSecret, $event['authorization']);
 		$I->assertEquals($_ENV['WORDPRESS_URL'], $event['body']['site_url']);
 		$I->assertEquals( (int) $subscriberID, (int) $event['body']['subscriber_id']);
+
+		// Plugin, WordPress, PHP and WooCommerce versions are sent for the App Server's admin screens.
+		$I->assertArrayHasKey('plugin', $event['body']['versions']);
+		$I->assertArrayHasKey('wordpress', $event['body']['versions']);
+		$I->assertArrayHasKey('woocommerce', $event['body']['versions']);
 	}
 
 	/**
