@@ -11,6 +11,8 @@ use lucatume\WPBrowser\TestCase\WPTestCase;
  */
 class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 {
+	use ResourceAssertionsTrait;
+
 	/**
 	 * The testing implementation.
 	 *
@@ -133,9 +135,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('id', reset($result));
 		$this->assertArrayHasKey('name', reset($result));
 
-		// Assert order of data is in ascending alphabetical order.
-		$this->assertEquals('AAA Test', reset($result)[ $this->resource->order_by ]);
-		$this->assertEquals('WooCommerce Product Form', end($result)[ $this->resource->order_by ]);
+		// Assert order of data matches the order_by and order properties.
+		$this->assertResourcesSorted($result);
 	}
 
 	/**
@@ -164,9 +165,8 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('id', reset($result));
 		$this->assertArrayHasKey('name', reset($result));
 
-		// Assert order of data is in descending alphabetical order.
-		$this->assertEquals('WooCommerce Product Form', reset($result)[ $this->resource->order_by ]);
-		$this->assertEquals('AAA Test', end($result)[ $this->resource->order_by ]);
+		// Assert order of data matches the order_by and order properties.
+		$this->assertResourcesSorted($result);
 	}
 
 	/**
@@ -195,8 +195,7 @@ class ResourceFormsTest extends \Codeception\TestCase\WPTestCase
 		$this->assertArrayHasKey('name', reset($result));
 
 		// Assert order of data has not changed.
-		$this->assertEquals('WPForms Form', reset($result)['name']);
-		$this->assertEquals('Legacy Form', end($result)['name']);
+		$this->assertResourcesInOriginalOrder($result);
 	}
 
 	/**
