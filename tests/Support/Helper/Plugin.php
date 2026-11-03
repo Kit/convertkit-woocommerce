@@ -533,39 +533,11 @@ class Plugin extends \Codeception\Module
 	 */
 	public function checkSelectWithOptionGroupsOptionOrder($I, $selectElement)
 	{
-		// Define options.
-		$options = [
-			'ckwc-sequences' => [ // <optgroup> ID.
-				'Another Sequence', // First item.
-				'WordPress Sequence', // Last item.
-			],
-			'ckwc-forms'     => [ // <optgroup> ID.
-				'AAA Test', // First item.
-				'WooCommerce Product Form', // Last item.
-			],
-			'ckwc-tags'      => [ // <optgroup> ID.
-				'gravityforms-tag-1', // First item.
-				'wpforms', // Last item.
-			],
-		];
-
-		// Confirm ordering.
-		foreach ( $options as $optgroup => $values ) {
-			foreach ( $values as $i => $value ) {
-				// Define the applicable CSS selector.
-				if ( $i === 0 ) {
-					$nth = 'first-child';
-				} elseif ( $i + 1 === count( $values ) ) {
-					$nth = 'last-child';
-				} else {
-					$nth = 'nth-child(' . ( $i + 1 ) . ')';
-				}
-
-				$I->assertEquals(
-					$I->grabTextFrom('select' . $selectElement . ' optgroup#' . $optgroup . ' option:' . $nth),
-					$value
-				);
-			}
+		// Confirm each <optgroup> has options, sorted in ascending alphabetical order.
+		foreach ( [ 'ckwc-sequences', 'ckwc-forms', 'ckwc-tags' ] as $optgroup ) {
+			$values = $I->grabMultiple('select' . $selectElement . ' optgroup#' . $optgroup . ' option');
+			$I->assertNotEmpty($values);
+			$I->assertSortedAlphabetically($I, $values);
 		}
 	}
 
@@ -581,47 +553,33 @@ class Plugin extends \Codeception\Module
 	 */
 	public function checkSelectCustomFieldOptionOrder($I, $selectElement, $prependOptions = false)
 	{
-		// Define options.
-		$options = [
-			'Billing Address', // First item.
-			'URL', // Last item.
-		];
+		// Get options.
+		$values = $I->grabMultiple('select' . $selectElement . ' option');
 
-		// Prepend options, such as 'Default' and 'None' to the options, if required.
+		// Confirm options such as 'Default' and 'None' are displayed before the resources, if required.
 		if ( $prependOptions ) {
-			$options = array_merge( $prependOptions, $options );
+			$I->assertEquals($prependOptions, array_slice($values, 0, count($prependOptions)));
+			$values = array_slice($values, count($prependOptions));
 		}
 
-		// Check order.
-		$I->checkSelectOptionOrder($I, $selectElement, $options);
+		// Confirm the resources are sorted in ascending alphabetical order.
+		$I->assertNotEmpty($values);
+		$I->assertSortedAlphabetically($I, $values);
 	}
 
 	/**
-	 * Helper method to determine the order of <option> values for the given select element
-	 * and values.
+	 * Helper method to assert the given values are sorted in ascending alphabetical order,
+	 * using the same comparison as the Plugin's resource classes.
 	 *
-	 * @since   1.5.7
+	 * @since   2.2.4
 	 *
-	 * @param   EndToEndTester $I             EndToEndTester.
-	 * @param   string         $selectElement <select> element.
-	 * @param   array          $values        <option> values.
+	 * @param   EndToEndTester $I         EndToEndTester.
+	 * @param   array          $values    Values.
 	 */
-	public function checkSelectOptionOrder($I, $selectElement, $values)
+	public function assertSortedAlphabetically($I, $values)
 	{
-		foreach ( $values as $i => $value ) {
-			// Define the applicable CSS selector.
-			if ( $i === 0 ) {
-				$nth = 'first-child';
-			} elseif ( $i + 1 === count( $values ) ) {
-				$nth = 'last-child';
-			} else {
-				$nth = 'nth-child(' . ( $i + 1 ) . ')';
-			}
-
-			$I->assertEquals(
-				$I->grabTextFrom('select' . $selectElement . ' option:' . $nth),
-				$value
-			);
-		}
+		$sorted = $values;
+		usort($sorted, 'strcmp');
+		$I->assertEquals($sorted, $values);
 	}
 }
