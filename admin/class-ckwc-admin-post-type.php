@@ -214,6 +214,11 @@ class CKWC_Admin_Post_Type {
 		// Get screen.
 		$screen = get_current_screen();
 
+		// Return false if the current screen isn't set yet.
+		if ( is_null( $screen ) ) {
+			return false;
+		}
+
 		// Return false if we're not on the Add / Edit Post Type's screen.
 		if ( $screen->id !== $this->post_type ) {
 			return false;
