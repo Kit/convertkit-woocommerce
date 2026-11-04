@@ -110,6 +110,11 @@ jobs:
         with:
           path: /home/runner/work/convertkit-woocommerce/convertkit-woocommerce/convertkit-woocommerce
 
+      # MySQL 8.4+ (Ubuntu 26.04 runners) doesn't load the mysql_native_password plugin by default.
+      # The loose- prefix ensures MySQL 8.0 ignores this option.
+      - name: Enable MySQL Native Password Plugin
+        run: printf '[mysqld]\nloose-mysql_native_password=ON\n' | sudo tee /etc/mysql/mysql.conf.d/native-password.cnf
+
       - name: Start MySQL
         run: sudo systemctl start mysql.service
 
