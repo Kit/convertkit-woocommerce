@@ -235,8 +235,14 @@ class SettingOAuthCest
 		// Attempt to exchange an authorization code without a nonce.
 		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc&code=fakeAuthorizationCode');
 
+		// Confirm an error notice is displayed.
+		$I->seeErrorNotice($I, 'The Kit authorization request could not be verified. Please click Connect again.');
+
 		// Attempt to exchange an authorization code with an invalid nonce.
 		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc&code=fakeAuthorizationCode&nonce=invalid');
+
+		// Confirm an error notice is displayed.
+		$I->seeErrorNotice($I, 'The Kit authorization request could not be verified. Please click Connect again.');
 
 		// Confirm the authorization code was not exchanged.
 		$I->apiCheckAuthorizationCodeNotExchanged($I);
@@ -245,6 +251,86 @@ class SettingOAuthCest
 		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
 		$I->assertEquals($_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'], $settings['access_token']);
 		$I->assertEquals($_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'], $settings['refresh_token']);
+	}
+
+	/**
+	 * Test that an error notice is displayed when exchanging the authorization code
+	 * for an access token fails.
+	 *
+	 * @since   2.2.5
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testErrorNoticeWhenAccessTokenRequestFails(EndToEndTester $I)
+	{
+		// Make the Kit API reject requests to exchange an authorization code for an access token.
+		$I->haveMuPlugin(
+			'kit-api-fail-access-token.php',
+			<<<'PHP'
+			add_filter(
+				'pre_http_request',
+				function ( $pre, $args, $url ) {
+					if ( $args['method'] !== 'POST' || strtok( $url, '?' ) !== 'https://api.kit.com/oauth/token' ) {
+						return $pre;
+					}
+					return array(
+						'headers'  => array(),
+						'body'     => wp_json_encode(
+							array(
+								'error'             => 'invalid_grant',
+								'error_description' => 'The provided authorization grant is invalid.',
+							)
+						),
+						'response' => array( 'code' => 400, 'message' => 'Bad Request' ),
+						'cookies'  => array(),
+						'filename' => null,
+					);
+				},
+				10,
+				3
+			);
+			PHP
+		);
+
+		// Load Settings screen.
+		$I->loadConvertKitSettingsScreen($I);
+
+		// Get the OAuth return URL, which includes a valid nonce.
+		$state = $I->apiDecodeStateFromOAuthURL($I->grabAttributeFrom('a[href*="oauth/authorize"]', 'href'));
+
+		// Return to the settings screen with an authorization code, as Kit would.
+		$I->amOnUrl($state['return_to'] . '&code=fakeAuthorizationCode');
+
+		// Confirm an error notice is displayed.
+		$I->seeErrorNotice($I, 'The provided authorization grant is invalid.');
+
+		// Confirm the Connect button displays.
+		$I->see('Connect');
+		$I->dontSee('Disconnect');
+	}
+
+	/**
+	 * Test that an error notice is displayed when Kit returns to the settings screen
+	 * with an error e.g. the user denied access.
+	 *
+	 * @since   2.2.5
+	 *
+	 * @param   EndToEndTester $I  Tester.
+	 */
+	public function testErrorNoticeWhenAuthorizationDenied(EndToEndTester $I)
+	{
+		// Return to the settings screen with an error description.
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc&error=access_denied&error_description=' . rawurlencode('The resource owner denied the request.'));
+
+		// Confirm an error notice is displayed with the error description.
+		$I->seeErrorNotice($I, 'The resource owner denied the request.');
+		$I->dontSee('access_denied');
+
+		// Return to the settings screen with only an error.
+		$I->amOnAdminPage('admin.php?page=wc-settings&tab=integration&section=ckwc&error=access_denied');
+
+		// Confirm an error notice is displayed with the error.
+		$I->seeErrorNotice($I, 'access_denied');
 	}
 
 	/**
