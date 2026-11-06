@@ -67,17 +67,29 @@ function ckwc_abandoned_cart() {
 		// Check if cart looks abandoned.
 		if ( $timestamp < $threshold ) {
 			// Create subscriber, and send the abandoned checkout event for Kit's automation event node.
+			$sent       = false;
 			$subscriber = $api->create_subscriber( $email );
 			if ( ! is_wp_error( $subscriber ) && isset( $subscriber['subscriber']['id'] ) ) {
-				WP_CKWC_Integration()->send_automation_event( 'abandoned_checkout', $subscriber['subscriber']['id'], ckwc_get_abandoned_cart_context( $session_data ) );
+				$sent = WP_CKWC_Integration()->send_automation_event( 'abandoned_checkout', $subscriber['subscriber']['id'], ckwc_get_abandoned_cart_context( $session_data ) );
+				$sent = ! is_wp_error( $sent ) && $sent;
 
 				// Remember the subscriber, to send the product purchased event if they complete checkout.
-				set_transient( ckwc_get_abandoned_cart_transient_name( $email ), $subscriber['subscriber']['id'], 30 * DAY_IN_SECONDS );
+				if ( $sent ) {
+					set_transient( ckwc_get_abandoned_cart_transient_name( $email ), $subscriber['subscriber']['id'], 30 * DAY_IN_SECONDS );
+				}
 			}
 
-			// Remove session data so we don't trigger this email again.
-			unset( $session_data['ckwc_abandoned_cart_email'] );
-			unset( $session_data['ckwc_abandoned_cart_timestamp'] );
+			// If sending failed (e.g. the App Server timed out), retry on the next run, up to 3 attempts.
+			$attempts = ( isset( $session_data['ckwc_abandoned_cart_attempts'] ) ? absint( $session_data['ckwc_abandoned_cart_attempts'] ) : 0 ) + 1;
+			if ( ! $sent && $attempts < 3 ) {
+				$session_data['ckwc_abandoned_cart_attempts'] = $attempts;
+			} else {
+				// Remove session data so we don't trigger this email again.
+				unset( $session_data['ckwc_abandoned_cart_email'] );
+				unset( $session_data['ckwc_abandoned_cart_timestamp'] );
+				unset( $session_data['ckwc_abandoned_cart_attempts'] );
+			}
+
 			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$wpdb->prefix . 'woocommerce_sessions',
 				array( 'session_value' => maybe_serialize( $session_data ) ),

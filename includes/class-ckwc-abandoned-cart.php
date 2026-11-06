@@ -154,6 +154,7 @@ class CKWC_Abandoned_Cart {
 		// Clear the abandoned cart data.
 		WC()->session->__unset( 'ckwc_abandoned_cart_email' );
 		WC()->session->__unset( 'ckwc_abandoned_cart_timestamp' );
+		WC()->session->__unset( 'ckwc_abandoned_cart_attempts' );
 
 		// Bail if this customer's cart wasn't sent to Kit as abandoned.
 		// We use the order's email, as the Action Scheduler may have already cleared the session's email.
