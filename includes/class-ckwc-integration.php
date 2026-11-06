@@ -299,8 +299,9 @@ class CKWC_Integration extends WC_Integration {
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
 		$this->update_option( 'token_expires', ( time() + $result['expires_in'] ) );
 
-		// Register this site with the Kit App Store app server, storing the site secret it returns.
-		$response = ckwc_get_app_server()->register_site( $result['access_token'] );
+		// Register this site with the Kit App Store app server using the registration token sent with the code, storing the site secret.
+		$registration_token = isset( $_REQUEST['registration_token'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['registration_token'] ) ) : '';
+		$response           = ckwc_get_app_server()->register_site( $result['access_token'], $registration_token );
 		if ( ! is_wp_error( $response ) && isset( $response['site_secret'] ) ) {
 			$this->update_option( 'app_server_site_secret', sanitize_text_field( $response['site_secret'] ) );
 
