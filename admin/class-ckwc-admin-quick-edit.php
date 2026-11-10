@@ -148,6 +148,11 @@ class CKWC_Admin_Quick_Edit {
 		// Get screen.
 		$screen = get_current_screen();
 
+		// Return false if the current screen isn't set yet.
+		if ( is_null( $screen ) ) {
+			return false;
+		}
+
 		// Bail if we're not on a Post Type Edit screen.
 		if ( $screen->base !== 'edit' ) {
 			return false;
