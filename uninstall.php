@@ -26,7 +26,7 @@ if ( ! $settings ) {
 
 // Must match CKWC_OAUTH_CLIENT_ID and CKWC_APP_SERVER_URL in woocommerce-convertkit.php.
 $ckwc_client_id      = 'NXMHMATeDPobWYsPZkoWODM6vPb1eB15IeUqt_Jyjjc';
-$ckwc_app_server_url = 'https://kit-wp-app-server-production-d4wcia.laravel.cloud';
+$ckwc_app_server_url = 'https://kit-wp-app-server-37079c038818.herokuapp.com';
 
 // Unregister this site from the Kit App Store app server.
 // If other sites are still connected, don't revoke the tokens, as this would uninstall the Kit app for all sites.
