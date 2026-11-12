@@ -13,7 +13,7 @@
  */
 function ckwcSelect2Init() {
 	(function ($) {
-		$('.ckwc-select2').select2();
+		$('.ckwc-select2').selectWoo();
 	})(jQuery);
 }
 
