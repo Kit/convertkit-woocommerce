@@ -63,6 +63,9 @@ class UninstallCest
 		uksort($cron, 'strnatcasecmp');
 		$I->haveOptionInDatabase('cron', $cron);
 
+		// Populate cached resources.
+		$I->setupConvertKitPluginResources($I);
+
 		// Deactivate the Plugin.
 		$I->deactivateConvertKitPlugin($I);
 
@@ -81,6 +84,12 @@ class UninstallCest
 		$cron = $I->grabOptionFromDatabase('cron');
 		foreach ($cron as $timestamp => $events) {
 			$I->assertArrayNotHasKey('ckwc_refresh_token', is_array($events) ? $events : []);
+		}
+
+		// Confirm cached resources have been removed.
+		foreach ([ 'ckwc_forms', 'ckwc_tags', 'ckwc_sequences', 'ckwc_custom_fields' ] as $resource) {
+			$I->dontSeeOptionInDatabase($resource);
+			$I->dontSeeOptionInDatabase($resource . '_last_queried');
 		}
 
 		// Confirm attempting to use the revoked access token no longer works.
