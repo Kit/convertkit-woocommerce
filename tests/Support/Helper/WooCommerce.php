@@ -926,13 +926,13 @@ class WooCommerce extends \Codeception\Module
 		$I->selectOption('#order_status', 'wc-pending');
 
 		// Define User and Payment Method.
-		$I->fillSelect2Field($I, '#select2-customer_user-container', $emailAddress, 'aria-owns');
+		$I->fillSelect2Field($I, '#select2-customer_user-container', $emailAddress);
 		$I->selectOption('#_payment_method', $paymentMethod);
 
 		// Add Product.
 		$I->click('button.add-line-item');
 		$I->click('button.add-order-item');
-		$I->fillSelect2Field($I, '.wc-backbone-modal-content .select2-selection__rendered', $productName, 'aria-owns');
+		$I->fillSelect2Field($I, '.wc-backbone-modal-content .select2-selection__rendered', $productName);
 		$I->click('#btn-ok');
 
 		// Opt in Customer.

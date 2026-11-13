@@ -180,8 +180,8 @@ function ckwc_get_oauth_return_url() {
  */
 function ckwc_select2_enqueue_scripts() {
 
-	wp_enqueue_script( 'ckwc-select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array( 'jquery' ), CKWC_PLUGIN_VERSION, false );
-	wp_enqueue_script( 'ckwc-admin-select2', CKWC_PLUGIN_URL . 'resources/backend/js/select2.js', array( 'ckwc-select2' ), CKWC_PLUGIN_VERSION, false );
+	// Use selectWoo, WooCommerce's fork of Select2.
+	wp_enqueue_script( 'ckwc-admin-select2', CKWC_PLUGIN_URL . 'resources/backend/js/select2.js', array( 'selectWoo' ), CKWC_PLUGIN_VERSION, false );
 
 }
 
@@ -192,8 +192,8 @@ function ckwc_select2_enqueue_scripts() {
  */
 function ckwc_select2_enqueue_styles() {
 
-	wp_enqueue_style( 'ckwc-select2', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), CKWC_PLUGIN_VERSION );
-	wp_enqueue_style( 'ckwc-admin-select2', CKWC_PLUGIN_URL . 'resources/backend/css/select2.css', array(), CKWC_PLUGIN_VERSION );
+	// Select2 CSS is included in WooCommerce's admin CSS.
+	wp_enqueue_style( 'ckwc-admin-select2', CKWC_PLUGIN_URL . 'resources/backend/css/select2.css', array( 'woocommerce_admin_styles' ), CKWC_PLUGIN_VERSION );
 
 }
 

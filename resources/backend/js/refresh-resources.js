@@ -78,7 +78,7 @@ jQuery(document).ready(function ($) {
 				}
 
 				// Reload Select2 instances, so that they reflect the changes made.
-				$('.ckwc-select2').select2();
+				$('.ckwc-select2').selectWoo();
 
 				// Enable button.
 				$(button).prop('disabled', false).removeClass('is-refreshing');
