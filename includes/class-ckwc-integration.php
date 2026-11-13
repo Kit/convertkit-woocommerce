@@ -91,6 +91,7 @@ class CKWC_Integration extends WC_Integration {
 			// Perform OAuth and export configuration options, if required.
 			add_action( 'admin_init', array( $this, 'maybe_disconnect' ), 1 );
 			add_action( 'admin_init', array( $this, 'maybe_get_and_store_access_token' ), 2 );
+			add_action( 'admin_init', array( $this, 'maybe_connect_via_app_server' ), 2 );
 			add_action( 'admin_init', array( $this, 'maybe_export_configuration' ), 3 );
 
 			// Enqueue JS and CSS.
@@ -146,6 +147,7 @@ class CKWC_Integration extends WC_Integration {
 		$this->update_option( 'token_expires', '' );
 		$this->update_option( 'api_key', '' );
 		$this->update_option( 'api_secret', '' );
+		$this->update_option( 'app_server_site_secret', '' );
 
 		// Clear any existing scheduled WordPress Cron event.
 		wp_clear_scheduled_hook( 'ckwc_refresh_token' );
@@ -198,6 +200,18 @@ class CKWC_Integration extends WC_Integration {
 					)
 				)
 			);
+			exit();
+		}
+
+		// Unregister this site from the Kit App Store app server, while the access token is still valid.
+		$response = ckwc_get_app_server()->unregister_site( $this->get_access_token() );
+
+		// If other sites are still connected, only delete this site's credentials, as revoking the tokens
+		// would uninstall the Kit app for all sites.
+		if ( ! is_wp_error( $response ) && ! empty( $response['remaining_sites'] ) ) {
+			$this->delete_credentials();
+			$this->resources_delete();
+			wp_safe_redirect( ckwc_get_settings_link() );
 			exit();
 		}
 
@@ -285,9 +299,76 @@ class CKWC_Integration extends WC_Integration {
 		$this->update_option( 'refresh_token', $result['refresh_token'] );
 		$this->update_option( 'token_expires', ( time() + $result['expires_in'] ) );
 
-		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
-		// is now authenticated.
-		wp_safe_redirect( ckwc_get_settings_link() );
+		// Register this site with the Kit App Store app server using the registration token sent with the code, storing the site secret.
+		$registration_token = isset( $_REQUEST['registration_token'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['registration_token'] ) ) : '';
+		$response           = ckwc_get_app_server()->register_site( $result['access_token'], $registration_token );
+		if ( ! is_wp_error( $response ) && isset( $response['site_secret'] ) ) {
+			$this->update_option( 'app_server_site_secret', sanitize_text_field( $response['site_secret'] ) );
+
+			// Ensure the daily heartbeat is scheduled.
+			ckwc_schedule_actions();
+		}
+
+		// Return to the app server to complete the Kit App Store install, which then
+		// redirects to the Plugin's settings.
+		wp_safe_redirect( ckwc_get_app_server()->get_complete_url() );
+		exit();
+
+	}
+
+	/**
+	 * Sends an automation event to the Kit App Store app server, which Kit polls for its event nodes.
+	 *
+	 * @since   2.3.0
+	 *
+	 * @param   string $type           Event type (abandoned_checkout, product_purchased).
+	 * @param   int    $subscriber_id  Kit Subscriber ID.
+	 * @param   array  $context        Event data, available in Kit emails as Liquid.
+	 * @return  bool|WP_Error
+	 */
+	public function send_automation_event( $type, $subscriber_id, $context = array() ) {
+
+		// Bail if this site isn't registered with the app server.
+		$site_secret = $this->get_option( 'app_server_site_secret' );
+		if ( empty( $site_secret ) ) {
+			return false;
+		}
+
+		$result = ckwc_get_app_server()->send_automation_event( $site_secret, $type, $subscriber_id, $context );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		return true;
+
+	}
+
+	/**
+	 * Begins OAuth if the Kit App Store app server requests it, when the Kit app
+	 * was installed from the Kit App Store.
+	 *
+	 * @since   2.3.0
+	 */
+	public function maybe_connect_via_app_server() {
+
+		// Bail if we're not on the integration screen.
+		if ( ! $this->get_integration_screen_name() ) {
+			return;
+		}
+
+		// Bail if the app server didn't request a connection.
+		if ( ! array_key_exists( 'kit_app_connect', $_REQUEST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+
+		// Bail if the user isn't permitted to manage WooCommerce settings.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		// Begin OAuth, which the app server continues with Kit.
+		$api = new CKWC_API( CKWC_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI );
+		wp_safe_redirect( ckwc_get_app_server()->get_connect_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ) );
 		exit();
 
 	}
@@ -866,7 +947,7 @@ class CKWC_Integration extends WC_Integration {
 				'type'        => 'checkbox',
 				'default'     => 'no',
 				'description' => __(
-					'If enabled, the visitor will be subscribed to a tag in Kit, if they leave items in their cart without completing the checkout process after the below number of minutes. The tag is removed when they complete checkout.',
+					'If enabled, visitors who leave items in their cart without completing the checkout process after the below number of minutes are sent to Kit\'s Abandoned checkout automation event. Use the WooCommerce abandoned checkout automation template in Kit to email them.',
 					'woocommerce-convertkit'
 				),
 				'desc_tip'    => false,
@@ -891,19 +972,6 @@ class CKWC_Integration extends WC_Integration {
 					'step' => 1,
 				),
 			),
-			'abandoned_cart_subscription'   => array(
-				'title'             => __( 'Abandoned Cart: Tag', 'woocommerce-convertkit' ),
-				'type'              => 'subscription',
-				'default'           => '',
-				'description'       => __( 'The Kit tag to subscribe visitors to when they abandon their cart. This can be used in a Sequence or Automation to send abandoned cart emails to the subscriber. This tag is removed when the customer completes the checkout process.', 'woocommerce-convertkit' ),
-				'include_forms'     => false,
-				'include_tags'      => true,
-				'include_sequences' => false,
-
-				// The setting name that needs to be checked/enabled for this setting to display. Used by JS to toggle visibility.
-				'class'             => 'enabled abandoned_cart',
-			),
-
 			// Debugging.
 			'debug'                         => array(
 				'title'       => __( 'Debug', 'woocommerce-convertkit' ),

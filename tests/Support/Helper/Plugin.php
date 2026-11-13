@@ -117,7 +117,7 @@ class Plugin extends \Codeception\Module
 	 * @param   bool|array     $addressFields               Address fields to include in the custom field data (false = all address fields).
 	 * @param   bool           $abandonedCart               Abandoned Cart enabled.
 	 * @param   int            $abandonedCartThreshold      Number of minutes to wait before considering a cart abandoned.
-	 * @param   bool|string    $abandonedCartSubscription   Tag to subscribe abandoned cart emails to.
+	 * @param   bool|string    $appServerSiteSecret         Kit App Server site secret (false = site isn't connected via the Kit App Store).
 	 */
 	public function setupConvertKitPlugin(
 		$I,
@@ -134,7 +134,7 @@ class Plugin extends \Codeception\Module
 		$addressFields = false,
 		$abandonedCart = false,
 		$abandonedCartThreshold = 15,
-		$abandonedCartSubscription = false,
+		$appServerSiteSecret = false,
 	) {
 		// Define Plugin's settings.
 		$I->haveOptionInDatabase(
@@ -169,7 +169,9 @@ class Plugin extends \Codeception\Module
 				// Abandoned Cart.
 				'abandoned_cart'                => ( $abandonedCart ? 'yes' : 'no' ),
 				'abandoned_cart_threshold'      => ( $abandonedCartThreshold ? $abandonedCartThreshold : '' ),
-				'abandoned_cart_subscription'   => ( $abandonedCartSubscription ? $abandonedCartSubscription : '' ),
+
+				// Kit App Store.
+				'app_server_site_secret'        => ( $appServerSiteSecret ? $appServerSiteSecret : '' ),
 
 				// Debug.
 				'debug'                         => 'yes',

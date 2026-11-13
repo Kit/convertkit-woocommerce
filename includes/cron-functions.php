@@ -7,7 +7,7 @@
  */
 
 /**
- * Subscribe abandoned cart emails to the abandoned cart tag
+ * Send abandoned carts to Kit's Abandoned checkout automation event
  * by checking the WooCommerce sessions table.
  *
  * @since   2.0.5
@@ -29,14 +29,10 @@ function ckwc_abandoned_cart() {
 		return;
 	}
 
-	// Bail if no tag is configured.
-	$subscription = WP_CKWC_Integration()->get_option( 'abandoned_cart_subscription' );
-	if ( empty( $subscription ) ) {
+	// Bail if this site isn't registered with the Kit App Store app server.
+	if ( empty( WP_CKWC_Integration()->get_option( 'app_server_site_secret' ) ) ) {
 		return;
 	}
-
-	// Get the tag ID.
-	list( $resource_type, $tag_id ) = explode( ':', $subscription );
 
 	// Calculate the threshold.
 	$threshold = time() - ( absint( WP_CKWC_Integration()->get_option( 'abandoned_cart_threshold' ) ) * MINUTE_IN_SECONDS );
@@ -70,13 +66,30 @@ function ckwc_abandoned_cart() {
 
 		// Check if cart looks abandoned.
 		if ( $timestamp < $threshold ) {
-			// Create subscriber and tag.
-			$api->create_subscriber( $email );
-			$api->tag_subscriber_by_email( absint( $tag_id ), $email );
+			// Create subscriber, and send the abandoned checkout event for Kit's automation event node.
+			$sent       = false;
+			$subscriber = $api->create_subscriber( $email );
+			if ( ! is_wp_error( $subscriber ) && isset( $subscriber['subscriber']['id'] ) ) {
+				$sent = WP_CKWC_Integration()->send_automation_event( 'abandoned_checkout', $subscriber['subscriber']['id'], ckwc_get_abandoned_cart_context( $session_data ) );
+				$sent = ! is_wp_error( $sent ) && $sent;
 
-			// Remove session data so we don't trigger this email again.
-			unset( $session_data['ckwc_abandoned_cart_email'] );
-			unset( $session_data['ckwc_abandoned_cart_timestamp'] );
+				// Remember the subscriber, to send the product purchased event if they complete checkout.
+				if ( $sent ) {
+					set_transient( ckwc_get_abandoned_cart_transient_name( $email ), $subscriber['subscriber']['id'], 30 * DAY_IN_SECONDS );
+				}
+			}
+
+			// If sending failed (e.g. the App Server timed out), retry on the next run, up to 3 attempts.
+			$attempts = ( isset( $session_data['ckwc_abandoned_cart_attempts'] ) ? absint( $session_data['ckwc_abandoned_cart_attempts'] ) : 0 ) + 1;
+			if ( ! $sent && $attempts < 3 ) {
+				$session_data['ckwc_abandoned_cart_attempts'] = $attempts;
+			} else {
+				// Remove session data so we don't trigger this email again.
+				unset( $session_data['ckwc_abandoned_cart_email'] );
+				unset( $session_data['ckwc_abandoned_cart_timestamp'] );
+				unset( $session_data['ckwc_abandoned_cart_attempts'] );
+			}
+
 			$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$wpdb->prefix . 'woocommerce_sessions',
 				array( 'session_value' => maybe_serialize( $session_data ) ),
@@ -89,6 +102,37 @@ function ckwc_abandoned_cart() {
 
 }
 add_action( 'ckwc_abandoned_cart', 'ckwc_abandoned_cart' );
+
+/**
+ * Send a daily heartbeat to the Kit App Store app server, so it knows the site is still connected,
+ * with the Plugin, WordPress, PHP and WooCommerce versions.
+ *
+ * @since   2.3.0
+ */
+function ckwc_app_server_heartbeat() {
+
+	// Bail if the integration is unavailable.
+	if ( ! function_exists( 'WP_CKWC_Integration' ) ) {
+		return;
+	}
+
+	// Bail if this site isn't registered with the Kit App Store app server.
+	$site_secret = WP_CKWC_Integration()->get_option( 'app_server_site_secret' );
+	if ( empty( $site_secret ) ) {
+		return;
+	}
+
+	$result = ckwc_get_app_server()->heartbeat( $site_secret );
+
+	// If the app server no longer recognises the site, forget its secret, so the creator is asked to reconnect.
+	if ( is_wp_error( $result ) && 401 === ( $result->get_error_data()['status'] ?? 0 ) ) {
+		WP_CKWC_Integration()->update_option( 'app_server_site_secret', '' );
+	}
+
+}
+
+// Register action to run above function; this action is created by the Action Scheduler in ckwc_schedule_actions().
+add_action( 'ckwc_app_server_heartbeat', 'ckwc_app_server_heartbeat' );
 
 /**
  * Refresh the OAuth access token, triggered by WordPress' Cron.
