@@ -54,6 +54,15 @@ class UninstallCest
 			apiSecret: $_ENV['CONVERTKIT_API_SECRET']
 		);
 
+		// Schedule the event to refresh the access token, as the Plugin does when connecting via OAuth.
+		$cron = $I->grabOptionFromDatabase('cron');
+		$cron[ time() + 3600 ]['ckwc_refresh_token'][ md5(serialize([])) ] = [
+			'schedule' => false,
+			'args'     => [],
+		];
+		uksort($cron, 'strnatcasecmp');
+		$I->haveOptionInDatabase('cron', $cron);
+
 		// Deactivate the Plugin.
 		$I->deactivateConvertKitPlugin($I);
 
@@ -67,6 +76,12 @@ class UninstallCest
 		$I->assertEmpty($settings['refresh_token']);
 		$I->assertEmpty($settings['api_key']);
 		$I->assertEmpty($settings['api_secret']);
+
+		// Confirm the scheduled event to refresh the access token has been removed.
+		$cron = $I->grabOptionFromDatabase('cron');
+		foreach ($cron as $timestamp => $events) {
+			$I->assertArrayNotHasKey('ckwc_refresh_token', is_array($events) ? $events : []);
+		}
 
 		// Confirm attempting to use the revoked access token no longer works.
 		$result = wp_remote_get(

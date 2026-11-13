@@ -16,6 +16,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 // are not reliably available due to the Plugin being deactivated and going
 // through deletion now.
 
+// Clear the scheduled event to refresh the access token.
+wp_clear_scheduled_hook( 'ckwc_refresh_token' );
+
 // Get settings.
 $settings = get_option( 'woocommerce_ckwc_settings' );
 
