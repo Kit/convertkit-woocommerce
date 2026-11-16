@@ -84,6 +84,9 @@ class ProductCest
 		$I->seeCSSEnqueued($I, 'convertkit-woocommerce/resources/backend/css/select2.css', 'ckwc-admin-select2-css' );
 		$I->seeJSEnqueued($I, 'convertkit-woocommerce/resources/backend/js/select2.js', 'ckwc-admin-select2-js' );
 
+		// Confirm Select2 is not loaded from a CDN, as WooCommerce's selectWoo is used.
+		$I->dontSeeInSource('cdn.jsdelivr.net/npm/select2');
+
 		// Check that the ConvertKit meta box exists.
 		$I->seeElementInDOM('#ckwc');
 

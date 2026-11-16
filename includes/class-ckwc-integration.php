@@ -273,7 +273,7 @@ class CKWC_Integration extends WC_Integration {
 			wp_safe_redirect(
 				ckwc_get_settings_link(
 					array(
-						'error' => $result->get_error_code(),
+						'error' => $result->get_error_message(),
 					)
 				)
 			);
@@ -421,6 +421,37 @@ class CKWC_Integration extends WC_Integration {
 	}
 
 	/**
+	 * Outputs an error notice if the request includes an `error_description` or `error`,
+	 * such as when connecting to or disconnecting from Kit fails.
+	 *
+	 * @since   2.2.5
+	 */
+	private function maybe_output_error_notice() {
+
+		// Get the error, preferring the OAuth error description over the error.
+		if ( isset( $_REQUEST['error_description'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$error = sanitize_text_field( wp_unslash( $_REQUEST['error_description'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		} elseif ( isset( $_REQUEST['error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$error = sanitize_text_field( wp_unslash( $_REQUEST['error'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		} else {
+			return;
+		}
+
+		// Bail if the error is empty.
+		if ( empty( $error ) ) {
+			return;
+		}
+		?>
+		<div class="notice notice-error is-dismissible">
+			<p>
+				<?php echo esc_html( $error ); ?>
+			</p>
+		</div>
+		<?php
+
+	}
+
+	/**
 	 * Output the Integration settings screen, depending on whether the request
 	 * is for the settings or the Sync Past Orders screen.
 	 *
@@ -440,6 +471,9 @@ class CKWC_Integration extends WC_Integration {
 
 		// Hide 'Save changes' button, so we can add our own to each panel.
 		$hide_save_button = true;
+
+		// Output an error notice if the request includes an error e.g. connecting or disconnecting failed.
+		$this->maybe_output_error_notice();
 
 		// If no Access Token and Refresh Token exist, show the OAuth screen.
 		if ( ! $this->has_access_and_refresh_token() ) {
