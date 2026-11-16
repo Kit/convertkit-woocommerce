@@ -70,6 +70,10 @@ class BackwardCompatSettingOptInCheckboxCest
 		// Close Gutenberg modal, which would otherwise intercept clicks made in the editor.
 		$I->maybeCloseGutenbergWelcomeModal($I);
 
+		// Confirm the block is registered with API version 3.
+		$I->waitForJS('return typeof wp !== "undefined" && wp.blocks && !! wp.blocks.getBlockType("ckwc/opt-in");', 10);
+		$I->assertEquals(3, $I->executeJS('return wp.blocks.getBlockType("ckwc/opt-in").apiVersion;'));
+
 		// Switch to the Gutenberg IFrame.
 		$I->switchToGutenbergIFrameEditor($I);
 
