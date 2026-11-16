@@ -52,7 +52,7 @@ class AdminScreenTest extends WPTestCase
 		unset( $GLOBALS['current_screen'] );
 
 		// Dequeue assets.
-		wp_dequeue_script( 'ckwc-select2' );
+		wp_dequeue_script( 'ckwc-admin-select2' );
 		wp_dequeue_script( 'ckwc-admin-quick-edit' );
 		wp_dequeue_script( 'ckwc-bulk-edit' );
 		wp_dequeue_style( 'ckwc-bulk-quick-edit' );
@@ -72,7 +72,7 @@ class AdminScreenTest extends WPTestCase
 		$admin->enqueue_scripts();
 		$admin->enqueue_styles();
 
-		$this->assertFalse( wp_script_is( 'ckwc-select2', 'enqueued' ) );
+		$this->assertFalse( wp_script_is( 'ckwc-admin-select2', 'enqueued' ) );
 		$this->assertFalse( wp_style_is( 'ckwc-refresh-resources', 'enqueued' ) );
 	}
 
@@ -89,7 +89,7 @@ class AdminScreenTest extends WPTestCase
 		$admin->enqueue_scripts();
 		$admin->enqueue_styles();
 
-		$this->assertTrue( wp_script_is( 'ckwc-select2', 'enqueued' ) );
+		$this->assertTrue( wp_script_is( 'ckwc-admin-select2', 'enqueued' ) );
 		$this->assertTrue( wp_style_is( 'ckwc-refresh-resources', 'enqueued' ) );
 	}
 
