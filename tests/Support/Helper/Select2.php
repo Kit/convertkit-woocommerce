@@ -21,7 +21,7 @@ class Select2 extends \Codeception\Module
 	 *
 	 * @throws  \Exception If the dropdown does not open.
 	 */
-	public function fillSelect2Field($I, $container, $value, $ariaAttributeName = 'aria-controls')
+	public function fillSelect2Field($I, $container, $value, $ariaAttributeName = 'aria-owns')
 	{
 		$I->waitForElementVisible($container);
 		$fieldID     = $I->grabAttributeFrom($container, 'id');

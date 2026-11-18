@@ -72,8 +72,8 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	public function testAccessTokenRefreshedAndSavedWhenExpired()
 	{
 		// Confirm no Access or Refresh Token exists in the Plugin settings.
-		$this->assertEquals( WP_CKWC_Integration()->get_access_token(), '' );
-		$this->assertEquals( WP_CKWC_Integration()->get_refresh_token(), '' );
+		$this->assertEquals( '', WP_CKWC_Integration()->get_access_token() );
+		$this->assertEquals( '', WP_CKWC_Integration()->get_refresh_token() );
 
 		// Filter requests to mock the token expiry and refreshing the token.
 		add_filter( 'pre_http_request', array( $this, 'mockAccessTokenExpiredResponse' ), 10, 3 );
@@ -84,8 +84,8 @@ class APITest extends \Codeception\TestCase\WPTestCase
 
 		// Confirm "new" tokens now exist in the Plugin's settings, which confirms the `convertkit_api_refresh_token` hook was called when
 		// the tokens were refreshed.
-		$this->assertEquals( WP_CKWC_Integration()->get_access_token(), $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'] );
-		$this->assertEquals( WP_CKWC_Integration()->get_refresh_token(), $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] );
+		$this->assertEquals( $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'], WP_CKWC_Integration()->get_access_token() );
+		$this->assertEquals( $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'], WP_CKWC_Integration()->get_refresh_token() );
 	}
 
 	/**
@@ -102,8 +102,8 @@ class APITest extends \Codeception\TestCase\WPTestCase
 		WP_CKWC_Integration()->update_option( 'token_expires', time() + 10000 );
 
 		// Confirm the tokens saved.
-		$this->assertEquals( WP_CKWC_Integration()->get_access_token(), 'invalidAccessToken' );
-		$this->assertEquals( WP_CKWC_Integration()->get_refresh_token(), $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'] );
+		$this->assertEquals( 'invalidAccessToken', WP_CKWC_Integration()->get_access_token() );
+		$this->assertEquals( $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'], WP_CKWC_Integration()->get_refresh_token() );
 
 		// Initialize the API using the invalid access token.
 		$api = new \CKWC_API(
@@ -118,12 +118,36 @@ class APITest extends \Codeception\TestCase\WPTestCase
 
 		// Confirm a WP_Error is returned.
 		$this->assertInstanceOf( 'WP_Error', $result );
-		$this->assertEquals( $result->get_error_code(), 'convertkit_api_error' );
-		$this->assertEquals( $result->get_error_message(), 'The access token is invalid' );
+		$this->assertEquals( 'convertkit_api_error', $result->get_error_code() );
+		$this->assertEquals( 'The access token is invalid', $result->get_error_message() );
 
 		// Confirm tokens removed from the Plugin's settings, which confirms the `convertkit_api_access_token_invalid` hook was called when the tokens were deleted.
 		$this->assertEmpty( WP_CKWC_Integration()->get_access_token() );
 		$this->assertEmpty( WP_CKWC_Integration()->get_refresh_token() );
+	}
+
+	/**
+	 * Test that the Access Token, Refresh Token and Token Expiry are saved in the Plugin's settings
+	 * when an access token is obtained.
+	 *
+	 * @since   2.2.5
+	 */
+	public function testAccessTokenSavedWhenObtained()
+	{
+		// Confirm no Access or Refresh Token exists in the Plugin settings.
+		$this->assertEmpty( WP_CKWC_Integration()->get_access_token() );
+		$this->assertEmpty( WP_CKWC_Integration()->get_refresh_token() );
+
+		// Mock request as if the API returned an access and refresh token.
+		add_filter( 'pre_http_request', array( $this, 'mockTokenResponse' ), 10, 3 );
+
+		// Run request, as if the access token was obtained successfully.
+		$this->api->get_access_token( 'mockAuthCode' );
+
+		// Confirm the tokens and expiry were saved by the `convertkit_api_get_access_token` hook.
+		$this->assertEquals( $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'], WP_CKWC_Integration()->get_access_token() );
+		$this->assertEquals( $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'], WP_CKWC_Integration()->get_refresh_token() );
+		$this->assertGreaterThanOrEqual( time() + 10000 - 5, (int) WP_CKWC_Integration()->get_option( 'token_expires' ) );
 	}
 
 	/**
