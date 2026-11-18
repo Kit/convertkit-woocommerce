@@ -133,7 +133,7 @@ class ResourceSequencesNoDataTest extends \Codeception\TestCase\WPTestCase
 	public function testCount()
 	{
 		$result = $this->resource->get();
-		$this->assertEquals($this->resource->count(), count($result));
+		$this->assertEquals(count($result), $this->resource->count());
 	}
 
 	/**
@@ -145,6 +145,6 @@ class ResourceSequencesNoDataTest extends \Codeception\TestCase\WPTestCase
 	{
 		// Confirm that the function returns true, because no resources exist.
 		$result = $this->resource->exist();
-		$this->assertSame($result, false);
+		$this->assertSame(false, $result);
 	}
 }

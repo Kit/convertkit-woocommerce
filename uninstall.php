@@ -16,6 +16,15 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 // are not reliably available due to the Plugin being deactivated and going
 // through deletion now.
 
+// Clear the scheduled event to refresh the access token.
+wp_clear_scheduled_hook( 'ckwc_refresh_token' );
+
+// Delete cached resources.
+foreach ( array( 'ckwc_forms', 'ckwc_tags', 'ckwc_sequences', 'ckwc_custom_fields' ) as $ckwc_resource ) {
+	delete_option( $ckwc_resource );
+	delete_option( $ckwc_resource . '_last_queried' );
+}
+
 // Get settings.
 $settings = get_option( 'woocommerce_ckwc_settings' );
 
