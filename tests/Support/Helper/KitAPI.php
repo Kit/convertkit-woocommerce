@@ -409,7 +409,7 @@ class KitAPI extends \Codeception\Module
 
 		// If a referrer is specified, assert it matches the subscriber's referrer now.
 		if ($referrer) {
-			$I->assertEquals($subscriber['referrer'], $referrer);
+			$I->assertEquals($referrer, $subscriber['referrer']);
 		}
 	}
 
@@ -696,11 +696,11 @@ class KitAPI extends \Codeception\Module
 		}
 
 		// Check the subscriber's custom field data is valid.
-		$I->assertEquals($subscriber['fields']['last_name'], 'Last');
-		$I->assertEquals($subscriber['fields']['phone_number'], '6159684594');
-		$I->assertEquals($subscriber['fields']['billing_address'], $addressString);
-		$I->assertEquals($subscriber['fields']['payment_method'], 'cod');
-		$I->assertEquals($subscriber['fields']['notes'], 'Notes');
+		$I->assertEquals('Last', $subscriber['fields']['last_name']);
+		$I->assertEquals('6159684594', $subscriber['fields']['phone_number']);
+		$I->assertEquals($addressString, $subscriber['fields']['billing_address']);
+		$I->assertEquals('cod', $subscriber['fields']['payment_method']);
+		$I->assertEquals('Notes', $subscriber['fields']['notes']);
 	}
 
 	/**
@@ -732,12 +732,12 @@ class KitAPI extends \Codeception\Module
 			$subscriber = $results['subscriber'];
 		}
 
-		$I->assertEquals($subscriber['fields']['last_name'], '');
-		$I->assertEquals($subscriber['fields']['phone_number'], '');
-		$I->assertEquals($subscriber['fields']['billing_address'], '');
-		$I->assertEquals($subscriber['fields']['shipping_address'], '');
-		$I->assertEquals($subscriber['fields']['payment_method'], '');
-		$I->assertEquals($subscriber['fields']['notes'], '');
+		$I->assertEquals('', $subscriber['fields']['last_name']);
+		$I->assertEquals('', $subscriber['fields']['phone_number']);
+		$I->assertEquals('', $subscriber['fields']['billing_address']);
+		$I->assertEquals('', $subscriber['fields']['shipping_address']);
+		$I->assertEquals('', $subscriber['fields']['payment_method']);
+		$I->assertEquals('', $subscriber['fields']['notes']);
 	}
 
 	/**
