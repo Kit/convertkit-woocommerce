@@ -104,17 +104,17 @@ class SettingImportExportCest
 		// We don't check the access and refresh tokens, as they're invalid in the export JSON
 		// and therefore are automatically removed when used on the settings screen.
 		$settings = $I->grabOptionFromDatabase('woocommerce_ckwc_settings');
-		$I->assertEquals($settings['enabled'], 'yes');
-		$I->assertEquals($settings['event'], 'completed');
-		$I->assertEquals($settings['display_opt_in'], 'yes');
-		$I->assertEquals($settings['opt_in_label'], 'Opt In to Newsletter');
-		$I->assertEquals($settings['opt_in_status'], 'checked');
-		$I->assertEquals($settings['opt_in_location'], 'billing');
-		$I->assertEquals($settings['name_format'], 'first');
-		$I->assertEquals($settings['send_purchases'], 'yes');
-		$I->assertEquals($settings['debug'], 'yes');
-		$I->assertEquals($settings['subscribe'], 'yes');
-		$I->assertEquals($settings['send_purchases_event'], 'completed');
+		$I->assertEquals('yes', $settings['enabled']);
+		$I->assertEquals('completed', $settings['event']);
+		$I->assertEquals('yes', $settings['display_opt_in']);
+		$I->assertEquals('Opt In to Newsletter', $settings['opt_in_label']);
+		$I->assertEquals('checked', $settings['opt_in_status']);
+		$I->assertEquals('billing', $settings['opt_in_location']);
+		$I->assertEquals('first', $settings['name_format']);
+		$I->assertEquals('yes', $settings['send_purchases']);
+		$I->assertEquals('yes', $settings['debug']);
+		$I->assertEquals('yes', $settings['subscribe']);
+		$I->assertEquals('completed', $settings['send_purchases_event']);
 	}
 
 	/**

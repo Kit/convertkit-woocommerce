@@ -133,7 +133,7 @@ class ResourceCustomFieldsNoDataTest extends \Codeception\TestCase\WPTestCase
 	public function testCount()
 	{
 		$result = $this->resource->get();
-		$this->assertEquals($this->resource->count(), count($result));
+		$this->assertEquals(count($result), $this->resource->count());
 	}
 
 	/**
@@ -145,6 +145,6 @@ class ResourceCustomFieldsNoDataTest extends \Codeception\TestCase\WPTestCase
 	{
 		// Confirm that the function returns false, because resources do not exist.
 		$result = $this->resource->exist();
-		$this->assertSame($result, false);
+		$this->assertSame(false, $result);
 	}
 }
