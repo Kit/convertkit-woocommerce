@@ -280,10 +280,7 @@ class CKWC_Integration extends WC_Integration {
 			exit();
 		}
 
-		// Update settings.
-		$this->update_option( 'access_token', $result['access_token'] );
-		$this->update_option( 'refresh_token', $result['refresh_token'] );
-		$this->update_option( 'token_expires', ( time() + $result['expires_in'] ) );
+		// Credentials are saved by update_credentials(), via the `convertkit_api_get_access_token` action.
 
 		// Redirect to General screen, which will now show the Plugin's settings, because the Plugin
 		// is now authenticated.

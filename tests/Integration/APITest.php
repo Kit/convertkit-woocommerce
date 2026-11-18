@@ -127,6 +127,30 @@ class APITest extends \Codeception\TestCase\WPTestCase
 	}
 
 	/**
+	 * Test that the Access Token, Refresh Token and Token Expiry are saved in the Plugin's settings
+	 * when an access token is obtained.
+	 *
+	 * @since   2.2.5
+	 */
+	public function testAccessTokenSavedWhenObtained()
+	{
+		// Confirm no Access or Refresh Token exists in the Plugin settings.
+		$this->assertEmpty( WP_CKWC_Integration()->get_access_token() );
+		$this->assertEmpty( WP_CKWC_Integration()->get_refresh_token() );
+
+		// Mock request as if the API returned an access and refresh token.
+		add_filter( 'pre_http_request', array( $this, 'mockTokenResponse' ), 10, 3 );
+
+		// Run request, as if the access token was obtained successfully.
+		$this->api->get_access_token( 'mockAuthCode' );
+
+		// Confirm the tokens and expiry were saved by the `convertkit_api_get_access_token` hook.
+		$this->assertEquals( $_ENV['CONVERTKIT_OAUTH_ACCESS_TOKEN'], WP_CKWC_Integration()->get_access_token() );
+		$this->assertEquals( $_ENV['CONVERTKIT_OAUTH_REFRESH_TOKEN'], WP_CKWC_Integration()->get_refresh_token() );
+		$this->assertGreaterThanOrEqual( time() + 10000 - 5, (int) WP_CKWC_Integration()->get_option( 'token_expires' ) );
+	}
+
+	/**
 	 * Test that a WordPress Cron event is created when an access token is obtained.
 	 *
 	 * @since   1.9.8
