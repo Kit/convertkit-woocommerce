@@ -986,6 +986,9 @@ class CKWC_Integration extends WC_Integration {
 						'sync_past_orders_confirmation_message' => __( 'Do you want to send past WooCommerce Orders to Kit?', 'woocommerce-convertkit' ),
 					)
 				);
+
+				// Enqueue selectWoo for the Subscription dropdowns. Its CSS is included in WooCommerce's admin CSS.
+				ckwc_select2_enqueue_scripts();
 				break;
 
 		}
