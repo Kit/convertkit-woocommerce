@@ -48,6 +48,7 @@ class CKWC_Opt_In_Block_Integration implements IntegrationInterface {
 	public function get_metadata() {
 
 		return array(
+			'api_version'   => 3,
 			'name'          => 'ckwc/opt-in',
 			'title'         => __( 'Kit Opt In', 'woocommerce-convertkit' ),
 			'category'      => 'woocommerce',

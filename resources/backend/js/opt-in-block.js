@@ -25,7 +25,7 @@
 	// Define some constants for the various items we'll use.
 	const el = element.createElement;
 	const { registerBlockType } = blocks;
-	const { InspectorControls } = editor;
+	const { InspectorControls, useBlockProps } = editor;
 	const { Button, CardBody, CheckboxControl } = components;
 
 	// Get settings from WooCommerce; this calls the get_script_data()
@@ -87,18 +87,23 @@
 		)
 	);
 
+	// Return a render of the checkbox in the block editor as it would look
+	// on the frontend checkout, based on the integration settings for the
+	// checkbox checked state and its label.
+	const Edit = () => {
+		return el('div', useBlockProps(), [blockInspectorControls, checkbox]);
+	};
+
 	// Register Block.
 	registerBlockType('ckwc/opt-in', {
+		// Block API version.
+		apiVersion: 3,
+
 		// Icon.
 		icon,
 
 		// Editor.
-		edit() {
-			// Return a render of the checkbox in the block editor as it would look
-			// on the frontend checkout, based on the integration settings for the
-			// checkbox checked state and its label.
-			return el('div', {}, [blockInspectorControls, checkbox]);
-		},
+		edit: Edit,
 
 		// Output.
 		save() {
