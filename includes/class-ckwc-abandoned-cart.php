@@ -43,6 +43,11 @@ class CKWC_Abandoned_Cart {
 			return;
 		}
 
+		// If this site isn't registered with the Kit App Store app server, don't load any other actions or filters.
+		if ( empty( $this->integration->get_option( 'app_server_site_secret' ) ) ) {
+			return;
+		}
+
 		// Track the abandoned cart when products are added, edited or removed from the cart.
 		add_action( 'woocommerce_add_to_cart', array( $this, 'track_abandoned_cart' ) );
 		add_action( 'woocommerce_after_cart_item_quantity_update', array( $this, 'track_abandoned_cart' ) );
@@ -135,8 +140,8 @@ class CKWC_Abandoned_Cart {
 	}
 
 	/**
-	 * Clear the abandoned cart session data, and removes the abandoned cart tag from the subscriber
-	 * in Kit.
+	 * Clear the abandoned cart session data, and send the product purchased event to Kit
+	 * if the customer's cart was sent to Kit as abandoned.
 	 *
 	 * @since   2.0.5
 	 *
@@ -149,34 +154,19 @@ class CKWC_Abandoned_Cart {
 		// Clear the abandoned cart data.
 		WC()->session->__unset( 'ckwc_abandoned_cart_email' );
 		WC()->session->__unset( 'ckwc_abandoned_cart_timestamp' );
+		WC()->session->__unset( 'ckwc_abandoned_cart_attempts' );
 
-		// Get tag ID from the integration's setting.
-		$subscription = $this->integration->get_option( 'abandoned_cart_subscription' );
-
-		// Bail if no subscription is configured.
-		if ( empty( $subscription ) ) {
+		// Bail if this customer's cart wasn't sent to Kit as abandoned.
+		// We use the order's email, as the Action Scheduler may have already cleared the session's email.
+		$transient     = ckwc_get_abandoned_cart_transient_name( $order->get_billing_email() );
+		$subscriber_id = get_transient( $transient );
+		if ( ! $subscriber_id ) {
 			return;
 		}
 
-		// Get email address from order.
-		// We don't use the session data here, as the Action Scheduler may have triggered the abandoned cart
-		// function, which itself clears session data to ensure subscribers aren't repetitively tagged.
-		$email = $order->get_billing_email();
-
-		// Setup the API.
-		$api = new CKWC_API(
-			CKWC_OAUTH_CLIENT_ID,
-			CKWC_OAUTH_CLIENT_REDIRECT_URI,
-			$this->integration->get_option( 'access_token' ),
-			$this->integration->get_option( 'refresh_token' ),
-			$this->integration->get_option_bool( 'debug' )
-		);
-
-		// Get the resource type and ID.
-		list( $resource_type, $tag_id ) = explode( ':', $subscription );
-
-		// Remove tag from subscriber.
-		$api->remove_tag_from_subscriber_by_email( absint( $tag_id ), $email );
+		// Send the product purchased event for Kit's automation event node.
+		$this->integration->send_automation_event( 'product_purchased', $subscriber_id, ckwc_get_order_context( $order ) );
+		delete_transient( $transient );
 
 	}
 

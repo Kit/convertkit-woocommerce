@@ -30,6 +30,13 @@ class CKWC_Setup {
 		}
 
 		/**
+		 * 2.3.0: Register the Kit App Store app server heartbeat action.
+		 */
+		if ( ! $current_version || version_compare( $current_version, '2.3.0', '<' ) ) {
+			add_action( 'shutdown', 'ckwc_schedule_actions' );
+		}
+
+		/**
 		 * 2.0.5: Register Action Scheduler actions.
 		 */
 		if ( ! $current_version || version_compare( $current_version, '2.0.5', '<' ) ) {

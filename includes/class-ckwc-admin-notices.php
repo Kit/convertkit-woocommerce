@@ -33,6 +33,49 @@ class CKWC_Admin_Notices {
 	public function __construct() {
 
 		add_action( 'admin_notices', array( $this, 'output' ) );
+		add_action( 'admin_notices', array( $this, 'maybe_output_reconnect_notice' ) );
+
+	}
+
+	/**
+	 * Asks the creator to reconnect if the site is connected to Kit but not through the Kit App Store,
+	 * e.g. connected with an older version of the Plugin, as abandoned cart emails need the Kit App Store connection.
+	 *
+	 * @since   2.3.0
+	 */
+	public function maybe_output_reconnect_notice() {
+
+		// Don't output if we don't have the required capabilities to fix the issue.
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		// Bail if the integration is unavailable.
+		$integration = WP_CKWC_Integration();
+		if ( ! $integration ) {
+			return;
+		}
+
+		// Bail if not connected to Kit, or already connected through the Kit App Store.
+		if ( empty( $integration->get_option( 'access_token' ) ) || ! empty( $integration->get_option( 'app_server_site_secret' ) ) ) {
+			return;
+		}
+
+		$api = new CKWC_API( CKWC_OAUTH_CLIENT_ID, CKWC_OAUTH_CLIENT_REDIRECT_URI );
+		?>
+		<div class="notice notice-warning">
+			<p>
+				<?php
+				printf(
+					'%s <a href="%s">%s</a>',
+					esc_html__( 'Kit for WooCommerce: Reconnect your Kit account to install the Kit app and send abandoned cart emails.', 'woocommerce-convertkit' ),
+					esc_url( ckwc_get_app_server()->get_connect_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ) ),
+					esc_html__( 'Reconnect', 'woocommerce-convertkit' )
+				);
+				?>
+			</p>
+		</div>
+		<?php
 
 	}
 
@@ -64,7 +107,7 @@ class CKWC_Admin_Notices {
 						esc_html__( 'Kit for WooCommerce: Authorization failed. Please', 'woocommerce-convertkit' ),
 						sprintf(
 							'<a href="%s">%s</a>',
-							esc_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ),
+							esc_url( ckwc_get_app_server()->get_connect_url( $api->get_oauth_url( ckwc_get_oauth_return_url(), get_site_url() ) ) ),
 							esc_html__( 'connect your Kit account.', 'woocommerce-convertkit' )
 						)
 					);

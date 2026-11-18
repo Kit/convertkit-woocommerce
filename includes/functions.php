@@ -98,19 +98,27 @@ function ckwc_schedule_actions() {
 		return;
 	}
 
-	// Bail if the scheduled action already exists.
-	if ( as_next_scheduled_action( 'ckwc_abandoned_cart' ) ) {
-		return;
+	// Schedule the abandoned cart action, if not already scheduled.
+	if ( ! as_next_scheduled_action( 'ckwc_abandoned_cart' ) ) {
+		as_schedule_recurring_action(
+			time(),
+			15 * MINUTE_IN_SECONDS,
+			'ckwc_abandoned_cart',
+			array(),
+			'ckwc'
+		);
 	}
 
-	// Schedule action.
-	as_schedule_recurring_action(
-		time(),
-		15 * MINUTE_IN_SECONDS,
-		'ckwc_abandoned_cart',
-		array(),
-		'ckwc'
-	);
+	// Schedule the daily Kit App Store app server heartbeat, if not already scheduled.
+	if ( ! as_next_scheduled_action( 'ckwc_app_server_heartbeat' ) ) {
+		as_schedule_recurring_action(
+			time(),
+			DAY_IN_SECONDS,
+			'ckwc_app_server_heartbeat',
+			array(),
+			'ckwc'
+		);
+	}
 
 }
 
@@ -126,8 +134,9 @@ function ckwc_unschedule_actions() {
 		return;
 	}
 
-	// Unschedule action.
+	// Unschedule actions.
 	as_unschedule_all_actions( 'ckwc_abandoned_cart' );
+	as_unschedule_all_actions( 'ckwc_app_server_heartbeat' );
 
 }
 
@@ -172,6 +181,31 @@ function ckwc_get_oauth_return_url() {
 	);
 
 }
+
+/**
+ * Returns the Kit App Store app server instance.
+ *
+ * @since   2.3.0
+ *
+ * @return  ConvertKit_App_Server
+ */
+function ckwc_get_app_server() {
+
+	return new ConvertKit_App_Server(
+		CKWC_OAUTH_CLIENT_ID,
+		CKWC_APP_SERVER_URL,
+		array(
+			'plugin'      => CKWC_PLUGIN_VERSION,
+			'wordpress'   => get_bloginfo( 'version' ),
+			'php'         => PHP_VERSION,
+			'woocommerce' => defined( 'WC_VERSION' ) ? WC_VERSION : '',
+		)
+	);
+
+}
+
+// Permit redirects to the Kit App Store app server.
+add_filter( 'allowed_redirect_hosts', array( ckwc_get_app_server(), 'allowed_redirect_hosts' ) );
 
 /**
  * Helper method to enqueue Select2 scripts for use within the ConvertKit Plugin.
@@ -285,6 +319,125 @@ function ckwc_delete_credentials( $client_id ) {
 
 	// Delete Access and Refresh Tokens.
 	WP_CKWC_Integration()->delete_credentials();
+
+}
+
+/**
+ * Returns the transient name storing the Kit subscriber ID for an email address whose cart was sent to Kit as abandoned.
+ *
+ * @since   2.3.0
+ *
+ * @param   string $email  Email address.
+ * @return  string
+ */
+function ckwc_get_abandoned_cart_transient_name( $email ) {
+
+	return 'ckwc_abandoned_cart_' . md5( strtolower( trim( $email ) ) );
+
+}
+
+/**
+ * Returns the abandoned_checkout automation event context for a WooCommerce session's cart.
+ *
+ * @since   2.3.0
+ *
+ * @param   array $session_data   WooCommerce session data.
+ * @return  array
+ */
+function ckwc_get_abandoned_cart_context( $session_data ) {
+
+	$cart    = maybe_unserialize( isset( $session_data['cart'] ) ? $session_data['cart'] : '' );
+	$totals  = maybe_unserialize( isset( $session_data['cart_totals'] ) ? $session_data['cart_totals'] : '' );
+	$coupons = maybe_unserialize( isset( $session_data['applied_coupons'] ) ? $session_data['applied_coupons'] : '' );
+
+	$products = array();
+	foreach ( is_array( $cart ) ? $cart : array() as $item ) {
+		$product = wc_get_product( ! empty( $item['variation_id'] ) ? $item['variation_id'] : $item['product_id'] );
+		if ( ! $product ) {
+			continue;
+		}
+
+		$quantity   = absint( $item['quantity'] );
+		$products[] = ckwc_get_automation_event_product( $product, $quantity, $quantity ? floatval( $item['line_subtotal'] ) / $quantity : 0 );
+	}
+
+	return array(
+		'checkout_url'   => wc_get_checkout_url(),
+		'products'       => array_slice( $products, 0, 20 ),
+		'subtotal'       => ckwc_format_price( is_array( $totals ) && isset( $totals['subtotal'] ) ? $totals['subtotal'] : 0 ),
+		'discount_codes' => is_array( $coupons ) ? array_values( $coupons ) : array(),
+		'total'          => ckwc_format_price( is_array( $totals ) && isset( $totals['total'] ) ? $totals['total'] : 0 ),
+	);
+
+}
+
+/**
+ * Returns the product_purchased automation event context for a WooCommerce Order.
+ *
+ * @since   2.3.0
+ *
+ * @param   WC_Order $order  WooCommerce Order.
+ * @return  array
+ */
+function ckwc_get_order_context( $order ) {
+
+	$products = array();
+	foreach ( $order->get_items() as $item ) {
+		if ( ! $item->get_product() ) {
+			continue;
+		}
+
+		$products[] = ckwc_get_automation_event_product( $item->get_product(), $item->get_quantity(), $order->get_item_subtotal( $item, false, true ), $order->get_currency() );
+	}
+
+	return array(
+		'order_id'       => $order->get_order_number(),
+		'products'       => array_slice( $products, 0, 20 ),
+		'subtotal'       => ckwc_format_price( $order->get_subtotal(), $order->get_currency() ),
+		'discount_codes' => array_values( $order->get_coupon_codes() ),
+		'total'          => ckwc_format_price( $order->get_total(), $order->get_currency() ),
+	);
+
+}
+
+/**
+ * Returns a Product's automation event data.
+ *
+ * @since   2.3.0
+ *
+ * @param   WC_Product $product   WooCommerce Product.
+ * @param   int        $quantity  Quantity.
+ * @param   float      $price     Unit price.
+ * @param   string     $currency  Currency code (defaults to the store's currency).
+ * @return  array
+ */
+function ckwc_get_automation_event_product( $product, $quantity, $price, $currency = '' ) {
+
+	$description = $product->get_short_description() ? $product->get_short_description() : $product->get_description();
+
+	return array(
+		'name'        => $product->get_name(),
+		'quantity'    => $quantity,
+		'price'       => ckwc_format_price( $price, $currency ),
+		'description' => mb_substr( trim( html_entity_decode( wp_strip_all_tags( $description ), ENT_QUOTES, 'UTF-8' ) ), 0, 300 ),
+		'image_url'   => $product->get_image_id() ? (string) wp_get_attachment_image_url( absint( $product->get_image_id() ), 'woocommerce_thumbnail' ) : '',
+		'url'         => $product->get_permalink(),
+	);
+
+}
+
+/**
+ * Returns a price as plain text, e.g. $29.99.
+ *
+ * @since   2.3.0
+ *
+ * @param   float  $amount    Amount.
+ * @param   string $currency  Currency code (defaults to the store's currency).
+ * @return  string
+ */
+function ckwc_format_price( $amount, $currency = '' ) {
+
+	return html_entity_decode( wp_strip_all_tags( wc_price( $amount, array( 'currency' => $currency ) ) ), ENT_QUOTES, 'UTF-8' );
 
 }
 

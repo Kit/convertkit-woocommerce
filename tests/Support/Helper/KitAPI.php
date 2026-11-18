@@ -10,7 +10,7 @@ namespace Tests\Support\Helper;
 class KitAPI extends \Codeception\Module
 {
 	/**
-	 * Installs the Kit API recorder mu-plugin, and clears any previously recorded
+	 * Installs the Kit API and Kit App Server recorder mu-plugins, and clears any previously recorded
 	 * requests, before each test runs.
 	 *
 	 * @since   2.2.0
@@ -24,7 +24,13 @@ class KitAPI extends \Codeception\Module
 			(string) file_get_contents(__DIR__ . '/../mu-plugins/kit-api-recorder.php') // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 		);
 
+		$this->getModule('lucatume\WPBrowser\Module\WPFilesystem')->haveMuPlugin(
+			'kit-app-server-recorder.php',
+			(string) file_get_contents(__DIR__ . '/../mu-plugins/kit-app-server-recorder.php') // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		);
+
 		$this->getModule('lucatume\WPBrowser\Module\WPDb')->haveOptionInDatabase('kit_api_log', []);
+		$this->getModule('lucatume\WPBrowser\Module\WPDb')->haveOptionInDatabase('kit_app_server_log', []);
 	}
 
 	/**
@@ -281,6 +287,57 @@ class KitAPI extends \Codeception\Module
 				}
 
 				return false;
+			},
+			10,
+			1
+		);
+	}
+
+	/**
+	 * Returns the automation event requests the Plugin sent to the Kit App Server during this test,
+	 * optionally filtered by event type.
+	 *
+	 * @since   2.3.0
+	 *
+	 * @param   EndToEndTester $I      EndToEndTester.
+	 * @param   bool|string    $type   Event type e.g. `abandoned_checkout`.
+	 * @return  array
+	 */
+	public function grabAppServerEventRequests($I, $type = false)
+	{
+		$log = $I->grabOptionFromDatabase('kit_app_server_log');
+
+		if ( ! is_array($log)) {
+			return [];
+		}
+
+		return array_values(
+			array_filter(
+				$log,
+				function ($request) use ($type) {
+					return ! $type || ( isset($request['body']['type']) && $request['body']['type'] === $type );
+				}
+			)
+		);
+	}
+
+	/**
+	 * Returns the first automation event request of the given type the Plugin sent to the
+	 * Kit App Server during this test, waiting for it to be made.
+	 *
+	 * @since   2.3.0
+	 *
+	 * @param   EndToEndTester $I      EndToEndTester.
+	 * @param   string         $type   Event type e.g. `abandoned_checkout`.
+	 * @return  bool|array
+	 */
+	public function grabAppServerEventRequest($I, $type)
+	{
+		return $this->retryUntil(
+			function () use ($I, $type) {
+				$requests = $this->grabAppServerEventRequests($I, $type);
+
+				return count($requests) ? $requests[0] : false;
 			},
 			10,
 			1

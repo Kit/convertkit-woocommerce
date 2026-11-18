@@ -47,22 +47,21 @@ class SettingOAuthCest
 		$I->see('Connect');
 		$I->dontSee('Disconnect');
 
-		// Check that a link to the OAuth auth screen exists.
-		$I->seeInSource('<a href="https://app.kit.com/oauth/authorize?client_id=' . $_ENV['CONVERTKIT_OAUTH_CLIENT_ID'] . '&amp;response_type=code&amp;redirect_uri=' . urlencode( $_ENV['KIT_OAUTH_REDIRECT_URI'] ) );
+		// Check that the Connect link starts connecting through the Kit App Server.
+		$connectURL = $I->grabAttributeFrom('a.button-primary[href*="/connect/start"]', 'href');
+		parse_str( (string) parse_url($connectURL, PHP_URL_QUERY), $args); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
+
+		// Check the App Server continues to the OAuth auth screen, returning to the App Server's callback.
+		$I->assertStringStartsWith('https://app.kit.com/oauth/authorize?client_id=' . $_ENV['CONVERTKIT_OAUTH_CLIENT_ID'] . '&response_type=code&redirect_uri=', $args['authorize_url']);
+		parse_str( (string) parse_url($args['authorize_url'], PHP_URL_QUERY), $oauthArgs); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
+		$I->assertStringEndsWith('/kit/api/callback', $oauthArgs['redirect_uri']);
 
 		// Check the state parameter returns to the settings screen, with a nonce.
-		$state = $I->apiDecodeStateFromOAuthURL($I->grabAttributeFrom('a[href*="oauth/authorize"]', 'href'));
+		$state = $I->apiDecodeStateFromOAuthURL($args['authorize_url']);
 		$I->assertEquals($_ENV['CONVERTKIT_OAUTH_CLIENT_ID'], $state['client_id']);
 		$I->assertStringStartsWith($_ENV['WORDPRESS_URL'] . '/wp-admin/admin.php?', $state['return_to']);
 		$I->assertStringContainsString('page=wc-settings&tab=integration&section=ckwc', $state['return_to']);
 		$I->assertStringContainsString('nonce=', $state['return_to']);
-
-		// Click the connect button.
-		$I->click('Connect');
-
-		// Confirm the ConvertKit hosted OAuth login screen is displayed.
-		$I->waitForElementVisible('body.sessions');
-		$I->seeInSource('oauth/authorize?client_id=' . $_ENV['CONVERTKIT_OAUTH_CLIENT_ID']);
 	}
 
 	/**
