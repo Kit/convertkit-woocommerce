@@ -5,7 +5,7 @@ Tags: email, marketing, embed form, convertkit, capture
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.1
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -48,6 +48,14 @@ Please report security bugs found in the source code of the plugin through the [
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 2.2.5 2026-11-18
+* Updated: Use WooCommerce's selectWoo for dropdowns, instead of loading Select2 from a CDN
+* Updated: Opt In Block: Use block API version 3
+* Fix: Settings: Display an error notice when connecting to or disconnecting from Kit fails
+* Fix: Admin: PHP warning when the current screen isn't set
+* Fix: Uninstall: Clear the scheduled event to refresh the access token
+* Fix: Uninstall: Delete cached Forms, Tags, Sequences and Custom Fields
 
 ### 2.2.4 2026-11-03
 * Updated: WordPress Libraries to 2.8.1
