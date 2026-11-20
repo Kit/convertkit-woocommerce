@@ -45,7 +45,7 @@ class SettingsAbandonedCartCest
 
 		// Confirm the Abandoned Cart options are displayed.
 		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_threshold');
-		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_subscription');
+		$I->waitForElementVisible('#select2-woocommerce_ckwc_abandoned_cart_subscription-container');
 
 		// Save.
 		$I->clickSaveChangesButton($I);
@@ -53,7 +53,7 @@ class SettingsAbandonedCartCest
 		// Confirm the setting saved.
 		$I->seeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
 		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_threshold');
-		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_subscription');
+		$I->waitForElementVisible('#select2-woocommerce_ckwc_abandoned_cart_subscription-container');
 	}
 
 	/**
@@ -74,7 +74,7 @@ class SettingsAbandonedCartCest
 
 		// Confirm the Abandoned Cart options are not displayed.
 		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_threshold');
-		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_subscription');
+		$I->waitForElementNotVisible('#select2-woocommerce_ckwc_abandoned_cart_subscription-container');
 
 		// Save.
 		$I->clickSaveChangesButton($I);
@@ -82,7 +82,7 @@ class SettingsAbandonedCartCest
 		// Confirm the setting saved.
 		$I->dontSeeCheckboxIsChecked('#woocommerce_ckwc_abandoned_cart');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_threshold');
-		$I->waitForElementNotVisible('#woocommerce_ckwc_abandoned_cart_subscription');
+		$I->waitForElementNotVisible('#select2-woocommerce_ckwc_abandoned_cart_subscription-container');
 	}
 
 	/**
@@ -124,8 +124,8 @@ class SettingsAbandonedCartCest
 		$I->checkOption('#woocommerce_ckwc_abandoned_cart');
 
 		// Set Abandoned Cart Subscription to a Tag.
-		$I->waitForElementVisible('#woocommerce_ckwc_abandoned_cart_subscription');
-		$I->selectOption('#woocommerce_ckwc_abandoned_cart_subscription', $_ENV['CONVERTKIT_API_TAG_NAME']);
+		$I->waitForElementVisible('#select2-woocommerce_ckwc_abandoned_cart_subscription-container');
+		$I->fillSelect2Field($I, '#select2-woocommerce_ckwc_abandoned_cart_subscription-container', $_ENV['CONVERTKIT_API_TAG_NAME']);
 
 		// Save.
 		$I->clickSaveChangesButton($I);

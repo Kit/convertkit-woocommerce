@@ -88,7 +88,7 @@ class SettingEnabledDisabledCest
 
 		// Confirm other fields are displayed.
 		$I->waitForElementVisible('#woocommerce_ckwc_event');
-		$I->waitForElementVisible('#woocommerce_ckwc_subscription');
+		$I->waitForElementVisible('#select2-woocommerce_ckwc_subscription-container');
 		$I->waitForElementVisible('#woocommerce_ckwc_name_format');
 		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_last_name');
 		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_phone');
@@ -109,7 +109,7 @@ class SettingEnabledDisabledCest
 
 		// Confirm other fields are still displayed.
 		$I->waitForElementVisible('#woocommerce_ckwc_event');
-		$I->waitForElementVisible('#woocommerce_ckwc_subscription');
+		$I->waitForElementVisible('#select2-woocommerce_ckwc_subscription-container');
 		$I->waitForElementVisible('#woocommerce_ckwc_name_format');
 		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_last_name');
 		$I->waitForElementVisible('#woocommerce_ckwc_custom_field_phone');
@@ -151,7 +151,7 @@ class SettingEnabledDisabledCest
 
 		// Confirm other fields are not displayed.
 		$I->waitForElementNotVisible('#woocommerce_ckwc_event');
-		$I->waitForElementNotVisible('#woocommerce_ckwc_subscription');
+		$I->waitForElementNotVisible('#select2-woocommerce_ckwc_subscription-container');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_name_format');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_last_name');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_phone');
@@ -172,7 +172,7 @@ class SettingEnabledDisabledCest
 
 		// Confirm other fields are still not displayed.
 		$I->waitForElementNotVisible('#woocommerce_ckwc_event');
-		$I->waitForElementNotVisible('#woocommerce_ckwc_subscription');
+		$I->waitForElementNotVisible('#select2-woocommerce_ckwc_subscription-container');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_name_format');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_last_name');
 		$I->waitForElementNotVisible('#woocommerce_ckwc_custom_field_phone');
