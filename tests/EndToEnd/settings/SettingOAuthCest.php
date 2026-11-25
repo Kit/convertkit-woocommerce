@@ -126,13 +126,13 @@ class SettingOAuthCest
 		$I->checkOption('#woocommerce_ckwc_enabled');
 
 		// Confirm that the Subscription dropdown option is displayed.
-		$I->seeElement('#woocommerce_ckwc_subscription');
+		$I->seeElement('#select2-woocommerce_ckwc_subscription-container');
 
 		// Check the order of the resource dropdown are alphabetical.
 		$I->checkSelectWithOptionGroupsOptionOrder($I, '#woocommerce_ckwc_subscription');
 
 		// Confirm that an expected option can be selected.
-		$I->selectOption('#woocommerce_ckwc_subscription', $_ENV['CONVERTKIT_API_FORM_NAME']);
+		$I->fillSelect2Field($I, '#select2-woocommerce_ckwc_subscription-container', $_ENV['CONVERTKIT_API_FORM_NAME']);
 
 		// Save changes.
 		$I->clickSaveChangesButton($I);

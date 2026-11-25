@@ -54,7 +54,7 @@ class UpgradePathsCest
 		$I->checkOption('#woocommerce_ckwc_enabled');
 
 		// Confirm that the Subscription dropdown option is displayed.
-		$I->seeElement('#woocommerce_ckwc_subscription');
+		$I->seeElement('#select2-woocommerce_ckwc_subscription-container');
 
 		// Check the order of the resource dropdown are alphabetical.
 		$I->checkSelectWithOptionGroupsOptionOrder($I, '#woocommerce_ckwc_subscription');
